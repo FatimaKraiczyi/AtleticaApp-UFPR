@@ -23,3 +23,7 @@ npm install
 
 ```bash
 npx expo start
+````
+6. Baixe o aplicativo Expo Go em seu dispositivo móvel.
+
+7. Escaneie o QR code exibido no terminal usando o aplicativo Expo Go para visualizar a aplicação.
