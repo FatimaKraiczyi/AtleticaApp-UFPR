@@ -13,12 +13,12 @@
 
 ```bash
 cd AtleticaApp
-
+```
 4. Instale as dependências do projeto:
 
 ```bash
 npm install
-   
+```
 5. Inicie o servidor de desenvolvimento:
 
 ```bash
