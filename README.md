@@ -10,10 +10,16 @@
    git clone https://github.com/FatimaKraiczyi/TCC-AtleticaApp-UFPR-frontend.git
 
 3. Navegue até o diretório da aplicação:
+
+```bash
 cd AtleticaApp
 
 4. Instale as dependências do projeto:
+
+```bash
 npm install
    
 5. Inicie o servidor de desenvolvimento:
+
+```bash
 npx expo start
