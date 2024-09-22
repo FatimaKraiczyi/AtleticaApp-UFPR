@@ -1,4 +1,4 @@
-export const InboxIcon: any = (props: any) => {
+export const InboxIcon = () => {
   return (
     <svg
       width="25"

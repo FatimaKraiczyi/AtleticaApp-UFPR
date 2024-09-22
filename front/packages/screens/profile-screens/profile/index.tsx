@@ -477,8 +477,6 @@ const MainContent = () => {
             <VStack space="lg" className="items-center">
               <Avatar size="2xl" className="bg-primary-600">
                 <AvatarImage
-                  height={"100%"}
-                  width={"100%"}
                   source={require("@/assets/profile-screens/profile/image.png")}
                 />
                 <AvatarBadge />
@@ -882,7 +880,7 @@ const MobileScreen = () => {
                   }
                 },
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <Select onValueChange={onChange} selectedValue={value}>
                   <SelectTrigger variant="outline" size="md">
                     <SelectInput placeholder="Select" />
@@ -929,7 +927,7 @@ const MobileScreen = () => {
                   }
                 },
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <Select onValueChange={onChange} selectedValue={value}>
                   <SelectTrigger variant="outline" size="md">
                     <SelectInput placeholder="Select" />
@@ -976,7 +974,7 @@ const MobileScreen = () => {
                   }
                 },
               }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <Select onValueChange={onChange} selectedValue={value}>
                   <SelectTrigger variant="outline" size="md">
                     <SelectInput placeholder="Select" />
@@ -1343,7 +1341,7 @@ const ModalComponent = ({
                       }
                     },
                   }}
-                  render={({ field: { onChange, onBlur, value } }) => (
+                  render={({ field: { onChange, value } }) => (
                     <Select onValueChange={onChange} selectedValue={value}>
                       <SelectTrigger variant="outline" size="md">
                         <SelectInput placeholder="Select" />
@@ -1391,7 +1389,7 @@ const ModalComponent = ({
                       }
                     },
                   }}
-                  render={({ field: { onChange, onBlur, value } }) => (
+                  render={({ field: { onChange, value } }) => (
                     <Select onValueChange={onChange} selectedValue={value}>
                       <SelectTrigger variant="outline" size="md">
                         <SelectInput placeholder="Select" />
@@ -1442,7 +1440,7 @@ const ModalComponent = ({
                       }
                     },
                   }}
-                  render={({ field: { onChange, onBlur, value } }) => (
+                  render={({ field: { onChange, value } }) => (
                     <Select onValueChange={onChange} selectedValue={value}>
                       <SelectTrigger variant="outline" size="md">
                         <SelectInput placeholder="Select" />

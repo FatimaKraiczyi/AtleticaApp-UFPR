@@ -1,5 +1,4 @@
-export const HeartIcon: any = (props: any) => {
-  console.log(props, "props");
+export const HeartIcon = () => {
 
   return (
     <svg

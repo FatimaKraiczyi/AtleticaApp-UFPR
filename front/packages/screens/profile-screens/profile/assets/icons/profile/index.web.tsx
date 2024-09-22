@@ -1,4 +1,4 @@
-export const ProfileIcon: any = (props: any) => {
+export const ProfileIcon = () => {
   return (
     <svg
       width="25"

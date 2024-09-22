@@ -275,7 +275,6 @@ function MobileFooter({ footerIcons }: { footerIcons: any }) {
       {footerIcons.map(
         (
           item: { iconText: string; iconName: any },
-          index: React.Key | null | undefined
         ) => {
           return (
             <Pressable
@@ -371,8 +370,6 @@ const MainContent = () => {
                     <HStack space="xl" className="items-center">
                       <Avatar>
                         <AvatarImage
-                          height={"100%"}
-                          width={"100%"}
                           //@ts-ignore
                           source={item.bannerUri}
                         />
@@ -524,8 +521,6 @@ const MainContent = () => {
                     <HStack space="lg" key={index} className="w-full px-4 py-2">
                       <Avatar className="h-10 w-10">
                         <AvatarImage
-                          height={"100%"}
-                          width={"100%"}
                           source={item.image}
                         />
                       </Avatar>
@@ -565,8 +560,6 @@ const MainContent = () => {
                     <HStack space="lg" key={index} className="px-4 py-2 w-full">
                       <Avatar className="h-10 w-10">
                         <AvatarImage
-                          height={"100%"}
-                          width={"100%"}
                           source={item.image}
                         />
                       </Avatar>
