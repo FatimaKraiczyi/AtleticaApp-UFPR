@@ -21,8 +21,8 @@ export default function StyledJsxRegistry({
   const isServerInserted = useRef(false);
 
   useServerInsertedHTML(() => {
-    AppRegistry.registerComponent("Main", () => Main);
-    const { getStyleElement } = AppRegistry.getApplication("Main");
+    AppRegistry.registerComponent("AtleticaUFPR", () => Main);
+    const { getStyleElement } = AppRegistry.getApplication("AtleticaUFPR");
     if (!isServerInserted.current) {
       isServerInserted.current = true;
       const styles = [getStyleElement(), jsxStyleRegistry.styles(), flush()];
