@@ -34,25 +34,10 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
-import { GoogleIcon } from "./assets/icons/google";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-
-const USERS = [
-  {
-    email: "gabrial@gmail.com",
-    password: "Gabrial@123",
-  },
-  {
-    email: "tom@gmail.com",
-    password: "Tom@123",
-  },
-  {
-    email: "thomas@gmail.com",
-    password: "Thomas@1234",
-  },
-];
+import {userAuthentication} from "../../../../api/users"
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email(),
@@ -63,44 +48,32 @@ const loginSchema = z.object({
 type LoginSchemaType = z.infer<typeof loginSchema>;
 
 const LoginWithLeftBackground = () => {
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<LoginSchemaType>({
+  const { control, handleSubmit, reset, formState: { errors } } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
   const toast = useToast();
-  const [validated, setValidated] = useState({
-    emailValid: true,
-    passwordValid: true,
-  });
+  const router = useRouter();
+  const [validated, setValidated] = useState({ emailValid: true, passwordValid: true });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data: LoginSchemaType) => {
-    const user = USERS.find((element) => element.email === data.email);
-    if (user) {
-      if (user.password !== data.password)
-        setValidated({ emailValid: true, passwordValid: false });
-      else {
-        setValidated({ emailValid: true, passwordValid: true });
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => {
-            return (
-              <Toast nativeID={id} variant="accent" action="success">
-                <ToastTitle>Logged in successfully!</ToastTitle>
-              </Toast>
-            );
-          },
-        });
-        reset();
-      }
+  const onSubmit = async (data: LoginSchemaType) => {
+    const response = await userAuthentication(data.email, data.password);
+
+    if (response.success) {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="accent" action="success">
+            <ToastTitle>Logged in successfully!</ToastTitle>
+          </Toast>
+        ),
+      });
+      router.push('/dashboard/dashboard-layout');
+      reset();
     } else {
-      setValidated({ emailValid: false, passwordValid: true });
+      setValidated({ emailValid: false, passwordValid: false });
     }
   };
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleState = () => {
     setShowPassword((showState) => {
@@ -111,7 +84,7 @@ const LoginWithLeftBackground = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();
   };
-  const router = useRouter();
+
   return (
     <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
@@ -254,17 +227,6 @@ const LoginWithLeftBackground = () => {
         <VStack className="w-full my-7 " space="lg">
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
             <ButtonText className="font-medium">Log in</ButtonText>
-          </Button>
-          <Button
-            variant="outline"
-            action="secondary"
-            className="w-full gap-1"
-            onPress={() => {}}
-          >
-            <ButtonText className="font-medium">
-              Continue with Google
-            </ButtonText>
-            <ButtonIcon as={GoogleIcon} />
           </Button>
         </VStack>
         <HStack className="self-center ">

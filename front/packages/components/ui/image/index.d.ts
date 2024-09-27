@@ -1,4 +1,5 @@
 import React from "react";
+import UnitoolsImage from "@unitools/image";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 declare const imageStyle: import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
     size: {
@@ -116,7 +117,7 @@ declare const imageStyle: import("@gluestack-ui/nativewind-utils/types").TVRetur
         full: string;
     };
 }>, unknown, unknown, undefined>>;
-declare const UIImage: import("@gluestack-ui/image/lib/typescript/types").IImageComponentType<import("@unitools/image").IImageProps>;
+declare const UIImage: typeof UnitoolsImage;
 type ImageProps = VariantProps<typeof imageStyle> & React.ComponentProps<typeof UIImage>;
 declare const Image: {
     ({ size, className, ...props }: {
@@ -236,7 +237,7 @@ declare const Image: {
             "2xl": string;
             full: string;
         };
-    }>, unknown, unknown, undefined>>> & import("@gluestack-ui/image/lib/typescript/types").IImageProps & Omit<import("@unitools/image").IImageProps, "source" | "alt">): import("react/jsx-runtime").JSX.Element;
+    }>, unknown, unknown, undefined>>> & import("@unitools/image").IImageProps): import("react/jsx-runtime").JSX.Element;
     displayName: string;
 };
 export { Image };

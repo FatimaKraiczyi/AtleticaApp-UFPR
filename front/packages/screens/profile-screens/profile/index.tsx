@@ -177,11 +177,11 @@ const Sidebar = () => {
     useState<number>(0);
   const handlePress = (index: number) => {
     setSelectedIndex(index);
-    // router.push("/profile/profile");
+     router.push("/profile/profile");
   };
   const handlePressResources = (index: number) => {
     setSelectedIndexResources(index);
-    // router.push("/profile/profile");
+     router.push("/profile/profile");
   };
   return (
     <ScrollView className=" h-full" contentContainerStyle={{ flexGrow: 1 }}>

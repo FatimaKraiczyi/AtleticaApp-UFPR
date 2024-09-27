@@ -1,7 +1,5 @@
 "use client";
 import "react";
-import { createImage } from "@gluestack-ui/image";
-import { Platform } from "react-native";
 import UnitoolsImage from "@unitools/image";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { cssInterop } from "@gluestack-ui/nativewind-utils/cssInterop";
@@ -20,16 +18,14 @@ const imageStyle = tva({
         },
     },
 });
-const UIImage = createImage({ Root: UnitoolsImage });
+const UIImage = UnitoolsImage;
 cssInterop(UIImage, 
 //@ts-ignore
 UnitoolsImage.displayName === "NextImage" ? {} : { className: "style" });
 const Image = ({ size = "md", className, ...props }) => {
-    return (<UIImage className={imageStyle({ size, class: className })} {...props} 
-    //@ts-ignore
-    style={Platform.OS === "web"
-            ? { height: "revert-layer", width: "revert-layer" }
-            : undefined}/>);
+    return (<UIImage 
+    // @ts-ignore
+    className={imageStyle({ size, class: className })} {...props}/>);
 };
 Image.displayName = "Image";
 export { Image };

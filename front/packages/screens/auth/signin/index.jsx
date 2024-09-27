@@ -5,22 +5,20 @@ import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { LinkText } from "@/components/ui/link";
-import { Image } from "@/components/ui/image";
 import Link from "@unitools/link";
 import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText, } from "@/components/ui/form-control";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel, } from "@/components/ui/checkbox";
 import { ArrowLeftIcon, CheckIcon, EyeIcon, EyeOffIcon, Icon, } from "@/components/ui/icon";
-import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Keyboard } from "react-native";
-import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
-import { GoogleIcon } from "./assets/icons/google";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
+import { AuthLayout } from "../layout";
 const USERS = [
     {
         email: "gabrial@gmail.com",
@@ -40,20 +38,6 @@ const loginSchema = z.object({
     password: z.string().min(1, "Password is required"),
     rememberme: z.boolean().optional(),
 });
-const AuthLayout = (props) => {
-    return (<SafeAreaView className="w-full h-full">
-      <HStack className="w-full h-full bg-background-0">
-        <VStack className="relative w-0 hidden md:flex md:h-full md:min-w-[50%] items-center  justify-center p-7" space="md">
-          <Image source={require("@/assets/auth/radialGradient.png")} className="h-full w-full absolute inset-0 -z-10" alt="Radial Gradient"/>
-          <Image source={require("@/assets/auth/logo.png")} className="h-40 w-40" alt="Gluestack Logo"/>
-        </VStack>
-
-        <VStack className="md:items-center md:justify-center w-full md:max-w-[440px] p-9 md:gap-10 gap-16 md:m-auto md:w-1/2">
-          {props.children}
-        </VStack>
-      </HStack>
-    </SafeAreaView>);
-};
 const LoginWithLeftBackground = () => {
     const { control, handleSubmit, reset, formState: { errors }, } = useForm({
         resolver: zodResolver(loginSchema),
@@ -63,26 +47,20 @@ const LoginWithLeftBackground = () => {
         emailValid: true,
         passwordValid: true,
     });
-    const onSubmit = (data) => {
-        const user = USERS.find((element) => element.email === data.email);
-        if (user) {
-            if (user.password !== data.password)
-                setValidated({ emailValid: true, passwordValid: false });
-            else {
-                setValidated({ emailValid: true, passwordValid: true });
-                toast.show({
-                    placement: "bottom right",
-                    render: ({ id }) => {
-                        return (<Toast nativeID={id} variant="accent" action="success">
-                <ToastTitle>Logged in successfully!</ToastTitle>
-              </Toast>);
-                    },
-                });
-                reset();
-            }
+    const onSubmit = async (data) => {
+        const response = await userAuthentication(data.email, data.password);
+        if (response.success) {
+            toast.show({
+                placement: "bottom right",
+                render: ({ id }) => (<Toast nativeID={id} variant="accent" action="success">
+            <ToastTitle>Logged in successfully!</ToastTitle>
+          </Toast>),
+            });
+            router.push('/dashboard/dashboard-layout');
+            reset();
         }
         else {
-            setValidated({ emailValid: false, passwordValid: true });
+            setValidated({ emailValid: false, passwordValid: false });
         }
     };
     const [showPassword, setShowPassword] = useState(false);
@@ -96,7 +74,7 @@ const LoginWithLeftBackground = () => {
         handleSubmit(onSubmit)();
     };
     const router = useRouter();
-    return (<>
+    return (<VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
         <Pressable onPress={() => {
             router.back();
@@ -184,12 +162,6 @@ const LoginWithLeftBackground = () => {
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
             <ButtonText className="font-medium">Log in</ButtonText>
           </Button>
-          <Button variant="outline" action="secondary" className="w-full gap-1" onPress={() => { }}>
-            <ButtonText className="font-medium">
-              Continue with Google
-            </ButtonText>
-            <ButtonIcon as={GoogleIcon}/>
-          </Button>
         </VStack>
         <HStack className="self-center ">
           <Text size="md">Don't have an account?</Text>
@@ -200,7 +172,7 @@ const LoginWithLeftBackground = () => {
           </Link>
         </HStack>
       </VStack>
-    </>);
+    </VStack>);
 };
 export const SignIn = () => {
     return (<AuthLayout>

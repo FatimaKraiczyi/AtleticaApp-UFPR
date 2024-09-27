@@ -34,7 +34,6 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
-import { GoogleIcon } from "./assets/icons/google";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
@@ -303,17 +302,6 @@ const SignUpWithLeftBackground = () => {
         <VStack className="w-full my-7" space="lg">
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
             <ButtonText className="font-medium">Sign up</ButtonText>
-          </Button>
-          <Button
-            variant="outline"
-            action="secondary"
-            className="w-full gap-1"
-            onPress={() => {}}
-          >
-            <ButtonText className="font-medium">
-              Continue with Google
-            </ButtonText>
-            <ButtonIcon as={GoogleIcon} />
           </Button>
         </VStack>
         <HStack className="self-center">

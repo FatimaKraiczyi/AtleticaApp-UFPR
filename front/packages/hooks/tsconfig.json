@@ -5,7 +5,7 @@
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "noEmit": false,
-    "declaration": true,
+    "declaration": false,
     "allowJs": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": true,
