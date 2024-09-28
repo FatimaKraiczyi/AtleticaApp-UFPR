@@ -238,7 +238,7 @@ const LoginWithLeftBackground = () => {
         </VStack>
         <HStack className="self-center ">
           <Text size="md">Não tem cadastro?</Text>
-          <Link href="/auth/signup">
+          <Link href="/auth/email">
             <LinkText
               className="font-medium text-primary-700 ml-1 group-hover/link:text-primary-600  group-hover/pressed:text-primary-700"
               size="md"
