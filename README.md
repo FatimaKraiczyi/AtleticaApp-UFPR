@@ -6,12 +6,18 @@
 
 ```bash
 https://github.com/FatimaKraiczyi/AtleticaApp-UFPR.git
-cd AtleticaApp-UFPR
+
 ```
 
 2. Install dependencies:
 
-Go to `front` folder and run the following command:
+Go to 
+```bash
+cd AtleticaApp-UFPR
+cd front
+```
+
+ and run the following command:
 
 ```bash
 yarn
@@ -24,7 +30,7 @@ yarn
 To run expo app, run the following command:
 
 ```bash
-cd apps/expo-app && yarn expo start
+cd apps/expo-app && yarn expo start -c
 ```
 
 #### Next.js

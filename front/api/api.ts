@@ -1,13 +1,36 @@
 import axios from "axios";
-import { IResponse } from "../interfaces";
+import type { IResponse } from "../interfaces"; // Use 'import type'
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Importa AsyncStorage
+import { Platform } from 'react-native'; // Adicione isso
+import * as Network from 'expo-network';
 
-const API = axios.create({
-  baseURL: "http://localhost:3001",
-});
+// Cria uma instância do Axios
+const API = axios.create();
 
+// Função assíncrona para obter o endereço IP
+const getIpAddress = async (): Promise<string | null> => {
+  const ipAddress = await Network.getIpAddressAsync();
+  console.log('IP Address:', ipAddress); // Log do IP
+  return ipAddress; // Retorna o IP ou null se não houver
+};
+
+// Interceptor de requisições
 API.interceptors.request.use(
-  (config) => {
-    const token = sessionStorage.getItem('authToken');
+  async (config) => {
+    // Obtem o IP dinâmico e define a baseURL
+    const ipAddress = await getIpAddress();
+    config.baseURL = Platform.OS === 'web' ? "http://localhost:3001" : `http://${'192.168.15.6'}:3001`;
+    console.log('Base URL:', config.baseURL); // Log da baseURL
+
+    // Configuração do token
+    let token: string | null = null;
+
+    if (Platform.OS === 'web') {
+      token = sessionStorage.getItem('authToken');
+    } else {
+      token = await AsyncStorage.getItem("x-access-token");
+    }
+
     if (token) {
       config.headers['x-access-token'] = token;
     }
@@ -18,7 +41,7 @@ API.interceptors.request.use(
   }
 );
 
-
+// Configurações de captura de erros
 const objectCatch: IResponse.Default<undefined> = {
   data: undefined,
   success: false,
@@ -31,4 +54,4 @@ const arrayCatch: IResponse.Default<[]> = {
   message: 'Falha na requisição, tente novamente.'
 }
 
-export { API, objectCatch, arrayCatch }
+export { API, objectCatch, arrayCatch };

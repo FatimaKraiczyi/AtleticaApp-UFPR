@@ -37,7 +37,7 @@ import { AlertTriangle } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-import {userAuthentication} from "../../../../api/users"
+import { userAuthentication } from "../../../../api/users";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email(),
@@ -48,12 +48,20 @@ const loginSchema = z.object({
 type LoginSchemaType = z.infer<typeof loginSchema>;
 
 const LoginWithLeftBackground = () => {
-  const { control, handleSubmit, reset, formState: { errors } } = useForm<LoginSchemaType>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
   });
   const toast = useToast();
   const router = useRouter();
-  const [validated, setValidated] = useState({ emailValid: true, passwordValid: true });
+  const [validated, setValidated] = useState({
+    emailValid: true,
+    passwordValid: true,
+  });
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: LoginSchemaType) => {
@@ -68,7 +76,7 @@ const LoginWithLeftBackground = () => {
           </Toast>
         ),
       });
-      router.push('/dashboard/dashboard-layout');
+      router.push("/dashboard/dashboard-layout");
       reset();
     } else {
       setValidated({ emailValid: false, passwordValid: false });

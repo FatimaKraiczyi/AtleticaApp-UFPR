@@ -105,7 +105,7 @@ interface ColleaguesCardData {
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
+    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
     title: "Update your profile",
     description: "Add your details",
   },
@@ -323,7 +323,7 @@ function MobileHeader(props: MobileHeaderProps) {
   const router = useRouter();
   return (
     <HStack
-      className="py-6 px-4 border-b border-border-50 bg-background-0 items-center"
+      className="py-4 px-4 mt-10 border-b border-border-50 bg-background-0 items-center"
       space="md"
     >
       <Pressable

@@ -100,7 +100,7 @@ interface CreatorData {
 
 const WORLD_DATA: BlogData[] = [
   {
-    bannerUri: require("@/assets/news-feed/news-and-feed/image3.png"),
+    bannerUri: require("@/shared/assets/news-feed/news-and-feed/image3.png"),
     title: "The Power of Positive Thinking",
     description:
       "Discover how the power of positive thinking can transform your life, boost your confidence, and help you overcome challenges. Explore practical tips and techniques to cultivate a positive mindset for greater happiness and success.",

@@ -1,19 +1,17 @@
 import React, { useEffect } from "react";
 import { router } from "expo-router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { Text } from "react-native";
 import SignIn from "./auth/signin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const index = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
-      const token = await sessionStorage.getItem("x-access-token");
-      
+      const token = await AsyncStorage.getItem("x-access-token"); 
+
       if (token) {
-        // Se o token estiver presente, redireciona para o dashboard
         router.replace("dashboard/dashboard-layout");
       } else {
-        // Caso contrário, redireciona para a tela de login
         router.replace("auth/signin");
       }
     };
