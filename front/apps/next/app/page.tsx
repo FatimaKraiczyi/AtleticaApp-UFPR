@@ -9,10 +9,8 @@ const Page = () => {
     const token = sessionStorage.getItem("x-access-token");
     
     if (token) {
-      // Redireciona para o dashboard se o usuário já estiver logado
       router.replace("dashboard/dashboard-layout");
     } else {
-      // Caso contrário, redireciona para a página de login
       router.replace("auth/signin");
     }
   }, [router]);
