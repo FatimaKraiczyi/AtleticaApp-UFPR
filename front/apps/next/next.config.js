@@ -2,7 +2,7 @@
 const { DefinePlugin } = require("webpack");
 
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   transpilePackages: [
     "@gluestack-ui/nativewind-utils",
     "nativewind",

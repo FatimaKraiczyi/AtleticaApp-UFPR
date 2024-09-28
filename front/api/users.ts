@@ -3,7 +3,7 @@ import type { UserProps } from "../interfaces/users";
 import { API, objectCatch } from './api';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from 'react-native';
-import { userAuthentication as userAuthenticationEndpoint, sendEmail, validateToken } from "./routes/user";
+import { userAuthentication as userAuthenticationEndpoint, sendEmail, validateToken } from "./routes/routes";
 
 export const userAuthentication = async (
   email: string,

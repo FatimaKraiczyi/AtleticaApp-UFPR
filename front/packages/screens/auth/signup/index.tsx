@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
@@ -28,38 +28,59 @@ import {
   EyeOffIcon,
   Icon,
 } from "@/components/ui/icon";
-import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle } from "lucide-react-native";
+import { AlertTriangle, ChevronDownIcon } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
+import axios from "axios";
 import { AuthLayout } from "../layout";
+import {
+  Select,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectItem,
+  SelectItemText,
+  SelectPortal,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { getCursos } from "../../../../api/cursos";
+import { CursoProps } from "../../../../interfaces/cursos";
 
 const signUpSchema = z.object({
-  email: z.string().min(1, "Email is required").email(),
   password: z
     .string()
-    .min(6, "Must be at least 8 characters in length")
-    .regex(new RegExp(".*[A-Z].*"), "One uppercase character")
-    .regex(new RegExp(".*[a-z].*"), "One lowercase character")
-    .regex(new RegExp(".*\\d.*"), "One number")
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .regex(
+      new RegExp(".*[A-Z].*"),
+      "Deve conter pelo menos uma letra maiúscula"
+    )
+    .regex(
+      new RegExp(".*[a-z].*"),
+      "Deve conter pelo menos uma letra minúscula"
+    )
+    .regex(new RegExp(".*\\d.*"), "Deve conter pelo menos um número")
     .regex(
       new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "One special character"
+      "Deve conter pelo menos um caractere especial"
     ),
-  confirmpassword: z
+  confirmpassword: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
+  curso: z.string().min(1, "Curso é obrigatório"),
+  telefone: z
     .string()
-    .min(6, "Must be at least 8 characters in length")
-    .regex(new RegExp(".*[A-Z].*"), "One uppercase character")
-    .regex(new RegExp(".*[a-z].*"), "One lowercase character")
-    .regex(new RegExp(".*\\d.*"), "One number")
-    .regex(
-      new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "One special character"
-    ),
+    .min(11, "Telefone é obrigatório")
+    .regex(/^\(\d{2}\) \d{5}-\d{4}$/, "Formato de telefone inválido"),
+  dataNascimento: z
+    .string()
+    .min(8, "Data de nascimento é obrigatória")
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Formato de data inválido"),
   rememberme: z.boolean().optional(),
 });
 type SignUpSchemaType = z.infer<typeof signUpSchema>;
@@ -74,6 +95,20 @@ const SignUpWithLeftBackground = () => {
     resolver: zodResolver(signUpSchema),
   });
   const toast = useToast();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [cursos, setCursos] = useState<CursoProps[]>([]);
+
+  useEffect(() => {
+    const fetchCursos = async () => {
+      const response = await getCursos();
+      if (response.success) {
+        setCursos(response.data ?? []);
+      }
+    };
+    fetchCursos();
+  }, []);
 
   const onSubmit = (data: SignUpSchemaType) => {
     if (data.password === data.confirmpassword) {
@@ -101,24 +136,19 @@ const SignUpWithLeftBackground = () => {
       });
     }
   };
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleState = () => {
-    setShowPassword((showState) => {
-      return !showState;
-    });
+    setShowPassword((showState) => !showState);
   };
   const handleConfirmPwState = () => {
-    setShowConfirmPassword((showState) => {
-      return !showState;
-    });
+    setShowConfirmPassword((showState) => !showState);
   };
   const handleKeyPress = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();
   };
   const router = useRouter();
+
   return (
     <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
@@ -142,46 +172,6 @@ const SignUpWithLeftBackground = () => {
       </VStack>
       <VStack className="w-full">
         <VStack space="xl" className="w-full">
-          <FormControl isInvalid={!!errors.email}>
-            <FormControlLabel>
-              <FormControlLabelText>Email</FormControlLabelText>
-            </FormControlLabel>
-            <Controller
-              name="email"
-              defaultValue=""
-              control={control}
-              rules={{
-                validate: async (value) => {
-                  try {
-                    await signUpSchema.parseAsync({ email: value });
-                    return true;
-                  } catch (error: any) {
-                    return error.message;
-                  }
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input>
-                  <InputField
-                    className="text-sm"
-                    placeholder="Email"
-                    type="text"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
-                  />
-                </Input>
-              )}
-            />
-            <FormControlError>
-              <FormControlErrorIcon size="md" as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.email?.message}
-              </FormControlErrorText>
-            </FormControlError>
-          </FormControl>
           <FormControl isInvalid={!!errors.password}>
             <FormControlLabel>
               <FormControlLabelText>Password</FormControlLabelText>
@@ -276,6 +266,108 @@ const SignUpWithLeftBackground = () => {
             </FormControlError>
           </FormControl>
 
+          <FormControl isInvalid={!!errors.curso}>
+            <FormControlLabel>
+              <FormControlLabelText>Curso</FormControlLabelText>
+            </FormControlLabel>
+            <Controller
+              name="curso"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Select selectedValue={value} onValueChange={onChange}>
+                  <SelectTrigger variant="outline" size="md">
+                    <SelectInput placeholder="Selecione um curso" />
+                    <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                  </SelectTrigger>
+                  <SelectPortal>
+                    <SelectBackdrop />
+                    <SelectContent>
+                      <SelectDragIndicatorWrapper>
+                        <SelectDragIndicator />
+                      </SelectDragIndicatorWrapper>
+                      {cursos.map((curso) => (
+                        <SelectItem
+                          key={curso.id}
+                          value={String(curso.id)}
+                          label={curso.nome}
+                        />
+                      ))}
+                    </SelectContent>
+                  </SelectPortal>
+                </Select>
+              )}
+            />
+            <FormControlError>
+              <FormControlErrorIcon size="sm" as={AlertTriangle} />
+              <FormControlErrorText>
+                {errors?.curso?.message}
+              </FormControlErrorText>
+            </FormControlError>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.telefone}>
+            <FormControlLabel>
+              <FormControlLabelText>Telefone</FormControlLabelText>
+            </FormControlLabel>
+            <Controller
+              name="telefone"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input>
+                  <InputField
+                    className="text-sm"
+                    placeholder="(xx) xxxxx-xxxx"
+                    value={value}
+                    keyboardType="phone-pad"
+                    onChangeText={(text) => {
+                      const formatted = text
+                        .replace(/\D/g, "")
+                        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                      onChange(formatted);
+                    }}
+                  />
+                </Input>
+              )}
+            />
+            <FormControlError>
+              <FormControlErrorIcon size="sm" as={AlertTriangle} />
+              <FormControlErrorText>
+                {errors?.telefone?.message}
+              </FormControlErrorText>
+            </FormControlError>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.dataNascimento}>
+            <FormControlLabel>
+              <FormControlLabelText>Data de Nascimento</FormControlLabelText>
+            </FormControlLabel>
+            <Controller
+              name="dataNascimento"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Input>
+                  <InputField
+                    className="text-sm"
+                    placeholder="dd/mm/aaaa"
+                    value={value}
+                    keyboardType="numeric"
+                    onChangeText={(text) => {
+                      const formatted = text
+                        .replace(/\D/g, "")
+                        .replace(/(\d{2})(\d{2})(\d{4})/, "$1/$2/$3");
+                      onChange(formatted);
+                    }}
+                  />
+                </Input>
+              )}
+            />
+            <FormControlError>
+              <FormControlErrorIcon size="sm" as={AlertTriangle} />
+              <FormControlErrorText>
+                {errors?.dataNascimento?.message}
+              </FormControlErrorText>
+            </FormControlError>
+          </FormControl>
           <Controller
             name="rememberme"
             defaultValue={false}
