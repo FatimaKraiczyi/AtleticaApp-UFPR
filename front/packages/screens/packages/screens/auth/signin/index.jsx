@@ -39,7 +39,7 @@ const LoginWithLeftBackground = () => {
             toast.show({
                 placement: "bottom right",
                 render: ({ id }) => (<Toast nativeID={id} variant="accent" action="success">
-            <ToastTitle>Logged in successfully!</ToastTitle>
+            <ToastTitle>Logado com sucesso!</ToastTitle>
           </Toast>),
             });
             router.push('/dashboard/dashboard-layout');
@@ -67,9 +67,8 @@ const LoginWithLeftBackground = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Log in
+            Seja Bem Vindo!
           </Heading>
-          <Text>Login to start using gluestack</Text>
         </VStack>
       </VStack>
       <VStack className="w-full">
@@ -89,20 +88,20 @@ const LoginWithLeftBackground = () => {
                 }
             },
         }} render={({ field: { onChange, onBlur, value } }) => (<Input>
-                  <InputField placeholder="Enter email" value={value} onChangeText={onChange} onBlur={onBlur} onSubmitEditing={handleKeyPress} returnKeyType="done"/>
+                  <InputField placeholder="Informe o email" value={value} onChangeText={onChange} onBlur={onBlur} onSubmitEditing={handleKeyPress} returnKeyType="done"/>
                 </Input>)}/>
             <FormControlError>
               <FormControlErrorIcon as={AlertTriangle}/>
               <FormControlErrorText>
                 {errors?.email?.message ||
-            (!validated.emailValid && "Email ID not found")}
+            (!validated.emailValid && "email invalido")}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>
           {/* Label Message */}
           <FormControl isInvalid={!!errors.password || !validated.passwordValid} className="w-full">
             <FormControlLabel>
-              <FormControlLabelText>Password</FormControlLabelText>
+              <FormControlLabelText>Senha</FormControlLabelText>
             </FormControlLabel>
             <Controller defaultValue="" name="password" control={control} rules={{
             validate: async (value) => {
@@ -115,7 +114,7 @@ const LoginWithLeftBackground = () => {
                 }
             },
         }} render={({ field: { onChange, onBlur, value } }) => (<Input>
-                  <InputField type={showPassword ? "text" : "password"} placeholder="Enter password" value={value} onChangeText={onChange} onBlur={onBlur} onSubmitEditing={handleKeyPress} returnKeyType="done"/>
+                  <InputField type={showPassword ? "text" : "password"} placeholder="Informe a senha" value={value} onChangeText={onChange} onBlur={onBlur} onSubmitEditing={handleKeyPress} returnKeyType="done"/>
                   <InputSlot onPress={handleState} className="pr-3">
                     <InputIcon as={showPassword ? EyeIcon : EyeOffIcon}/>
                   </InputSlot>
@@ -124,7 +123,7 @@ const LoginWithLeftBackground = () => {
               <FormControlErrorIcon as={AlertTriangle}/>
               <FormControlErrorText>
                 {errors?.password?.message ||
-            (!validated.passwordValid && "Password was incorrect")}
+            (!validated.passwordValid && "senha invalida")}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>
@@ -133,25 +132,25 @@ const LoginWithLeftBackground = () => {
                   <CheckboxIndicator>
                     <CheckboxIcon as={CheckIcon}/>
                   </CheckboxIndicator>
-                  <CheckboxLabel>Remember me</CheckboxLabel>
+                  <CheckboxLabel>Salvar dados de login</CheckboxLabel>
                 </Checkbox>)}/>
             <Link href="/auth/forgot-password">
               <LinkText className="font-medium text-sm text-primary-700 group-hover/link:text-primary-600">
-                Forgot Password?
+                Esqueceu a senha?
               </LinkText>
             </Link>
           </HStack>
         </VStack>
         <VStack className="w-full my-7 " space="lg">
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-            <ButtonText className="font-medium">Log in</ButtonText>
+            <ButtonText className="font-medium">Acessar</ButtonText>
           </Button>
         </VStack>
         <HStack className="self-center ">
-          <Text size="md">Don't have an account?</Text>
+          <Text size="md">Não tem cadastro?</Text>
           <Link href="/auth/signup">
             <LinkText className="font-medium text-primary-700 ml-1 group-hover/link:text-primary-600  group-hover/pressed:text-primary-700" size="md">
-              Sign up
+              Realizar cadastro
             </LinkText>
           </Link>
         </HStack>
