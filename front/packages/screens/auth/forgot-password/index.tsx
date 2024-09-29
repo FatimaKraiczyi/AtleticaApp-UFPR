@@ -21,6 +21,7 @@ import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
 import { Pressable } from "@/components/ui/pressable";
 import { AuthLayout } from "../layout";
+import { resetPasswordResquet } from "../../../../api/users";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "Email is required").email(),
@@ -39,19 +40,35 @@ const ForgotPasswordScreen = () => {
   });
   const toast = useToast();
 
-  const onSubmit = (_data: forgotPasswordSchemaType) => {
-    toast.show({
-      placement: "bottom right",
-      render: ({ id }) => {
-        return (
-          <Toast nativeID={id} variant="accent" action="success">
-            <ToastTitle>Link Sent Successfully</ToastTitle>
-          </Toast>
-        );
-      },
-    });
-    reset();
-  };
+  const onSubmit = async (_data: forgotPasswordSchemaType) => {
+    const response = await resetPasswordResquet (_data.email);
+
+      if(response.success){
+        toast.show({
+          placement: "bottom right",
+          render: ({ id }) => {
+            return (
+              <Toast nativeID={id} variant="accent" action="success">
+                <ToastTitle>Link enviado com sucesso ao seu email</ToastTitle>
+              </Toast>
+            );
+          },
+        });
+        reset();
+      }else{
+        toast.show({
+          placement: "bottom right",
+          render: ({ id }) => {
+            return (
+              <Toast nativeID={id} variant="accent" action="error">
+                <ToastTitle>Email não cadastrado</ToastTitle>
+              </Toast>
+            );
+          },
+        });
+      }
+    };
+    
 
   const handleKeyPress = () => {
     Keyboard.dismiss();
@@ -74,11 +91,8 @@ const ForgotPasswordScreen = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Forgot Password?
+            Solicitação de Recuperação de Senha
           </Heading>
-          <Text className="text-sm">
-            Enter email ID associated with your account.
-          </Text>
         </VStack>
       </VStack>
 
@@ -104,7 +118,7 @@ const ForgotPasswordScreen = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <Input>
                 <InputField
-                  placeholder="Enter email"
+                  placeholder="Informe o email"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -122,7 +136,7 @@ const ForgotPasswordScreen = () => {
           </FormControlError>
         </FormControl>
         <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-          <ButtonText className="font-medium">Send Link</ButtonText>
+          <ButtonText className="font-medium">Enviar</ButtonText>
         </Button>
       </VStack>
     </VStack>
@@ -136,3 +150,4 @@ export const ForgotPassword = () => {
     </AuthLayout>
   );
 };
+

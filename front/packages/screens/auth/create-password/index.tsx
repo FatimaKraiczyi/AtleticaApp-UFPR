@@ -22,6 +22,7 @@ import { AlertTriangle } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
+import { newPasswordResquet } from "../../../../api/users";
 
 const createPasswordSchema = z.object({
   password: z
@@ -59,14 +60,16 @@ const CreatePasswordWithLeftBackground = () => {
   });
   const toast = useToast();
 
-  const onSubmit = (data: CreatePasswordSchemaType) => {
+  const onSubmit = async (data: CreatePasswordSchemaType) => {
+    const response = await newPasswordResquet (data.password, data.confirmpassword);
+
     if (data.password === data.confirmpassword) {
       toast.show({
         placement: "bottom right",
         render: ({ id }) => {
           return (
             <Toast nativeID={id} variant="accent" action="success">
-              <ToastTitle>Success</ToastTitle>
+              <ToastTitle>Senha criada com sucesso</ToastTitle>
             </Toast>
           );
         },
@@ -78,7 +81,7 @@ const CreatePasswordWithLeftBackground = () => {
         render: ({ id }) => {
           return (
             <Toast nativeID={id} variant="accent" action="error">
-              <ToastTitle>Passwords do not match</ToastTitle>
+              <ToastTitle>Senhas não correspondem</ToastTitle>
             </Toast>
           );
         },
@@ -119,18 +122,15 @@ const CreatePasswordWithLeftBackground = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Create new password
+            Criar nova senha
           </Heading>
-          <Text className="md:text-center">
-            Your new password must be different from previously used passwords{" "}
-          </Text>
         </VStack>
       </VStack>
       <VStack className="w-full">
         <VStack space="xl" className="w-full">
           <FormControl isInvalid={!!errors.password}>
             <FormControlLabel>
-              <FormControlLabelText>Password</FormControlLabelText>
+              <FormControlLabelText>Senha</FormControlLabelText>
             </FormControlLabel>
             <Controller
               defaultValue=""
@@ -152,7 +152,7 @@ const CreatePasswordWithLeftBackground = () => {
                 <Input>
                   <InputField
                     className="text-sm"
-                    placeholder="Password"
+                    placeholder="Nova senha"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -173,14 +173,11 @@ const CreatePasswordWithLeftBackground = () => {
               </FormControlErrorText>
             </FormControlError>
             <FormControlLabel>
-              <FormControlLabelText className="text-typography-500">
-                Must be atleast 8 characters
-              </FormControlLabelText>
             </FormControlLabel>
           </FormControl>
           <FormControl isInvalid={!!errors.confirmpassword}>
             <FormControlLabel>
-              <FormControlLabelText>Confirm Password</FormControlLabelText>
+              <FormControlLabelText>Repita a senha</FormControlLabelText>
             </FormControlLabel>
             <Controller
               defaultValue=""
@@ -201,7 +198,7 @@ const CreatePasswordWithLeftBackground = () => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input>
                   <InputField
-                    placeholder="Confirm Password"
+                    placeholder="Repita a senha"
                     className="text-sm"
                     value={value}
                     onChangeText={onChange}
@@ -226,16 +223,13 @@ const CreatePasswordWithLeftBackground = () => {
               </FormControlErrorText>
             </FormControlError>
             <FormControlLabel>
-              <FormControlLabelText className="text-typography-500">
-                Both passwords must match
-              </FormControlLabelText>
             </FormControlLabel>
           </FormControl>
         </VStack>
 
         <VStack className="mt-7 w-full">
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-            <ButtonText className="font-medium">Update Password</ButtonText>
+            <ButtonText className="font-medium">Atualizar senha</ButtonText>
           </Button>
         </VStack>
       </VStack>

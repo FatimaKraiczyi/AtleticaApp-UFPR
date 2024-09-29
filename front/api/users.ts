@@ -3,7 +3,7 @@ import type { UserProps } from "../interfaces/users";
 import { API, objectCatch } from './api';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from 'react-native';
-import { userAuthentication as userAuthenticationEndpoint, sendEmail, validateToken } from "./routes/routes";
+import { userAuthentication as userAuthenticationEndpoint, sendEmail, validateToken, resetPassword, password } from "./routes/routes";
 
 export const userAuthentication = async (
   email: string,
@@ -43,6 +43,32 @@ export const sendEmailRequest = async (
 export const validateUserToken = async (token: string): Promise<IResponse.Default<null>> => {
   try {
     const { data, status } = await API.post(validateToken, { token });
+    return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+export const resetPasswordResquet = async (
+  email: string,
+): Promise<IResponse.Default<null>> => {
+  try {
+    const { data, status } = await API.post(resetPassword, { email });
+
+    return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+
+export const newPasswordResquet = async (
+  password: string,
+  confirmpassword: string,
+): Promise<IResponse.Default<null>> => {
+  try {
+    const { data, status } = await API.put(password, { password, confirmpassword });
+
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };

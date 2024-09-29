@@ -129,7 +129,7 @@ const SignUpWithLeftBackground = () => {
         render: ({ id }) => {
           return (
             <Toast nativeID={id} variant="accent" action="error">
-              <ToastTitle>Passwords do not match</ToastTitle>
+              <ToastTitle>Senhas diferentes</ToastTitle>
             </Toast>
           );
         },
@@ -174,7 +174,7 @@ const SignUpWithLeftBackground = () => {
         <VStack space="xl" className="w-full">
           <FormControl isInvalid={!!errors.password}>
             <FormControlLabel>
-              <FormControlLabelText>Password</FormControlLabelText>
+              <FormControlLabelText>Senha</FormControlLabelText>
             </FormControlLabel>
             <Controller
               defaultValue=""
@@ -196,7 +196,7 @@ const SignUpWithLeftBackground = () => {
                 <Input>
                   <InputField
                     className="text-sm"
-                    placeholder="Password"
+                    placeholder="Senha"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -219,7 +219,7 @@ const SignUpWithLeftBackground = () => {
           </FormControl>
           <FormControl isInvalid={!!errors.confirmpassword}>
             <FormControlLabel>
-              <FormControlLabelText>Confirm Password</FormControlLabelText>
+              <FormControlLabelText>Confirmar senha</FormControlLabelText>
             </FormControlLabel>
             <Controller
               defaultValue=""
@@ -240,7 +240,7 @@ const SignUpWithLeftBackground = () => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input>
                   <InputField
-                    placeholder="Confirm Password"
+                    placeholder="Confirmar Senha"
                     className="text-sm"
                     value={value}
                     onChangeText={onChange}
