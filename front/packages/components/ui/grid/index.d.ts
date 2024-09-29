@@ -10,7 +10,7 @@ declare const Grid: React.ForwardRefExoticComponent<import("react-native").ViewP
     paddingRight?: number | undefined;
     paddingStart?: number | undefined;
     paddingEnd?: number | undefined;
-    _extra: {
+    _extra?: {
         className: string;
     };
 } & React.RefAttributes<unknown>>;
