@@ -5,5 +5,5 @@ repSenha?: string;
 token?: string;
 telefone?: string;
 dataNasc?: string;
-idCurso?: number | string;
+cursoId?: number | string;
 }

@@ -21,7 +21,7 @@ import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
 import { Pressable } from "@/components/ui/pressable";
 import { AuthLayout } from "../layout";
-import { resetPasswordResquet } from "../../../../api/users";
+import { resetPasswordRequest } from "../../../../api/users";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "Email is required").email(),
@@ -41,7 +41,7 @@ const ForgotPasswordScreen = () => {
   const toast = useToast();
 
   const onSubmit = async (_data: forgotPasswordSchemaType) => {
-    const response = await resetPasswordResquet (_data.email);
+    const response = await resetPasswordRequest (_data.email);
 
       if(response.success){
         toast.show({

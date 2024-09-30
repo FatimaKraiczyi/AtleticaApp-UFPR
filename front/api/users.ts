@@ -3,7 +3,8 @@ import type { UserProps } from "../interfaces/users";
 import { API, objectCatch } from './api';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from 'react-native';
-import { userAuthentication as userAuthenticationEndpoint, sendEmail, validateToken, resetPassword, password } from "./routes/routes";
+import { userAuthenticationEndpoint, sendEmail, validateToken, resetPassword, password, createUserEndpoint } from "./routes/routes";
+import { getToken } from "./token";
 
 export const userAuthentication = async (
   email: string,
@@ -14,10 +15,11 @@ export const userAuthentication = async (
 
     if (status === 200 && data && data.token) {
       if (Platform.OS === 'web') {
-        sessionStorage.setItem('authToken', data.token);
+        sessionStorage.setItem('x-access-token', data.token);
       } else {
         await AsyncStorage.setItem("x-access-token", data.token);
       }
+      console.log("Token armazenado:", data.token); // Adicione este log para verificar se o token foi armazenado.
     }
 
     return { data, success: status === 200 };
@@ -43,13 +45,22 @@ export const sendEmailRequest = async (
 export const validateUserToken = async (token: string): Promise<IResponse.Default<null>> => {
   try {
     const { data, status } = await API.post(validateToken, { token });
+
+    if (status === 200) {
+      if (Platform.OS === 'web') {
+        sessionStorage.setItem('x-access-token', token);
+      } else {
+        await AsyncStorage.setItem("x-access-token", token);
+      }
+    }
+
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
   }
 };
 
-export const resetPasswordResquet = async (
+export const resetPasswordRequest = async (
   email: string,
 ): Promise<IResponse.Default<null>> => {
   try {
@@ -61,15 +72,37 @@ export const resetPasswordResquet = async (
   }
 };
 
-
-export const newPasswordResquet = async (
-  password: string,
-  confirmpassword: string,
+export const newPasswordRequest = async (
+  senha: string,
+  repSenha: string,
 ): Promise<IResponse.Default<null>> => {
   try {
-    const { data, status } = await API.put(password, { password, confirmpassword });
+    const { data, status } = await API.put(password, { senha, repSenha });
 
     return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+export const createUser = async (user: UserProps): Promise<IResponse.Default<UserProps>> => {
+  try {
+    const token = await getToken();
+    if (!token) {
+      throw new Error("Token não encontrado");
+    }
+
+    const { data, status } = await API.post(
+      createUserEndpoint,
+      { ...user },
+      {
+        headers: {
+          'x-access-token': token,
+        },
+      }
+    );
+
+    return { data, success: status === 201 };
   } catch (error) {
     return { ...objectCatch };
   }

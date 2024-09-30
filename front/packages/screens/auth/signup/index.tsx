@@ -53,6 +53,9 @@ import {
 } from "@/components/ui/select";
 import { getCursos } from "../../../../api/cursos";
 import { CursoProps } from "../../../../interfaces/cursos";
+import { createUser } from "../../../../api/users";
+import { UserProps } from "../../../../interfaces/users";
+import { createUserError } from "../../../../api/errors/usersErrors";
 
 const signUpSchema = z.object({
   password: z
@@ -110,31 +113,44 @@ const SignUpWithLeftBackground = () => {
     fetchCursos();
   }, []);
 
-  const onSubmit = (data: SignUpSchemaType) => {
+  const onSubmit = async (data: SignUpSchemaType) => {
     if (data.password === data.confirmpassword) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => {
-          return (
+      const [day, month, year] = data.dataNascimento.split("/");
+      const formattedDate = `${day}-${month}-${year}`;
+
+      const user: UserProps = {
+        senha: data.password,
+        repSenha: data.confirmpassword,
+        cursoId: data.curso,
+        telefone: data.telefone.replace(/\D/g, ""),
+        dataNasc: formattedDate,
+      };
+
+      const response = await createUser(user);
+
+      if (response.success) {
+        toast.show({
+          placement: "bottom right",
+          render: ({ id }) => (
             <Toast nativeID={id} variant="accent" action="success">
-              <ToastTitle>Success</ToastTitle>
+              <ToastTitle>Usuário criado com sucesso!</ToastTitle>
             </Toast>
-          );
-        },
-      });
-      reset();
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => {
-          return (
-            <Toast nativeID={id} variant="accent" action="error">
-              <ToastTitle>Senhas diferentes</ToastTitle>
+          ),
+        });
+        router.push("/auth/signin");
+        reset();
+      } else {
+        const { errorMessage } = createUserError(response);
+        toast.show({
+          placement: "bottom right",
+          render: ({ id }) => (
+            <Toast nativeID={id} variant="error" action="error">
+              <ToastTitle>{errorMessage}</ToastTitle>
             </Toast>
-          );
-        },
-      });
-    }
+          ),
+        });
+      }
+    } 
   };
 
   const handleState = () => {
