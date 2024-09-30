@@ -1,7 +1,13 @@
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
-import { ChevronLeftIcon, Icon, MenuIcon, ChevronRightIcon } from "@/components/ui/icon";
+import {
+  ChevronLeftIcon,
+  EditIcon,
+  Icon,
+  MenuIcon,
+  TrashIcon,
+} from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
@@ -24,6 +30,7 @@ import { ProfileIcon } from "../assets/profile";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { cn } from "@gluestack-ui/nativewind-utils/cn";
 import { Platform } from "react-native";
+import { Button, ButtonText } from "@/components/ui/button";
 
 type MobileHeaderProps = {
   title: string;
@@ -80,6 +87,7 @@ const bottomTabsList: BottomTabs[] = [
 ];
 
 interface CardData {
+  id: number;
   bannerUri: string;
   title: string;
   description: string;
@@ -87,34 +95,22 @@ interface CardData {
 
 const HeadingCards: CardData[] = [
   {
+    id: 1,
     bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
-    title: "Jogos",
+    title: "Atletica 1",
     description: "Add your details",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image2.png"),
-    title: "Festas",
-    description: "Add your skills here",
+    id: 2,
+    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
+    title: "Atletica 2",
+    description: "Add your details",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
-    title: "Produtos",
-    description: "Set a target to accomplish",
-  },
-  {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
-    title: "Planos de assinatura",
-    description: "Set a target to accomplish",
-  },
-  {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
-    title: "Admin Atlética",
-    description: "Set a target to accomplish",
-  },
-  {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
-    title: "Gerenciar Atléticas",
-    description: "Set a target to accomplish",
+    id: 3,
+    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
+    title: "Atletica 3",
+    description: "Add your details",
   },
 ];
 
@@ -152,7 +148,7 @@ const Sidebar = () => {
   );
 };
 
-const DashboardLayout = (props: any) => {
+const Atleticas = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
     props.isSidebarVisible
   );
@@ -251,9 +247,9 @@ function MobileHeader(props: MobileHeaderProps) {
 const MainContent = () => {
   const router = useRouter();
 
-  const handleCardPress = () => {
+  const handleCardPress = (id: number) => {
     // Navegar para a página correspondente ao título do card
-    router.push("/dashboard/gerenciar-atleticas");
+    router.push(`/dashboard/gerenciar-atletica/${id}`);
   };
 
   return (
@@ -271,6 +267,12 @@ const MainContent = () => {
             Welcome Alexander
           </Heading>
 
+          <VStack space="lg" className="items-center">
+            <Button className="gap-3 relative">
+              <ButtonText>Cadastrar Atlética</ButtonText>
+            </Button>
+          </VStack>
+
           <Grid className="gap-5">
             {HeadingCards.map((item, index) => {
               return (
@@ -280,28 +282,47 @@ const MainContent = () => {
                   }}
                   key={index}
                 >
-                  <HStack
+                  <VStack
                     space="md"
-                    className="border border-border-300 rounded-lg p-4 items-center justify-between"
+                    className="border border-border-300 rounded-lg p-4"
                   >
-                    <HStack space="xl" className="items-center">
-                      <Avatar>
-                        <AvatarImage
-                          //@ts-ignore
-                          source={item.bannerUri}
-                        />
-                      </Avatar>
-                      <VStack>
-                        <Text className="font-semibold text-typography-900 line-clamp-1">
-                          {item.title}
-                        </Text>
-                        <Text className="line-clamp-1">{item.description}</Text>
-                      </VStack>
+                    <HStack space="xl" className="items-center justify-between">
+                      <HStack space="xl" className="items-center">
+                        <Avatar>
+                          <AvatarImage
+                            //@ts-ignore
+                            source={item.bannerUri}
+                          />
+                        </Avatar>
+                        <VStack>
+                          <Text className="font-semibold text-typography-900 line-clamp-1">
+                            {item.title}
+                          </Text>
+                          <Text className="line-clamp-1">
+                            {item.description}
+                          </Text>
+                        </VStack>
+                      </HStack>
+                      <HStack space="md">
+                        <Pressable onPress={() => handleCardPress(item.id)}>
+                          <Icon as={EditIcon} className="text-typography-600" />
+                        </Pressable>
+                        <Pressable onPress={() => handleCardPress(item.id)}>
+                          <Icon
+                            as={TrashIcon}
+                            className="text-typography-600"
+                          />
+                        </Pressable>
+                      </HStack>
                     </HStack>
-                    <Pressable onPress={() => handleCardPress()}>
-                      <Icon as={ChevronRightIcon} size="md" />
-                    </Pressable>
-                  </HStack>
+                    <Button
+                      variant="outline"
+                      className="gap-3 relative"
+                      onPress={() => handleCardPress(item.id)}
+                    >
+                      <ButtonText>Gerenciar Membros</ButtonText>
+                    </Button>
+                  </VStack>
                 </GridItem>
               );
             })}
@@ -312,12 +333,12 @@ const MainContent = () => {
   );
 };
 
-export const Dashboard = () => {
+export const GerenciarAtleticas = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <DashboardLayout title="Início" isSidebarVisible={true}>
+      <Atleticas title="Gerenciar Atléticas" isSidebarVisible={true}>
         <MainContent />
-      </DashboardLayout>
+      </Atleticas>
       <MobileFooter footerIcons={bottomTabsList} />
     </SafeAreaView>
   );

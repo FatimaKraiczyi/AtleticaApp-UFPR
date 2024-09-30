@@ -30,7 +30,8 @@ yarn
 To run expo app, run the following command:
 
 ```bash
-cd apps/expo-app && yarn expo start -c
+cd apps/expo-app
+yarn expo start -c
 ```
 
 #### Next.js
@@ -38,7 +39,8 @@ cd apps/expo-app && yarn expo start -c
 To run next app, run the following command:
 
 ```bash
-cd apps/next && yarn dev
+cd apps/next
+yarn dev
 ```
 
 ## Project Structure

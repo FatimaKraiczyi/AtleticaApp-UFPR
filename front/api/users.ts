@@ -19,7 +19,6 @@ export const userAuthentication = async (
       } else {
         await AsyncStorage.setItem("x-access-token", data.token);
       }
-      console.log("Token armazenado:", data.token); // Adicione este log para verificar se o token foi armazenado.
     }
 
     return { data, success: status === 200 };
