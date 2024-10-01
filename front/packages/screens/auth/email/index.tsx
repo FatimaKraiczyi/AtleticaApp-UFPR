@@ -1,11 +1,22 @@
-import React from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
+import {
+  FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
+  FormControlLabel,
+  FormControlLabelText,
+} from "@/components/ui/form-control";
 import { Input, InputField } from "@/components/ui/input";
-import { Checkbox, CheckboxIndicator, CheckboxIcon, CheckboxLabel } from "@/components/ui/checkbox";
+import {
+  Checkbox,
+  CheckboxIndicator,
+  CheckboxIcon,
+  CheckboxLabel,
+} from "@/components/ui/checkbox";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -16,9 +27,7 @@ import { AuthLayout } from "../layout";
 import { sendEmailRequest } from "../../../../api/users";
 
 const EmailSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email é obrigatório")
+  email: z.string().min(1, "Email é obrigatório")
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
   name: z.string().min(1, "Nome é obrigatório"),
@@ -47,7 +56,7 @@ const EmailWithLeftBackground = () => {
 
   const onSubmit = async (data: EmailSchemaType) => {
     const response = await sendEmailRequest(data.email, data.name);
-    
+
     if (response.success) {
       toast.show({
         placement: "bottom right",
@@ -106,7 +115,9 @@ const EmailWithLeftBackground = () => {
             />
             <FormControlError>
               <FormControlErrorIcon size="sm" as={AlertTriangle} />
-              <FormControlErrorText>{errors?.name?.message}</FormControlErrorText>
+              <FormControlErrorText>
+                {errors?.name?.message}
+              </FormControlErrorText>
             </FormControlError>
           </FormControl>
           <FormControl isInvalid={!!errors.email}>
@@ -115,17 +126,16 @@ const EmailWithLeftBackground = () => {
             </FormControlLabel>
             <Controller
               name="email"
-              defaultValue=""
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input>
                   <InputField
                     className="text-sm"
                     placeholder="Email"
+										onBlur={onBlur}
                     type="text"
                     value={value}
                     onChangeText={onChange}
-                    onBlur={onBlur}
                     returnKeyType="done"
                   />
                 </Input>
@@ -133,7 +143,9 @@ const EmailWithLeftBackground = () => {
             />
             <FormControlError>
               <FormControlErrorIcon size="md" as={AlertTriangle} />
-              <FormControlErrorText>{errors?.email?.message}</FormControlErrorText>
+              <FormControlErrorText>
+                {errors?.email?.message}
+              </FormControlErrorText>
             </FormControlError>
           </FormControl>
           <FormControl isInvalid={!!errors.terms}>
@@ -160,7 +172,9 @@ const EmailWithLeftBackground = () => {
             />
             <FormControlError>
               <FormControlErrorIcon size="sm" as={AlertTriangle} />
-              <FormControlErrorText>{errors?.terms?.message}</FormControlErrorText>
+              <FormControlErrorText>
+                {errors?.terms?.message}
+              </FormControlErrorText>
             </FormControlError>
           </FormControl>
         </VStack>
