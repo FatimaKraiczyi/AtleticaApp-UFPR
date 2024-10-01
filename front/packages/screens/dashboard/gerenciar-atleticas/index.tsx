@@ -17,6 +17,7 @@ import { MobileHeader } from "../../components/MobileHeader";
 import { WebHeader } from "../../components/WebHeader";
 import { MobileFooter } from "../../components/MobileFooter";
 import { Sidebar } from "../../components/Sidebar";
+import { ModalAtletica } from "./atletica-modal";
 
 interface CardData {
   id: number;
@@ -50,6 +51,7 @@ const Atleticas = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
     props.isSidebarVisible
   );
+
   function toggleSidebar() {
     setIsSidebarVisible(!isSidebarVisible);
   }
@@ -76,9 +78,18 @@ const Atleticas = (props: any) => {
 
 const MainContent = () => {
   const router = useRouter();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleCardPress = () => {
     router.push(`/dashboard/membros-atletica`);
+  };
+
+  const handleCadastrarAtleticaPress = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -97,7 +108,10 @@ const MainContent = () => {
           </Heading>
 
           <VStack space="lg" className="items-center">
-            <Button className="gap-3 relative">
+            <Button
+              className="gap-3 relative"
+              onPress={handleCadastrarAtleticaPress}
+            >
               <ButtonText>Cadastrar Atlética</ButtonText>
             </Button>
           </VStack>
@@ -158,6 +172,11 @@ const MainContent = () => {
           </Grid>
         </VStack>
       </ScrollView>
+
+			<ModalAtletica
+        showModal={isModalVisible}
+        setShowModal={handleCloseModal}
+      />
     </Box>
   );
 };
