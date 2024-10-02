@@ -1,24 +1,62 @@
-# TCC-AtleticaApp-UFPR-frontend
+## Getting Started
 
-## Instalação
+### Installation
 
-1. Certifique-se de ter o Node.js e o npm instalados. Você pode baixá-los em [nodejs.org](https://nodejs.org/).
-
-2. Clone este repositório em sua máquina local usando o seguinte comando:
-
-   ```bash
-   git clone https://github.com/FatimaKraiczyi/TCC-AtleticaApp-UFPR-frontend.git
-
-3. Instale as dependências do projeto:
+1. Clone the repository:
 
 ```bash
-npm install
+https://github.com/FatimaKraiczyi/AtleticaApp-UFPR.git
+
 ```
-4. Inicie o servidor de desenvolvimento:
+
+2. Install dependencies:
+
+Go to 
+```bash
+cd AtleticaApp-UFPR
+cd front
+```
+
+ and run the following command:
 
 ```bash
-npx expo start
-````
-5. Baixe o aplicativo Expo Go em seu dispositivo móvel.
+yarn
+```
 
-6. Escaneie o QR code exibido no terminal usando o aplicativo Expo Go para visualizar a aplicação.
+### Running the Application
+
+#### Expo
+
+To run expo app, run the following command:
+
+```bash
+cd apps/expo-app
+yarn expo start -c
+```
+
+#### Next.js
+
+To run next app, run the following command:
+
+```bash
+cd apps/next
+yarn dev
+```
+
+## Project Structure
+
+### Next.js
+
+- `next`: Contains the Next.js application along with components and screens.
+
+### Expo
+
+- `expo`: Contains the Expo application along with components and screens.
+
+### Front
+
+- `apps/next`: Contains the Next.js application.
+- `apps/expo-app`: Contains the Expo application.
+- `packages/components`: Shared components used across platforms.
+- `packages/screens`: Shared screens that can be used in both Next.js and Expo projects.
+- `packages/shared`: Shared assets
