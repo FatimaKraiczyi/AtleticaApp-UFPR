@@ -33,13 +33,13 @@ const HeadingCards: CardData[] = [
   {
     id: 2,
     nome: "Membro 2",
-		cargo: " ",
+    cargo: " ",
   },
 ];
 
 const Membros = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
+    props.isSidebarVisible,
   );
 
   function toggleSidebar() {

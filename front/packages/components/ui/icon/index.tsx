@@ -8,7 +8,7 @@ import { cssInterop } from "nativewind";
 const PrimitiveIcon = React.forwardRef(
   (
     { height, width, fill, color, size, stroke, as: AsComp, ...props }: any,
-    ref?: any
+    ref?: any,
   ) => {
     const sizeProps = useMemo(() => {
       return size ? { size } : { height, width };
@@ -38,7 +38,7 @@ const PrimitiveIcon = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
 export const UIIcon = createIcon({
@@ -102,7 +102,7 @@ export const Icon = React.forwardRef(
         className={iconStyle({ size, class: className })}
       />
     );
-  }
+  },
 );
 
 type ParameterTypes = Omit<Parameters<typeof createIcon>[0], "Root">;

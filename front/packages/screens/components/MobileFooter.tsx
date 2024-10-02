@@ -56,28 +56,29 @@ export const MobileFooter = () => {
       className={cn(
         "bg-background-0 justify-between w-full absolute left-0 bottom-0 right-0 p-3 overflow-hidden items-center  border-t-border-300  md:hidden border-t",
         { "pb-5": Platform.OS === "ios" },
-        { "pb-5": Platform.OS === "android" }
+        { "pb-5": Platform.OS === "android" },
       )}
     >
       {bottomTabsList.map(
         (item: { iconText: string; iconName: any }, index) => (
-            <Pressable
-              className="px-0.5 flex-1 flex-col items-center"
-              key={item.iconName}
-              onPress={() => handlePress(index)}
-            >
-              <Icon
-                as={item.iconName}
-                size="md"
-                className={`h-[32px] w-[65px] stroke-background-800 ${
-                  index === selectedIndex ? "fill-background-800" : "fill-none"
-                }`}
-              />
-              <Text className="text-xs text-center text-typography-600">
-                {item.iconText}
-              </Text>
-            </Pressable>
-         ))}
+          <Pressable
+            className="px-0.5 flex-1 flex-col items-center"
+            key={item.iconName}
+            onPress={() => handlePress(index)}
+          >
+            <Icon
+              as={item.iconName}
+              size="md"
+              className={`h-[32px] w-[65px] stroke-background-800 ${
+                index === selectedIndex ? "fill-background-800" : "fill-none"
+              }`}
+            />
+            <Text className="text-xs text-center text-typography-600">
+              {item.iconText}
+            </Text>
+          </Pressable>
+        ),
+      )}
     </HStack>
   );
 };

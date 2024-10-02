@@ -90,9 +90,7 @@ const ValidateTokenWithLeftBackground = () => {
           <Heading className="md:text-center" size="3xl">
             Create new password
           </Heading>
-          <Text className="md:text-center">
-            Your new password must be...
-          </Text>
+          <Text className="md:text-center">Your new password must be...</Text>
         </VStack>
       </VStack>
       <VStack className="w-full">
@@ -126,7 +124,7 @@ const ValidateTokenWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}

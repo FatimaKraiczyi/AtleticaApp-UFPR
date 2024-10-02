@@ -1,1 +1,1 @@
-export { StatusBar } from 'react-native';
+export { StatusBar } from "react-native";

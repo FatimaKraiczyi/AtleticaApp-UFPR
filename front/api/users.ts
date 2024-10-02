@@ -1,28 +1,37 @@
 import type { IResponse } from "../interfaces";
 import type { UserProps } from "../interfaces/users";
-import { API, objectCatch } from './api';
+import { API, objectCatch } from "./api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from 'react-native';
-import { userAuthenticationEndpoint, sendEmail, validateToken, resetPassword, password, createUserEndpoint } from "./routes/routes";
+import { Platform } from "react-native";
+import {
+  userAuthenticationEndpoint,
+  sendEmail,
+  validateToken,
+  resetPassword,
+  password,
+  createUserEndpoint,
+} from "./routes/routes";
 import { getToken } from "./token";
 
 export const userAuthentication = async (
   email: string,
-  senha: string
+  senha: string,
 ): Promise<IResponse.Default<UserProps>> => {
   try {
-    const { data, status } = await API.post(userAuthenticationEndpoint, { email, senha });
+    const { data, status } = await API.post(userAuthenticationEndpoint, {
+      email,
+      senha,
+    });
 
     if (status === 200 && data && data.token) {
-      if (Platform.OS === 'web') {
-        sessionStorage.setItem('x-access-token', data.token);
+      if (Platform.OS === "web") {
+        sessionStorage.setItem("x-access-token", data.token);
       } else {
         await AsyncStorage.setItem("x-access-token", data.token);
       }
     }
 
     return { data, success: status === 200 };
-
   } catch (error) {
     return { ...objectCatch };
   }
@@ -30,7 +39,7 @@ export const userAuthentication = async (
 
 export const sendEmailRequest = async (
   email: string,
-  nome: string
+  nome: string,
 ): Promise<IResponse.Default<null>> => {
   try {
     const { data, status } = await API.post(sendEmail, { email, nome });
@@ -41,13 +50,15 @@ export const sendEmailRequest = async (
   }
 };
 
-export const validateUserToken = async (token: string): Promise<IResponse.Default<null>> => {
+export const validateUserToken = async (
+  token: string,
+): Promise<IResponse.Default<null>> => {
   try {
     const { data, status } = await API.post(validateToken, { token });
 
     if (status === 200) {
-      if (Platform.OS === 'web') {
-        sessionStorage.setItem('x-access-token', token);
+      if (Platform.OS === "web") {
+        sessionStorage.setItem("x-access-token", token);
       } else {
         await AsyncStorage.setItem("x-access-token", token);
       }
@@ -84,7 +95,9 @@ export const newPasswordRequest = async (
   }
 };
 
-export const createUser = async (user: UserProps): Promise<IResponse.Default<UserProps>> => {
+export const createUser = async (
+  user: UserProps,
+): Promise<IResponse.Default<UserProps>> => {
   try {
     const token = await getToken();
     if (!token) {
@@ -96,9 +109,9 @@ export const createUser = async (user: UserProps): Promise<IResponse.Default<Use
       { ...user },
       {
         headers: {
-          'x-access-token': token,
+          "x-access-token": token,
         },
-      }
+      },
     );
 
     return { data, success: status === 201 };

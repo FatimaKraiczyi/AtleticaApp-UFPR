@@ -150,7 +150,7 @@ export const ModalMembros = ({
                       onChangeText={onChange}
                       onBlur={onBlur}
                       onSubmitEditing={handleKeyPress}
-                      returnKeyType="done"
+                      enterKeyHint="done"
                     />
                   </Input>
                 )}
@@ -179,7 +179,7 @@ export const ModalMembros = ({
                       onChangeText={onChange}
                       onBlur={onBlur}
                       onSubmitEditing={handleKeyPress}
-                      returnKeyType="done"
+                      enterKeyHint="done"
                     />
                   </Input>
                 )}
@@ -256,7 +256,7 @@ export const ModalMembros = ({
                         onChangeText={onChange}
                         onBlur={onBlur}
                         onSubmitEditing={handleKeyPress}
-                        returnKeyType="done"
+                        enterKeyHint="done"
                       />
                     </Input>
                   )}

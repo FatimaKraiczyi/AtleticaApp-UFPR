@@ -237,7 +237,7 @@ const Sidebar = () => {
 
 const DashboardLayout = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
+    props.isSidebarVisible,
   );
   function toggleSidebar() {
     setIsSidebarVisible(!isSidebarVisible);
@@ -269,31 +269,23 @@ function MobileFooter({ footerIcons }: { footerIcons: any }) {
       className={cn(
         "bg-background-0 justify-between w-full absolute left-0 bottom-0 right-0 p-3 overflow-hidden items-center  border-t-border-300  md:hidden border-t",
         { "pb-5": Platform.OS === "ios" },
-        { "pb-5": Platform.OS === "android" }
+        { "pb-5": Platform.OS === "android" },
       )}
     >
-      {footerIcons.map(
-        (
-          item: { iconText: string; iconName: any },
-        ) => {
-          return (
-            <Pressable
-              className="px-0.5 flex-1 flex-col items-center"
-              key={item.iconName}
-              onPress={() => router.push("/dashboard/dashboard-layout")}
-            >
-              <Icon
-                as={item.iconName}
-                size="md"
-                className="h-[32px] w-[65px]"
-              />
-              <Text className="text-xs text-center text-typography-600">
-                {item.iconText}
-              </Text>
-            </Pressable>
-          );
-        }
-      )}
+      {footerIcons.map((item: { iconText: string; iconName: any }) => {
+        return (
+          <Pressable
+            className="px-0.5 flex-1 flex-col items-center"
+            key={item.iconName}
+            onPress={() => router.push("/dashboard/dashboard-layout")}
+          >
+            <Icon as={item.iconName} size="md" className="h-[32px] w-[65px]" />
+            <Text className="text-xs text-center text-typography-600">
+              {item.iconText}
+            </Text>
+          </Pressable>
+        );
+      })}
     </HStack>
   );
 }
@@ -345,7 +337,7 @@ const MainContent = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: isWeb ? 0 : 100,
-          flexGrow:1
+          flexGrow: 1,
         }}
         className="flex-1 mb-20 md:mb-2"
       >
@@ -390,7 +382,7 @@ const MainContent = () => {
             })}
           </Grid>
 
-             <Grid className="gap-5">
+          <Grid className="gap-5">
             <GridItem
               _extra={{
                 className: "col-span-12 sm:col-span-6 lg:col-span-4",
@@ -458,13 +450,13 @@ const MainContent = () => {
                           className={cn(
                             "rounded-full h-10 w-10 items-center justify-center",
                             { "bg-success-0": item.leaves !== 0 },
-                            { "bg-error-50": item.leaves === 0 }
+                            { "bg-error-50": item.leaves === 0 },
                           )}
                         >
                           <Text
                             className={cn(
                               { "text-success-800": item.leaves !== 0 },
-                              { "text-error-700": item.leaves === 0 }
+                              { "text-error-700": item.leaves === 0 },
                             )}
                           >
                             {item.leaves}
@@ -514,9 +506,7 @@ const MainContent = () => {
                   return (
                     <HStack space="lg" key={index} className="w-full px-4 py-2">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage
-                          source={item.image}
-                        />
+                        <AvatarImage source={item.image} />
                       </Avatar>
                       <VStack>
                         <Text className="text-typography-900 font-roboto line-clamp-1">
@@ -553,9 +543,7 @@ const MainContent = () => {
                   return (
                     <HStack space="lg" key={index} className="px-4 py-2 w-full">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage
-                          source={item.image}
-                        />
+                        <AvatarImage source={item.image} />
                       </Avatar>
                       <VStack>
                         <Text className="text-typography-900 font-roboto line-clamp-1">

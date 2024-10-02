@@ -144,7 +144,7 @@ const LoginWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -188,7 +188,7 @@ const LoginWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                   <InputSlot onPress={handleState} className="pr-3">
                     <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />

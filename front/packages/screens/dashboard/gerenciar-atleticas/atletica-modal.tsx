@@ -77,7 +77,6 @@ export const ModalAtletica = ({
     Keyboard.dismiss();
   };
 
-  const [isAdmin, setIsAdmin] = useState(false);
   const [cursos, setCursos] = useState<CursoProps[]>([]);
 
   useEffect(() => {

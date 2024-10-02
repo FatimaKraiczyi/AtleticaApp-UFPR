@@ -1,7 +1,7 @@
 {
   "include": ["./**/*.tsx", "./**/*.ts"],
   "exclude": ["node_modules", "example", "dist"],
-	"path": {},
+  "path": {},
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "noEmit": false,

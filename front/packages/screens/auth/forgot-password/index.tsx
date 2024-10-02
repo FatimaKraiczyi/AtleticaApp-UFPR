@@ -41,34 +41,33 @@ const ForgotPasswordScreen = () => {
   const toast = useToast();
 
   const onSubmit = async (_data: forgotPasswordSchemaType) => {
-    const response = await resetPasswordRequest (_data.email);
+    const response = await resetPasswordRequest(_data.email);
 
-      if(response.success){
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => {
-            return (
-              <Toast nativeID={id} variant="accent" action="success">
-                <ToastTitle>Link enviado com sucesso ao seu email</ToastTitle>
-              </Toast>
-            );
-          },
-        });
-        reset();
-      }else{
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => {
-            return (
-              <Toast nativeID={id} variant="accent" action="error">
-                <ToastTitle>Email não cadastrado</ToastTitle>
-              </Toast>
-            );
-          },
-        });
-      }
-    };
-    
+    if (response.success) {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => {
+          return (
+            <Toast nativeID={id} variant="accent" action="success">
+              <ToastTitle>Link enviado com sucesso ao seu email</ToastTitle>
+            </Toast>
+          );
+        },
+      });
+      reset();
+    } else {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => {
+          return (
+            <Toast nativeID={id} variant="accent" action="error">
+              <ToastTitle>Email não cadastrado</ToastTitle>
+            </Toast>
+          );
+        },
+      });
+    }
+  };
 
   const handleKeyPress = () => {
     Keyboard.dismiss();
@@ -76,7 +75,7 @@ const ForgotPasswordScreen = () => {
   };
   const router = useRouter();
   return (
-   <VStack className="max-w-[440px] w-full" space="md">
+    <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
         <Pressable
           onPress={() => {
@@ -123,7 +122,7 @@ const ForgotPasswordScreen = () => {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   onSubmitEditing={handleKeyPress}
-                  returnKeyType="done"
+                  enterKeyHint="done"
                 />
               </Input>
             )}
@@ -150,4 +149,3 @@ export const ForgotPassword = () => {
     </AuthLayout>
   );
 };
-

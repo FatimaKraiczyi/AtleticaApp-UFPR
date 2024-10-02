@@ -12,17 +12,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -47,17 +47,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -90,7 +90,7 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         };
     };
     size: {
-        '2xs': import("tailwind-merge").ClassNameValue | {
+        "2xs": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
         xs: import("tailwind-merge").ClassNameValue | {
@@ -108,19 +108,19 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         xl: import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '2xl': import("tailwind-merge").ClassNameValue | {
+        "2xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '3xl': import("tailwind-merge").ClassNameValue | {
+        "3xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '4xl': import("tailwind-merge").ClassNameValue | {
+        "4xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '5xl': import("tailwind-merge").ClassNameValue | {
+        "5xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '6xl': import("tailwind-merge").ClassNameValue | {
+        "6xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
     };
@@ -153,17 +153,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -188,17 +188,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -223,17 +223,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -258,17 +258,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -293,17 +293,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -328,17 +328,17 @@ export declare const textStyle: import("@gluestack-ui/nativewind-utils/types").T
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;

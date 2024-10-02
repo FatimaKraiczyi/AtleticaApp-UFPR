@@ -63,16 +63,16 @@ const signUpSchema = z.object({
     .min(8, "A senha deve ter no mínimo 8 caracteres")
     .regex(
       new RegExp(".*[A-Z].*"),
-      "Deve conter pelo menos uma letra maiúscula"
+      "Deve conter pelo menos uma letra maiúscula",
     )
     .regex(
       new RegExp(".*[a-z].*"),
-      "Deve conter pelo menos uma letra minúscula"
+      "Deve conter pelo menos uma letra minúscula",
     )
     .regex(new RegExp(".*\\d.*"), "Deve conter pelo menos um número")
     .regex(
       new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "Deve conter pelo menos um caractere especial"
+      "Deve conter pelo menos um caractere especial",
     ),
   confirmpassword: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
   curso: z.string().min(1, "Curso é obrigatório"),
@@ -150,7 +150,7 @@ const SignUpWithLeftBackground = () => {
           ),
         });
       }
-    } 
+    }
   };
 
   const handleState = () => {
@@ -217,7 +217,7 @@ const SignUpWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                     type={showPassword ? "text" : "password"}
                   />
                   <InputSlot onPress={handleState} className="pr-3">
@@ -262,7 +262,7 @@ const SignUpWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                     type={showConfirmPassword ? "text" : "password"}
                   />
 

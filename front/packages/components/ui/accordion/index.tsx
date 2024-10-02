@@ -83,7 +83,7 @@ const accordionTriggerStyle = tva({
 const PrimitiveIcon = React.forwardRef(
   (
     { height, width, fill = "none", color, size, as: AsComp, ...props }: any,
-    ref?: any
+    ref?: any,
   ) => {
     const sizeProps = useMemo(() => {
       return size ? { size } : { height, width };
@@ -104,7 +104,7 @@ const PrimitiveIcon = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
 const Root =
@@ -188,7 +188,7 @@ const Accordion = React.forwardRef(
       size = "md",
       ...props
     }: { className?: string } & IAccordionProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAccordion
@@ -198,13 +198,13 @@ const Accordion = React.forwardRef(
         context={{ variant, size }}
       />
     );
-  }
+  },
 );
 
 const AccordionItem = React.forwardRef(
   (
     { className, ...props }: { className?: string } & IAccordionItemProps,
-    ref?: any
+    ref?: any,
   ) => {
     const { variant } = useStyleContext(SCOPE);
     return (
@@ -217,13 +217,13 @@ const AccordionItem = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 const AccordionContent = React.forwardRef(
   (
     { className, ...props }: { className?: string } & IAccordionContentProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAccordion.Content
@@ -234,7 +234,7 @@ const AccordionContent = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 const AccordionContentText = React.forwardRef(
@@ -243,7 +243,7 @@ const AccordionContentText = React.forwardRef(
       className,
       ...props
     }: { className?: string } & IAccordionContentTextProps,
-    ref?: any
+    ref?: any,
   ) => {
     const { size } = useStyleContext(SCOPE);
     return (
@@ -256,7 +256,7 @@ const AccordionContentText = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 const AccordionIcon = React.forwardRef(
@@ -272,7 +272,7 @@ const AccordionIcon = React.forwardRef(
       as?: any;
       color?: string;
     },
-    ref?: any
+    ref?: any,
   ) => {
     const { size: parentSize } = useStyleContext(SCOPE);
 
@@ -311,13 +311,13 @@ const AccordionIcon = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 const AccordionHeader = React.forwardRef(
   (
     { className, ...props }: { className?: string } & IAccordionHeaderProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAccordion.Header
@@ -328,12 +328,12 @@ const AccordionHeader = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 const AccordionTrigger = React.forwardRef(
   (
     { className, ...props }: { className?: string } & IAccordionTriggerProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAccordion.Trigger
@@ -344,12 +344,12 @@ const AccordionTrigger = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 const AccordionTitleText = React.forwardRef(
   (
     { className, ...props }: { className?: string } & IAccordionTitleTextProps,
-    ref?: any
+    ref?: any,
   ) => {
     const { size } = useStyleContext(SCOPE);
     return (
@@ -362,7 +362,7 @@ const AccordionTitleText = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 Accordion.displayName = "Accordion";

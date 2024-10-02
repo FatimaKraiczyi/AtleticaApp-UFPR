@@ -1,1 +1,1 @@
-export * as IResponse from './response'
+export * as IResponse from "./response";

@@ -1,1 +1,1 @@
-export { VirtualizedList } from 'react-native';
+export { VirtualizedList } from "react-native";

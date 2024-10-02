@@ -1,6 +1,6 @@
-import React from 'react';
-import { Text } from 'react-native';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from "react";
+import { Text } from "react-native";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 declare const badgeStyle: import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
     action: {
         error: string;

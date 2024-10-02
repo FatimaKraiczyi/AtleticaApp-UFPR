@@ -1,7 +1,7 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { View } from 'react-native';
-import { hstackStyle } from './styles';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
+import { View } from "react-native";
+import { hstackStyle } from "./styles";
 
 type IHStackProps = React.ComponentProps<typeof View> &
   VariantProps<typeof hstackStyle>;
@@ -15,9 +15,9 @@ const HStack = React.forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );
 
-HStack.displayName = 'HStack';
+HStack.displayName = "HStack";
 
 export { HStack };

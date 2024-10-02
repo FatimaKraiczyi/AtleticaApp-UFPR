@@ -1,9 +1,9 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 
-import { vstackStyle } from './styles';
+import { vstackStyle } from "./styles";
 
-type IVStackProps = React.ComponentProps<'div'> &
+type IVStackProps = React.ComponentProps<"div"> &
   VariantProps<typeof vstackStyle>;
 
 const VStack = React.forwardRef(
@@ -15,9 +15,9 @@ const VStack = React.forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );
 
-VStack.displayName = 'VStack';
+VStack.displayName = "VStack";
 
 export { VStack };

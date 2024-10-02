@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const index = () => {
   useEffect(() => {
     const checkAuthentication = async () => {
-      const token = await AsyncStorage.getItem("x-access-token"); 
+      const token = await AsyncStorage.getItem("x-access-token");
 
       if (token) {
         router.replace("dashboard/dashboard-layout");
@@ -21,7 +21,7 @@ const index = () => {
 
   return (
     <SafeAreaView className="md:flex flex-col items-center justify-center md:w-full h-full">
-      <SignIn/>
+      <SignIn />
     </SafeAreaView>
   );
 };

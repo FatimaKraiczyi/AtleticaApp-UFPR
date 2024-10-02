@@ -1,10 +1,10 @@
-import React from 'react';
-import { cardStyle } from './styles';
+import React from "react";
+import { cardStyle } from "./styles";
 
 const Card = ({
   className,
-  size = 'md',
-  variant = 'elevated',
+  size = "md",
+  variant = "elevated",
   ...props
 }: any) => {
   return (
@@ -15,6 +15,6 @@ const Card = ({
   );
 };
 
-Card.displayName = 'Card';
+Card.displayName = "Card";
 
 export { Card };

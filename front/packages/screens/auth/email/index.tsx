@@ -27,7 +27,9 @@ import { AuthLayout } from "../layout";
 import { sendEmailRequest } from "../../../../api/users";
 
 const EmailSchema = z.object({
-  email: z.string().min(1, "Email é obrigatório")
+  email: z
+    .string()
+    .min(1, "Email é obrigatório")
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
   name: z.string().min(1, "Nome é obrigatório"),
@@ -108,7 +110,7 @@ const EmailWithLeftBackground = () => {
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -132,11 +134,11 @@ const EmailWithLeftBackground = () => {
                   <InputField
                     className="text-sm"
                     placeholder="Email"
-										onBlur={onBlur}
+                    onBlur={onBlur}
                     type="text"
                     value={value}
                     onChangeText={onChange}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}

@@ -58,7 +58,7 @@ const HeadingCards: CardData[] = [
 
 const DashboardLayout = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
+    props.isSidebarVisible,
   );
   function toggleSidebar() {
     setIsSidebarVisible(!isSidebarVisible);

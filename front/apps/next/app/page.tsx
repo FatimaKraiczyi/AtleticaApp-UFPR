@@ -4,10 +4,10 @@ import { useEffect } from "react";
 
 const Page = () => {
   const router = useRouter();
-  
+
   useEffect(() => {
     const token = sessionStorage.getItem("x-access-token");
-    
+
     if (token) {
       router.replace("dashboard/dashboard-layout");
     } else {

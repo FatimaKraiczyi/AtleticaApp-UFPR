@@ -78,7 +78,6 @@ import { CameraSparklesIcon } from "./assets/icons/camera-sparkles";
 import { EditPhotoIcon } from "./assets/icons/edit-photo";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
 
-
 type MobileHeaderProps = {
   title: string;
 };
@@ -177,11 +176,11 @@ const Sidebar = () => {
     useState<number>(0);
   const handlePress = (index: number) => {
     setSelectedIndex(index);
-     router.push("/profile/profile");
+    router.push("/profile/profile");
   };
   const handlePressResources = (index: number) => {
     setSelectedIndexResources(index);
-     router.push("/profile/profile");
+    router.push("/profile/profile");
   };
   return (
     <ScrollView className=" h-full" contentContainerStyle={{ flexGrow: 1 }}>
@@ -280,7 +279,7 @@ const Sidebar = () => {
 
 const DashboardLayout = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
+    props.isSidebarVisible,
   );
   function toggleSidebar() {
     setIsSidebarVisible(!isSidebarVisible);
@@ -313,13 +312,13 @@ function MobileFooter({ footerIcons }: { footerIcons: any }) {
       className={cn(
         "bg-background-0 justify-between w-full absolute left-0 bottom-0 right-0 p-3 overflow-hidden items-center  border-t-border-300  md:hidden border-t",
         { "pb-5": Platform.OS === "ios" },
-        { "pb-5": Platform.OS === "android" }
+        { "pb-5": Platform.OS === "android" },
       )}
     >
       {footerIcons.map(
         (
           item: { iconText: string; iconName: any },
-          index: React.Key | null | undefined
+          index: React.Key | null | undefined,
         ) => {
           return (
             <Pressable
@@ -337,7 +336,7 @@ function MobileFooter({ footerIcons }: { footerIcons: any }) {
               </Text>
             </Pressable>
           );
-        }
+        },
       )}
     </HStack>
   );
@@ -402,7 +401,7 @@ const userSchema = z.object({
     .string()
     .regex(
       /^\+?[1-9]\d{1,14}$/,
-      "Phone number must be a valid international phone number"
+      "Phone number must be a valid international phone number",
     ),
   city: z
     .string()
@@ -702,7 +701,7 @@ const MobileScreen = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -742,7 +741,7 @@ const MobileScreen = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -843,7 +842,7 @@ const MobileScreen = () => {
                       keyboardType="number-pad"
                       onBlur={onBlur}
                       onSubmitEditing={handleKeyPress}
-                      returnKeyType="done"
+                      enterKeyHint="done"
                     />
                   </Input>
                 </HStack>
@@ -1029,7 +1028,7 @@ const MobileScreen = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -1159,7 +1158,7 @@ const ModalComponent = ({
                         onChangeText={onChange}
                         onBlur={onBlur}
                         onSubmitEditing={handleKeyPress}
-                        returnKeyType="done"
+                        enterKeyHint="done"
                       />
                     </Input>
                   )}
@@ -1202,7 +1201,7 @@ const ModalComponent = ({
                         onChangeText={onChange}
                         onBlur={onBlur}
                         onSubmitEditing={handleKeyPress}
-                        returnKeyType="done"
+                        enterKeyHint="done"
                       />
                     </Input>
                   )}
@@ -1306,7 +1305,7 @@ const ModalComponent = ({
                           keyboardType="number-pad"
                           onBlur={onBlur}
                           onSubmitEditing={handleKeyPress}
-                          returnKeyType="done"
+                          enterKeyHint="done"
                         />
                       </Input>
                     </HStack>
@@ -1498,7 +1497,7 @@ const ModalComponent = ({
                         onChangeText={onChange}
                         onBlur={onBlur}
                         onSubmitEditing={handleKeyPress}
-                        returnKeyType="done"
+                        enterKeyHint="done"
                       />
                     </Input>
                   )}

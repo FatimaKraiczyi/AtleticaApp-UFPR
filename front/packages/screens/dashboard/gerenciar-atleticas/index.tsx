@@ -49,7 +49,7 @@ const HeadingCards: CardData[] = [
 
 const Atleticas = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
+    props.isSidebarVisible,
   );
 
   function toggleSidebar() {
@@ -173,7 +173,7 @@ const MainContent = () => {
         </VStack>
       </ScrollView>
 
-			<ModalAtletica
+      <ModalAtletica
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
       />

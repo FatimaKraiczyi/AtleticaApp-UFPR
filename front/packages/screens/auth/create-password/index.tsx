@@ -22,7 +22,7 @@ import { AlertTriangle } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-import { newPasswordResquet } from "../../../../api/users";
+import { newPasswordRequest } from "../../../../api/users";
 
 const createPasswordSchema = z.object({
   password: z
@@ -33,7 +33,7 @@ const createPasswordSchema = z.object({
     .regex(new RegExp(".*\\d.*"), "One number")
     .regex(
       new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "One special character"
+      "One special character",
     ),
   confirmpassword: z
     .string()
@@ -43,7 +43,7 @@ const createPasswordSchema = z.object({
     .regex(new RegExp(".*\\d.*"), "One number")
     .regex(
       new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "One special character"
+      "One special character",
     ),
 });
 
@@ -61,7 +61,10 @@ const CreatePasswordWithLeftBackground = () => {
   const toast = useToast();
 
   const onSubmit = async (data: CreatePasswordSchemaType) => {
-    const response = await newPasswordResquet (data.password, data.confirmpassword);
+    const response = await newPasswordRequest(
+      data.password,
+      data.confirmpassword,
+    );
 
     if (data.password === data.confirmpassword) {
       toast.show({
@@ -157,7 +160,7 @@ const CreatePasswordWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                     type={showPassword ? "text" : "password"}
                   />
                   <InputSlot onPress={handleState} className="pr-3">
@@ -172,8 +175,7 @@ const CreatePasswordWithLeftBackground = () => {
                 {errors?.password?.message}
               </FormControlErrorText>
             </FormControlError>
-            <FormControlLabel>
-            </FormControlLabel>
+            <FormControlLabel></FormControlLabel>
           </FormControl>
           <FormControl isInvalid={!!errors.confirmpassword}>
             <FormControlLabel>
@@ -204,7 +206,7 @@ const CreatePasswordWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                     type={showConfirmPassword ? "text" : "password"}
                   />
 
@@ -222,8 +224,7 @@ const CreatePasswordWithLeftBackground = () => {
                 {errors?.confirmpassword?.message}
               </FormControlErrorText>
             </FormControlError>
-            <FormControlLabel>
-            </FormControlLabel>
+            <FormControlLabel></FormControlLabel>
           </FormControl>
         </VStack>
 

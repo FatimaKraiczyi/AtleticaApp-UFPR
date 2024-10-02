@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 declare const Table: React.ForwardRefExoticComponent<Omit<any, "ref"> & React.RefAttributes<unknown>>;
 declare const TableHeader: React.ForwardRefExoticComponent<Omit<any, "ref"> & React.RefAttributes<unknown>>;
 declare const TableBody: React.ForwardRefExoticComponent<Omit<any, "ref"> & React.RefAttributes<unknown>>;
