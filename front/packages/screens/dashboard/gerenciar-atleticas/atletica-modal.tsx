@@ -8,7 +8,7 @@ import {
   FormControlErrorText,
 } from "@/components/ui/form-control";
 import { ChevronDownIcon, CloseIcon, Icon } from "@/components/ui/icon";
-import { AlertTriangle } from "lucide-react-native";
+import { AlertTriangle, PlusIcon, XIcon } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -78,6 +78,7 @@ export const ModalAtletica = ({
   };
 
   const [cursos, setCursos] = useState<CursoProps[]>([]);
+  const [cursoFields, setCursoFields] = useState<string[]>(["curso"]);
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -88,6 +89,14 @@ export const ModalAtletica = ({
     };
     fetchCursos();
   }, []);
+
+  const addCursoField = () => {
+    setCursoFields([...cursoFields, `curso${cursoFields.length}`]);
+  };
+
+  const removeCursoField = (index: number) => {
+    setCursoFields(cursoFields.filter((_, i) => i !== index));
+  };
 
   const onSubmit = (_data: userSchemaDetails) => {
     setShowModal(false);
@@ -127,7 +136,7 @@ export const ModalAtletica = ({
             Cadastrar Atlética
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6">
+        <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
           <Center className="w-full mb-6">
             <Avatar size="2xl">
               <AvatarImage
@@ -197,44 +206,68 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <FormControl isInvalid={!!errors.curso}>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>Curso</FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                name="curso"
-                control={control}
-                render={({ field: { onChange } }) => (
-                  <Select onValueChange={onChange}>
-                    <SelectTrigger variant="outline" size="md">
-                      <SelectInput placeholder="Selecione um curso" />
-                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                    </SelectTrigger>
-                    <SelectPortal>
-                      <SelectBackdrop />
-                      <SelectContent>
-                        <SelectDragIndicatorWrapper>
-                          <SelectDragIndicator />
-                        </SelectDragIndicatorWrapper>
-                        {cursos.map((curso) => (
-                          <SelectItem
-                            key={curso.id}
-                            value={String(curso.id)}
-                            label={curso.nome}
-                          />
-                        ))}
-                      </SelectContent>
-                    </SelectPortal>
-                  </Select>
-                )}
-              />
-              <FormControlError>
-                <FormControlErrorIcon size="sm" as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.curso?.message}
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
+            {cursoFields.map((field, index) => (
+              <FormControl key={field} isInvalid={!!errors.curso}>
+                <FormControlLabel className="mb-2 flex items-center">
+                  <FormControlLabelText>Curso</FormControlLabelText>
+                </FormControlLabel>
+                <div className="flex items-center w-full">
+                  <Controller
+                    name={`curso.${index}`}
+                    control={control}
+                    render={({ field: { onChange } }) => (
+                      <Select onValueChange={onChange} className="flex-1">
+                        <SelectTrigger variant="outline" size="md">
+                          <SelectInput placeholder="Selecione um curso" />
+                          <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                        </SelectTrigger>
+                        <SelectPortal>
+                          <SelectBackdrop />
+                          <SelectContent>
+                            <SelectDragIndicatorWrapper>
+                              <SelectDragIndicator />
+                            </SelectDragIndicatorWrapper>
+                            {cursos.map((curso) => (
+                              <SelectItem
+                                key={curso.id}
+                                value={String(curso.id)}
+                                label={curso.nome}
+                              />
+                            ))}
+                          </SelectContent>
+                        </SelectPortal>
+                      </Select>
+                    )}
+                  />
+                  {index === cursoFields.length - 1 && (
+                    <Button
+                      onPress={addCursoField}
+                      className="ml-2 p-1"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Icon as={PlusIcon} size="sm" />
+                    </Button>
+                  )}
+                  {index > 0 && (
+                    <Button
+                      onPress={() => removeCursoField(index)}
+                      className="ml-2 p-1"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Icon as={XIcon} size="sm" />
+                    </Button>
+                  )}
+                </div>
+                <FormControlError>
+                  <FormControlErrorIcon size="sm" as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors?.curso?.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              </FormControl>
+            ))}
             <FormControl isInvalid={!!errors.esportes}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>
