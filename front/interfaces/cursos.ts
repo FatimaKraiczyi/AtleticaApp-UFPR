@@ -1,9 +1,5 @@
-export interface Curso {
+export interface CursoProps {
   id: number;
   nome: string;
   departamento: string;
-}
-
-export interface CursoProps {
-  cursos: Curso[];
 }

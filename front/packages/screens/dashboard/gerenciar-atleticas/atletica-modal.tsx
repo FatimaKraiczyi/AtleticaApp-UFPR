@@ -50,9 +50,9 @@ const userSchema = z.object({
     .string()
     .min(1, "Nome é obrigatório")
     .max(50, "Name must be less than 50 characters"),
-  curso: z.string().min(1, "Curso é obrigatório"),
-  descricao: z.string().min(1, "Curso é obrigatório"),
-  position: z.string().optional(),
+  curso: z.array(z.string()).min(1, "Curso é obrigatório"),
+  descricao: z.string().min(1, "Descrição é obrigatória"),
+  esportes: z.array(z.string()).min(1),
 });
 type userSchemaDetails = z.infer<typeof userSchema>;
 
@@ -169,7 +169,7 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-						<FormControl isInvalid={!!errors.name}>
+            <FormControl isInvalid={!!errors.name}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Descrição</FormControlLabelText>
               </FormControlLabel>
@@ -205,8 +205,8 @@ export const ModalAtletica = ({
               <Controller
                 name="curso"
                 control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Select selectedValue={value} onValueChange={onChange}>
+                render={({ field: { onChange } }) => (
+                  <Select onValueChange={onChange}>
                     <SelectTrigger variant="outline" size="md">
                       <SelectInput placeholder="Selecione um curso" />
                       <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -236,7 +236,37 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-                      
+            <FormControl isInvalid={!!errors.esportes}>
+              <FormControlLabel className="mb-2">
+                <FormControlLabelText>
+                  Atividades Esportivas
+                </FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                defaultValue=""
+                name="descricao"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input>
+                    <InputField
+                      placeholder="Atividades Esportivas"
+                      type="text"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      onSubmitEditing={handleKeyPress}
+                      returnKeyType="done"
+                    />
+                  </Input>
+                )}
+              />
+              <FormControlError>
+                <FormControlErrorIcon size="md" as={AlertTriangle} />
+                <FormControlErrorText>
+                  {errors?.esportes?.message}
+                </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
             <Button
               onPress={() => {
                 handleSubmit(onSubmit)();
