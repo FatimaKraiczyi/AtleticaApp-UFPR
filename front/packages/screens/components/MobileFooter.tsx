@@ -5,13 +5,12 @@ import { Text } from "@/components/ui/text";
 import useRouter from "@unitools/router";
 import { cn } from "@gluestack-ui/nativewind-utils/cn";
 import { Platform } from "react-native";
-import { LucideIcon } from "lucide-react-native";
+import type { LucideIcon } from "lucide-react-native";
 import { HomeIcon } from "../dashboard/assets/home";
 import { GlobeIcon } from "../dashboard/assets/globe";
-import { InboxIcon } from "../dashboard/assets/inbox";
-import { HeartIcon } from "../dashboard/assets/heart";
 import { ProfileIcon } from "../dashboard/assets/profile/index.web";
 import { useState } from "react";
+import { CartIcon } from "../dashboard/assets/cart";
 
 type BottomTabs = {
   iconName: LucideIcon | typeof Icon;
@@ -21,24 +20,19 @@ type BottomTabs = {
 const bottomTabsList: BottomTabs[] = [
   {
     iconName: HomeIcon,
-    iconText: "Home",
+    iconText: "Início",
   },
-
   {
     iconName: GlobeIcon,
-    iconText: "Community",
+    iconText: "Atléticas",
   },
   {
-    iconName: InboxIcon,
-    iconText: "Inbox",
-  },
-  {
-    iconName: HeartIcon,
-    iconText: "Favourite",
+    iconName: CartIcon,
+    iconText: "Carrinho",
   },
   {
     iconName: ProfileIcon,
-    iconText: "Profile",
+    iconText: "Meu Perfil",
   },
 ];
 
@@ -48,7 +42,15 @@ export const MobileFooter = () => {
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);
-    // router.push("/dashboard/dashboard-layout");
+    if (index === 0) {
+      router.push("/dashboard/dashboard-layout");
+    } else if (index === 1) {
+      router.push("/dashboard/atleticas");
+    } else if (index === 2) {
+      router.push("/dashboard/carrinho");
+    } else if (index === 3) {
+      router.push("/dashboard/meu-perfil");
+    }
   };
 
   return (
@@ -56,7 +58,7 @@ export const MobileFooter = () => {
       className={cn(
         "bg-background-0 justify-between w-full absolute left-0 bottom-0 right-0 p-3 overflow-hidden items-center  border-t-border-300  md:hidden border-t",
         { "pb-5": Platform.OS === "ios" },
-        { "pb-5": Platform.OS === "android" },
+        { "pb-5": Platform.OS === "android" }
       )}
     >
       {bottomTabsList.map(
@@ -77,7 +79,7 @@ export const MobileFooter = () => {
               {item.iconText}
             </Text>
           </Pressable>
-        ),
+        )
       )}
     </HStack>
   );

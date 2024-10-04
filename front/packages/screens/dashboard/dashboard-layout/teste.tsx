@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { HomeIcon } from "../assets/home";
-import { HeartIcon } from "../assets/heart";
+import { HeartIcon } from "../assets/cart";
 import { ProfileIcon } from "../assets/profile";
 import { CalendarIcon } from "../assets/calendar";
 import { SafeAreaView } from "@/components/ui/safe-area-view";

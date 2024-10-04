@@ -28,7 +28,7 @@ import { Keyboard, Switch } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { CursoProps } from "../../../../interfaces/cursos";
+import type { CursoProps } from "../../../../interfaces/cursos";
 import { getCursos } from "../../../../api/cursos";
 import {
   Select,
@@ -52,7 +52,7 @@ const userSchema = z.object({
     .max(50, "Name must be less than 50 characters"),
   curso: z.array(z.string()).min(1, "Curso é obrigatório"),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  esportes: z.array(z.string()).min(1),
+  esportes: z.string().min(1),
 });
 type userSchemaDetails = z.infer<typeof userSchema>;
 
@@ -79,6 +79,7 @@ export const ModalAtletica = ({
 
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["curso"]);
+	const [profileImage, setProfileImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -102,6 +103,14 @@ export const ModalAtletica = ({
     setShowModal(false);
     reset();
   };
+
+	const handleImageUploadWeb = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			const imageUrl = URL.createObjectURL(file);
+			setProfileImage(imageUrl);
+		}
+	};
 
   return (
     <Modal
@@ -139,12 +148,16 @@ export const ModalAtletica = ({
         <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
           <Center className="w-full mb-6">
             <Avatar size="2xl">
-              <AvatarImage
-                source={require("@/assets/profile-screens/profile/image.png")}
-              />
-              <AvatarBadge className="justify-center items-center bg-background-500">
-                <Icon as={EditPhotoIcon} />
-              </AvatarBadge>
+						<AvatarImage
+            source={
+              profileImage
+                ? { uri: profileImage }
+                : require("@/assets/profile-screens/profile/image.png")
+            }
+          />
+          <AvatarBadge className="justify-center items-center bg-background-500">
+            <Icon as={EditPhotoIcon} />
+          </AvatarBadge>
             </Avatar>
           </Center>
           <VStack space="xl">
@@ -177,7 +190,7 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <FormControl isInvalid={!!errors.name}>
+            <FormControl isInvalid={!!errors.descricao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Descrição</FormControlLabelText>
               </FormControlLabel>
@@ -276,7 +289,7 @@ export const ModalAtletica = ({
               </FormControlLabel>
               <Controller
                 defaultValue=""
-                name="descricao"
+                name="esportes"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input>

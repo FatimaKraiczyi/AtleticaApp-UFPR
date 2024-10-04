@@ -4,10 +4,10 @@ import { Icon } from "@/components/ui/icon";
 import useRouter from "@unitools/router";
 import { useState } from "react";
 import { HomeIcon } from "../dashboard/assets/home";
-import { InboxIcon } from "../dashboard/assets/inbox";
 import { GlobeIcon } from "../dashboard/assets/globe";
-import { HeartIcon } from "../dashboard/assets/heart";
-import { LucideIcon } from "lucide-react-native";
+import { CartIcon } from "../dashboard/assets/cart";
+import type { LucideIcon } from "lucide-react-native";
+import { ProfileIcon } from "../dashboard/assets/profile";
 
 type Icons = {
   iconName: LucideIcon | typeof Icon;
@@ -18,13 +18,13 @@ const list: Icons[] = [
     iconName: HomeIcon,
   },
   {
-    iconName: InboxIcon,
-  },
-  {
     iconName: GlobeIcon,
   },
   {
-    iconName: HeartIcon,
+    iconName: CartIcon,
+  },
+  {
+    iconName: ProfileIcon,
   },
 ];
 
@@ -34,7 +34,15 @@ export const Sidebar = () => {
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);
-    // router.push("/dashboard/dashboard-layout");
+    if (index === 0) {
+      router.push("/dashboard/dashboard-layout");
+    } else if (index === 1) {
+      router.push("/dashboard/atleticas");
+    } else if (index === 2) {
+      router.push("/dashboard/carrinho");
+    } else if (index === 3) {
+      router.push("/dashboard/meu-perfil");
+    }
   };
 
   return (
