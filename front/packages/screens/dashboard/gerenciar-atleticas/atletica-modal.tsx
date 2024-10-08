@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Keyboard, Switch } from "react-native";
+import { Keyboard, Platform, Switch, TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
 import { EditPhotoIcon } from "../../profile-screens/profile/assets/icons/edit-photo";
+import * as ImagePicker from "expo-image-picker";
 
 const userSchema = z.object({
   name: z
@@ -79,7 +80,7 @@ export const ModalAtletica = ({
 
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["curso"]);
-	const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -104,13 +105,30 @@ export const ModalAtletica = ({
     reset();
   };
 
-	const handleImageUploadWeb = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (file) {
-			const imageUrl = URL.createObjectURL(file);
-			setProfileImage(imageUrl);
-		}
-	};
+  const handleImageUploadWeb = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const { uri } = result.assets[0];
+      setProfileImage(uri);
+    }
+  };
 
   return (
     <Modal
@@ -147,18 +165,20 @@ export const ModalAtletica = ({
         </Center>
         <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
           <Center className="w-full mb-6">
-            <Avatar size="2xl">
-						<AvatarImage
-            source={
-              profileImage
-                ? { uri: profileImage }
-                : require("@/assets/profile-screens/profile/image.png")
-            }
-          />
-          <AvatarBadge className="justify-center items-center bg-background-500">
-            <Icon as={EditPhotoIcon} />
-          </AvatarBadge>
-            </Avatar>
+            <TouchableOpacity onPress={pickImage}>
+              <Avatar size="2xl">
+                <AvatarImage
+                  source={
+                    profileImage
+                      ? { uri: profileImage }
+                      : require("@/assets/profile-screens/profile/image.png")
+                  }
+                />
+                <AvatarBadge className="justify-center items-center bg-background-500">
+                  <Icon as={EditPhotoIcon} />
+                </AvatarBadge>
+              </Avatar>
+            </TouchableOpacity>
           </Center>
           <VStack space="xl">
             <FormControl isInvalid={!!errors.name}>
