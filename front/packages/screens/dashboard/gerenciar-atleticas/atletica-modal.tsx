@@ -46,6 +46,7 @@ import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
 import { EditPhotoIcon } from "../../profile-screens/profile/assets/icons/edit-photo";
 import * as ImagePicker from "expo-image-picker";
 import { createAtletica } from "../../../../api/atleticas";
+import type { Atletica } from "../../../../interfaces/atleticas";
 
 const userSchema = z.object({
   nome: z
@@ -53,6 +54,7 @@ const userSchema = z.object({
     .min(1, "Nome é obrigatório")
     .max(50, "O nome deve ter menos de 10 caracteres"),
   cursoIds: z.array(z.string()).min(1, "Curso é obrigatório"),
+  imagem: z.string().optional(),
   descricao: z.string().min(1, "Descrição é obrigatória"),
   atividades: z.string().min(1, "Atividades esportivas são obrigatórias"),
 });
@@ -61,9 +63,11 @@ type userSchemaDetails = z.infer<typeof userSchema>;
 export const ModalAtletica = ({
   showModal,
   setShowModal,
+  addAtletica,
 }: {
   showModal: boolean;
   setShowModal: any;
+  addAtletica: (newAtletica: Atletica) => void;
 }) => {
   const ref = useRef(null);
   const {
@@ -80,7 +84,7 @@ export const ModalAtletica = ({
   };
 
   const [cursos, setCursos] = useState<CursoProps[]>([]);
-  const [cursoFields, setCursoFields] = useState<string[]>(["curso"]);
+  const [cursoFields, setCursoFields] = useState<string[]>(["cursoIds"]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -94,7 +98,7 @@ export const ModalAtletica = ({
   }, []);
 
   const addCursoField = () => {
-    setCursoFields([...cursoFields, `curso${cursoFields.length}`]);
+    setCursoFields([...cursoFields, `cursoIds${cursoFields.length}`]);
   };
 
   const removeCursoField = (index: number) => {
@@ -106,16 +110,19 @@ export const ModalAtletica = ({
       nome: data.nome,
       descricao: data.descricao,
       atividades: data.atividades,
-      imagem: profileImage,
-      cursoIds: data.cursoIds,
+      imagem: data.imagem,
+      cursoIds: (data.cursoIds ?? []).filter((id) => id !== ""),
     };
 
     try {
       const response = await createAtletica(newAtletica);
 
       if (response.success) {
+        addAtletica(newAtletica);
         setShowModal(false);
         reset();
+        setCursoFields(["cursoIds"]);
+        setProfileImage(null);
       }
     } catch (error) {
       console.error("Erro na chamada createAtletica:", error);
@@ -253,6 +260,7 @@ export const ModalAtletica = ({
                 </FormControlLabel>
                 <div className="flex items-center w-full">
                   <Controller
+                    defaultValue=""
                     name={`cursoIds.${index}`}
                     control={control}
                     render={({ field: { onChange } }) => (
@@ -273,7 +281,7 @@ export const ModalAtletica = ({
                                 value={String(curso.id)}
                                 label={curso.nome}
                               >
-                                {curso.id}
+                                {curso.nome}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -314,7 +322,7 @@ export const ModalAtletica = ({
             <FormControl isInvalid={!!errors.atividades}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>
-                  Atividades Esportivas
+                  Atividades esportivas
                 </FormControlLabelText>
               </FormControlLabel>
               <Controller
@@ -324,7 +332,7 @@ export const ModalAtletica = ({
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Atividades Esportivas"
+                      placeholder="Atividades esportivas"
                       type="text"
                       value={value}
                       onChangeText={onChange}
@@ -344,9 +352,7 @@ export const ModalAtletica = ({
             </FormControl>
             <Button
               onPress={() => {
-                handleSubmit((data) => {
-                  onSubmit(data);
-                })();
+                handleSubmit(onSubmit)();
               }}
               className="flex-1 p-2 mt-8"
             >

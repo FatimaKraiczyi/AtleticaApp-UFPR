@@ -4,7 +4,7 @@ export interface Atletica {
   descricao: string;
   imagem?: string | null;
   atividades: string;
-	cursoIds: string[];
+	cursoIds?: string[];
 }
 
 export interface AtleticaResponse {

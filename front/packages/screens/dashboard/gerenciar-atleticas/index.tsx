@@ -68,6 +68,10 @@ const MainContent = () => {
     setIsModalVisible(false);
   };
 
+	const addAtletica = (newAtletica: Atletica) => {
+    setAtleticas((prevAtleticas) => [...prevAtleticas, newAtletica]);
+  };
+
   useEffect(() => {
     const fetchAtleticas = async () => {
       try {
@@ -174,6 +178,7 @@ const MainContent = () => {
       <ModalAtletica
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
+				addAtletica={addAtletica}
       />
     </Box>
   );
