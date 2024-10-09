@@ -157,16 +157,16 @@ const MainContent = () => {
                       </Pressable>
                     </HStack>
                   </HStack>
-                  <Button
+									<Button
                     variant="outline"
                     className="gap-3 relative"
-                    onPress={() => handleCardPress(item.id)}
+                    onPress={() => item.id !== undefined && handleCardPress(item.id)}
                   >
                     <ButtonText>Gerenciar Membros</ButtonText>
                   </Button>
                 </VStack>
               </GridItem>
-            ))}
+            ))}{" "}
           </Grid>
         </VStack>
       </ScrollView>

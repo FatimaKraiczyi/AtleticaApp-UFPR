@@ -106,7 +106,9 @@ const MainContent = () => {
             Welcome Alexander
           </Heading>
 
-          <Grid className="gap-5">
+          <Grid _extra={{
+						className: "gap-5"
+					}}>
             {HeadingCards.map((item, index) => {
               return (
                 <GridItem

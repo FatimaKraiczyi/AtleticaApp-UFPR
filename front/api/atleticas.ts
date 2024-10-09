@@ -1,5 +1,5 @@
 import type { IResponse } from "../interfaces";
-import { AtleticaResponse } from "../interfaces/atleticas";
+import { Atletica, AtleticaResponse } from "../interfaces/atleticas";
 import { API, objectCatch } from "./api";
 import { getAtleticaEndpoint, createAtleticaEndpoint, updateAtleticaEndpoint, deleteAtleticaEndpoint, getAtleticaByIdEndpoint } from "./routes/atleticas";
 
@@ -14,10 +14,10 @@ export const getAtletica = async (): Promise<IResponse.Default<AtleticaResponse>
 };
 
 export const createAtletica = async (
-  atletica: any,
-): Promise<IResponse.Default<any>> => {
+  atletica: Atletica,
+): Promise<IResponse.Default<AtleticaResponse>> => {
   try {
-    const { data, status } = await API.post(createAtleticaEndpoint, { ...atletica });
+    const { data, status } = await API.post(createAtleticaEndpoint, atletica );
     return { data, success: status === 201 };
   } catch (error) {
     return { ...objectCatch };

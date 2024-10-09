@@ -1,11 +1,10 @@
 export interface Atletica {
-  id: number;
+  id?: number;
   nome: string;
   descricao: string;
-  imagem: string | null;
+  imagem?: string | null;
   atividades: string;
-  createdAt: string;
-  updatedAt: string;
+	cursoIds: string[];
 }
 
 export interface AtleticaResponse {
