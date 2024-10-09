@@ -1,7 +1,6 @@
 import axios from "axios";
 import type { IResponse } from "../interfaces";
 import { getToken } from "./token";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 
 const API = axios.create();

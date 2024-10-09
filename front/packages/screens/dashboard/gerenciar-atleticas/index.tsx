@@ -5,7 +5,7 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
@@ -18,38 +18,12 @@ import { WebHeader } from "../../components/WebHeader";
 import { MobileFooter } from "../../components/MobileFooter";
 import { Sidebar } from "../../components/Sidebar";
 import { ModalAtletica } from "./atletica-modal";
-
-interface CardData {
-  id: number;
-  bannerUri: string;
-  title: string;
-  description: string;
-}
-
-const HeadingCards: CardData[] = [
-  {
-    id: 1,
-    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
-    title: "Atletica 1",
-    description: "Add your details",
-  },
-  {
-    id: 2,
-    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
-    title: "Atletica 2",
-    description: "Add your details",
-  },
-  {
-    id: 3,
-    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
-    title: "Atletica 3",
-    description: "Add your details",
-  },
-];
+import { getAtletica } from "../../../../api/atleticas";
+import type { Atletica } from "../../../../interfaces/atleticas";
 
 const Atleticas = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible,
+    props.isSidebarVisible
   );
 
   function toggleSidebar() {
@@ -79,9 +53,11 @@ const Atleticas = (props: any) => {
 const MainContent = () => {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [atleticas, setAtleticas] = useState<Atletica[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleCardPress = () => {
-    router.push(`/dashboard/membros-atletica`);
+  const handleCardPress = (id: number) => {
+    router.push(`/dashboard/membros-atletica/${id}`);
   };
 
   const handleCadastrarAtleticaPress = () => {
@@ -92,8 +68,31 @@ const MainContent = () => {
     setIsModalVisible(false);
   };
 
+  useEffect(() => {
+    const fetchAtleticas = async () => {
+      try {
+        const response = await getAtletica();
+        if (response.success && response.data) {
+          setAtleticas(response.data.atletica);
+        } else {
+          console.error("Erro ao buscar atléticas");
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAtleticas();
+  }, []);
+
+  if (loading) {
+    return <Text>Carregando...</Text>;
+  }
+
   return (
-    <Box className="flex-1 ">
+    <Box className="flex-1">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -104,7 +103,7 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Welcome Alexander
+            Bem-vindo, Alexander
           </Heading>
 
           <VStack space="lg" className="items-center">
@@ -116,59 +115,58 @@ const MainContent = () => {
             </Button>
           </VStack>
 
-          <Grid className="gap-5">
-            {HeadingCards.map((item, index) => {
-              return (
-                <GridItem
-                  _extra={{
-                    className: "col-span-12 sm:col-span-6 lg:col-span-4",
-                  }}
-                  key={index}
+          <Grid
+            _extra={{
+              className: "gap-5",
+            }}
+          >
+            {atleticas.map((item, index) => (
+              <GridItem
+                _extra={{
+                  className: "col-span-12 sm:col-span-6 lg:col-span-4",
+                }}
+                key={index}
+              >
+                <VStack
+                  space="md"
+                  className="border border-border-300 rounded-lg p-4"
                 >
-                  <VStack
-                    space="md"
-                    className="border border-border-300 rounded-lg p-4"
-                  >
-                    <HStack space="xl" className="items-center justify-between">
-                      <HStack space="xl" className="items-center">
-                        <Avatar>
-                          <AvatarImage
-                            //@ts-ignore
-                            source={item.bannerUri}
-                          />
-                        </Avatar>
-                        <VStack>
-                          <Text className="font-semibold text-typography-900 line-clamp-1">
-                            {item.title}
-                          </Text>
-                          <Text className="line-clamp-1">
-                            {item.description}
-                          </Text>
-                        </VStack>
-                      </HStack>
-                      <HStack space="md">
-                        <Pressable>
-                          <Icon as={EditIcon} className="text-typography-600" />
-                        </Pressable>
-                        <Pressable>
-                          <Icon
-                            as={TrashIcon}
-                            className="text-typography-600"
-                          />
-                        </Pressable>
-                      </HStack>
+                  <HStack space="xl" className="items-center justify-between">
+                    <HStack space="xl" className="items-center">
+                      <Avatar>
+                        <AvatarImage
+                          source={
+                            item.imagem ||
+                            require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+                          }
+                        />
+                      </Avatar>
+                      <VStack>
+                        <Text className="font-semibold text-typography-900 line-clamp-1">
+                          {item.nome}
+                        </Text>
+                        <Text className="line-clamp-1">{item.descricao}</Text>
+                      </VStack>
                     </HStack>
-                    <Button
-                      variant="outline"
-                      className="gap-3 relative"
-                      onPress={() => handleCardPress()}
-                    >
-                      <ButtonText>Gerenciar Membros</ButtonText>
-                    </Button>
-                  </VStack>
-                </GridItem>
-              );
-            })}
+                    <HStack space="md">
+                      <Pressable>
+                        <Icon as={EditIcon} className="text-typography-600" />
+                      </Pressable>
+                      <Pressable>
+                        <Icon as={TrashIcon} className="text-typography-600" />
+                      </Pressable>
+                    </HStack>
+                  </HStack>
+                  <Button
+                    variant="outline"
+                    className="gap-3 relative"
+                    onPress={() => handleCardPress(item.id)}
+                  >
+                    <ButtonText>Gerenciar Membros</ButtonText>
+                  </Button>
+                </VStack>
+              </GridItem>
+            ))}
           </Grid>
         </VStack>
       </ScrollView>
