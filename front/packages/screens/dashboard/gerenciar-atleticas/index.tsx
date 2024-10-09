@@ -54,10 +54,14 @@ const Atleticas = (props: any) => {
 const MainContent = () => {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [atleticaToEdit, setAtleticaToEdit] = useState<Atletica | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [atleticas, setAtleticas] = useState<Atletica[]>([]);
   const [loading, setLoading] = useState(true);
-  const [atleticaIdToDelete, setAtleticaIdToDelete] = useState<number | null>(null); // Estado para o ID da atlética a ser deletada
+  const [atleticaIdToDelete, setAtleticaIdToDelete] = useState<number | null>(
+    null
+  );
 
   const handleCardPress = (id: number) => {
     router.push(`/dashboard/membros-atletica/${id}`);
@@ -65,6 +69,14 @@ const MainContent = () => {
 
   const handleCadastrarAtleticaPress = () => {
     setIsModalVisible(true);
+    setIsEditMode(false);
+    setAtleticaToEdit(null);
+  };
+
+  const handleEditAtleticaPress = (atletica: Atletica) => {
+    setIsModalVisible(true);
+    setIsEditMode(true);
+    setAtleticaToEdit(atletica);
   };
 
   const handleCloseModal = () => {
@@ -81,7 +93,7 @@ const MainContent = () => {
     setAtleticaIdToDelete(null);
   };
 
-	const updateAtleticasList = async () => {
+  const updateAtleticasList = async () => {
     try {
       const response = await getAtletica();
       if (response.success && response.data) {
@@ -92,9 +104,9 @@ const MainContent = () => {
     } catch (error) {
       console.error("Erro na requisição:", error);
     } finally {
-			setLoading(false);
-		}
-	};
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     updateAtleticasList();
@@ -162,10 +174,17 @@ const MainContent = () => {
                       </VStack>
                     </HStack>
                     <HStack space="md">
-                      <Pressable>
-                        <Icon as={EditIcon} className="text-typography-600" />
-                      </Pressable>
-                      <Pressable  onPress={() => item.id !== undefined && handleOpenDeleteModal(item.id)}>
+                        <Pressable
+                          onPress={() => handleEditAtleticaPress(item)}
+                        >
+                          <Icon as={EditIcon} className="text-typography-600"/>
+                        </Pressable>
+                      <Pressable
+                        onPress={() =>
+                          item.id !== undefined &&
+                          handleOpenDeleteModal(item.id)
+                        }
+                      >
                         <Icon as={TrashIcon} className="text-typography-600" />
                       </Pressable>
                     </HStack>
@@ -173,7 +192,9 @@ const MainContent = () => {
                   <Button
                     variant="outline"
                     className="gap-3 relative"
-                    onPress={() => item.id !== undefined && handleCardPress(item.id)}
+                    onPress={() =>
+                      item.id !== undefined && handleCardPress(item.id)
+                    }
                   >
                     <ButtonText>Gerenciar Membros</ButtonText>
                   </Button>
@@ -188,6 +209,8 @@ const MainContent = () => {
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
         addAtletica={updateAtleticasList}
+        editAtletica={updateAtleticasList}
+        atleticaData={isEditMode && atleticaToEdit ? atleticaToEdit : undefined}
       />
 
       <DeleteModal

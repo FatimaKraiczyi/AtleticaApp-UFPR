@@ -45,7 +45,7 @@ import {
 import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
 import { EditPhotoIcon } from "../../profile-screens/profile/assets/icons/edit-photo";
 import * as ImagePicker from "expo-image-picker";
-import { createAtletica } from "../../../../api/atleticas";
+import { createAtletica, updateAtletica } from "../../../../api/atleticas";
 import type { Atletica } from "../../../../interfaces/atleticas";
 
 const userSchema = z.object({
@@ -64,10 +64,14 @@ export const ModalAtletica = ({
   showModal,
   setShowModal,
   addAtletica,
+  editAtletica,
+  atleticaData,
 }: {
   showModal: boolean;
   setShowModal: any;
   addAtletica: (newAtletica: Atletica) => void;
+  editAtletica?: (atletica: Atletica) => void;
+  atleticaData?: Atletica;
 }) => {
   const ref = useRef(null);
   const {
@@ -75,6 +79,7 @@ export const ModalAtletica = ({
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
   });
@@ -105,27 +110,57 @@ export const ModalAtletica = ({
     setCursoFields(cursoFields.filter((_, i) => i !== index));
   };
 
+  useEffect(() => {
+    if (showModal) {
+      resetForm();
+    }
+
+    if (atleticaData) {
+      setValue("nome", atleticaData.nome);
+      setValue("descricao", atleticaData.descricao);
+      setValue("atividades", atleticaData.atividades);
+      setValue("cursoIds", atleticaData.cursoIds ?? []);
+      setProfileImage(atleticaData.imagem || null);
+    }
+  }, [showModal, atleticaData, setValue]);
+
+  const resetForm = () => {
+    reset();
+    setCursoFields(["cursoIds"]);
+    setProfileImage(null);
+  };
+
   const onSubmit = async (data: userSchemaDetails) => {
-    const newAtletica = {
+    const atleticaPayload = {
       nome: data.nome,
       descricao: data.descricao,
       atividades: data.atividades,
-      imagem: data.imagem,
+      imagem: profileImage,
       cursoIds: (data.cursoIds ?? []).filter((id) => id !== ""),
     };
 
     try {
-      const response = await createAtletica(newAtletica);
-
-      if (response.success) {
-        addAtletica(newAtletica);
-        setShowModal(false);
-        reset();
-        setCursoFields(["cursoIds"]);
-        setProfileImage(null);
+      if (atleticaData) {
+        if (atleticaData.id !== undefined) {
+          const response = await updateAtletica(
+            atleticaData.id,
+            atleticaPayload
+          );
+          if (response.success) {
+            editAtletica && editAtletica(atleticaPayload);
+          }
+        }
+      } else {
+        const response = await createAtletica(atleticaPayload);
+        if (response.success) {
+          addAtletica(atleticaPayload);
+        }
       }
+
+      setShowModal(false);
+      resetForm();
     } catch (error) {
-      console.error("Erro na chamada createAtletica:", error);
+      console.error("Erro:", error);
     }
   };
 
@@ -148,6 +183,7 @@ export const ModalAtletica = ({
       isOpen={showModal}
       onClose={() => {
         setShowModal(false);
+        resetForm();
       }}
       finalFocusRef={ref}
       size="lg"
@@ -173,7 +209,7 @@ export const ModalAtletica = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            Cadastrar Atlética
+            {atleticaData ? "Editar Atlética" : "Cadastrar Atlética"}
           </Heading>
         </Center>
         <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
