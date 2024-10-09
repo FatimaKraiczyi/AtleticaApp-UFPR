@@ -1,10 +1,17 @@
 import type { IResponse } from "../interfaces";
 import { Atletica, AtleticaResponse } from "../interfaces/atleticas";
 import { API, objectCatch } from "./api";
-import { getAtleticaEndpoint, createAtleticaEndpoint, updateAtleticaEndpoint, deleteAtleticaEndpoint, getAtleticaByIdEndpoint } from "./routes/atleticas";
+import {
+  getAtleticaEndpoint,
+  createAtleticaEndpoint,
+  updateAtleticaEndpoint,
+  deleteAtleticaEndpoint,
+  getAtleticaByIdEndpoint,
+} from "./routes/atleticas";
 
-
-export const getAtletica = async (): Promise<IResponse.Default<AtleticaResponse>> => {
+export const getAtletica = async (): Promise<
+  IResponse.Default<AtleticaResponse>
+> => {
   try {
     const { data, status } = await API.get(getAtleticaEndpoint);
     return { data, success: status === 200 };
@@ -14,10 +21,10 @@ export const getAtletica = async (): Promise<IResponse.Default<AtleticaResponse>
 };
 
 export const createAtletica = async (
-  atletica: Atletica,
+  atletica: Atletica
 ): Promise<IResponse.Default<AtleticaResponse>> => {
   try {
-    const { data, status } = await API.post(createAtleticaEndpoint, atletica );
+    const { data, status } = await API.post(createAtleticaEndpoint, atletica);
     return { data, success: status === 201 };
   } catch (error) {
     return { ...objectCatch };
@@ -25,11 +32,14 @@ export const createAtletica = async (
 };
 
 export const updateAtletica = async (
-  id: string,
-  atletica: any,
-): Promise<IResponse.Default<any>> => {
+  id: number,
+  atletica: Atletica
+): Promise<IResponse.Default<AtleticaResponse>> => {
   try {
-    const { data, status } = await API.put(`${updateAtleticaEndpoint}/${id}`, { ...atletica });
+    const { data, status } = await API.put(
+      `${updateAtleticaEndpoint}/${id}`,
+      atletica
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -37,10 +47,12 @@ export const updateAtletica = async (
 };
 
 export const deleteAtletica = async (
-  id: string,
+  id: number
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.delete(`${deleteAtleticaEndpoint}/${id}`);
+    const { data, status } = await API.delete(
+      `${deleteAtleticaEndpoint}/${id}`
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -48,7 +60,7 @@ export const deleteAtletica = async (
 };
 
 export const getAtleticaById = async (
-  id: string,
+  id: string
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(`${getAtleticaByIdEndpoint}/${id}`);

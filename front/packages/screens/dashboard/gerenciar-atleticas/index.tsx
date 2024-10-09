@@ -18,6 +18,7 @@ import { WebHeader } from "../../components/WebHeader";
 import { MobileFooter } from "../../components/MobileFooter";
 import { Sidebar } from "../../components/Sidebar";
 import { ModalAtletica } from "./atletica-modal";
+import { DeleteModal } from "./delete-modal";
 import { getAtletica } from "../../../../api/atleticas";
 import type { Atletica } from "../../../../interfaces/atleticas";
 
@@ -53,8 +54,10 @@ const Atleticas = (props: any) => {
 const MainContent = () => {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [atleticas, setAtleticas] = useState<Atletica[]>([]);
   const [loading, setLoading] = useState(true);
+  const [atleticaIdToDelete, setAtleticaIdToDelete] = useState<number | null>(null); // Estado para o ID da atlética a ser deletada
 
   const handleCardPress = (id: number) => {
     router.push(`/dashboard/membros-atletica/${id}`);
@@ -68,27 +71,33 @@ const MainContent = () => {
     setIsModalVisible(false);
   };
 
-	const addAtletica = (newAtletica: Atletica) => {
-    setAtleticas((prevAtleticas) => [...prevAtleticas, newAtletica]);
+  const handleOpenDeleteModal = (id: number) => {
+    setAtleticaIdToDelete(id);
+    setIsDeleteModalVisible(true);
   };
 
-  useEffect(() => {
-    const fetchAtleticas = async () => {
-      try {
-        const response = await getAtletica();
-        if (response.success && response.data) {
-          setAtleticas(response.data.atletica);
-        } else {
-          console.error("Erro ao buscar atléticas");
-        }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalVisible(false);
+    setAtleticaIdToDelete(null);
+  };
 
-    fetchAtleticas();
+	const updateAtleticasList = async () => {
+    try {
+      const response = await getAtletica();
+      if (response.success && response.data) {
+        setAtleticas(response.data.atletica);
+      } else {
+        console.error("Erro ao buscar atléticas");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    } finally {
+			setLoading(false);
+		}
+	};
+
+  useEffect(() => {
+    updateAtleticasList();
   }, []);
 
   if (loading) {
@@ -156,12 +165,12 @@ const MainContent = () => {
                       <Pressable>
                         <Icon as={EditIcon} className="text-typography-600" />
                       </Pressable>
-                      <Pressable>
+                      <Pressable  onPress={() => item.id !== undefined && handleOpenDeleteModal(item.id)}>
                         <Icon as={TrashIcon} className="text-typography-600" />
                       </Pressable>
                     </HStack>
                   </HStack>
-									<Button
+                  <Button
                     variant="outline"
                     className="gap-3 relative"
                     onPress={() => item.id !== undefined && handleCardPress(item.id)}
@@ -170,7 +179,7 @@ const MainContent = () => {
                   </Button>
                 </VStack>
               </GridItem>
-            ))}{" "}
+            ))}
           </Grid>
         </VStack>
       </ScrollView>
@@ -178,7 +187,14 @@ const MainContent = () => {
       <ModalAtletica
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
-				addAtletica={addAtletica}
+        addAtletica={updateAtleticasList}
+      />
+
+      <DeleteModal
+        showModal={isDeleteModalVisible}
+        setShowModal={handleCloseDeleteModal}
+        atleticaId={atleticaIdToDelete!}
+        updateAtleticasList={updateAtleticasList}
       />
     </Box>
   );
