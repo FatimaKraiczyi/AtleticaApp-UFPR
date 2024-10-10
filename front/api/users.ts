@@ -1,5 +1,5 @@
 import type { IResponse } from "../interfaces";
-import type { UserProps } from "../interfaces/users";
+import type { UserNovaSenha, UserProps } from "../interfaces/users";
 import { API, objectCatch } from "./api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
@@ -10,6 +10,7 @@ import {
   resetPassword,
   password,
   createUserEndpoint,
+  newPasswordResquest,
 } from "./routes/routes";
 import { getToken } from "./token";
 
@@ -52,7 +53,7 @@ export const sendEmailRequest = async (
 
 export const validateUserToken = async (
   token: string,
-): Promise<IResponse.Default<null>> => {
+): Promise<IResponse.Default<UserNovaSenha>> => {
   try {
     const { data, status } = await API.post(validateToken, { token });
 
@@ -82,13 +83,12 @@ export const resetPasswordRequest = async (
   }
 };
 
-export const newPasswordRequest = async (
+export const newPassword = async (
   senha: string,
   repSenha: string,
 ): Promise<IResponse.Default<null>> => {
   try {
-    const { data, status } = await API.put(password, { senha, repSenha });
-
+    const { data, status } = await API.put(newPasswordResquest, { senha, repSenha });
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
