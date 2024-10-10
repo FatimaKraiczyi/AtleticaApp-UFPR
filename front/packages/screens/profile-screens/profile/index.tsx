@@ -426,7 +426,7 @@ interface AccountCardType {
   subText: string;
   endIcon: LucideIcon | typeof Icon;
 }
-const accountData: AccountCardType[] = [
+/* const accountData: AccountCardType[] = [
   {
     iconName: InboxIcon,
     subText: "Settings",
@@ -442,9 +442,9 @@ const accountData: AccountCardType[] = [
     subText: "Rewards",
     endIcon: ChevronRightIcon,
   },
-];
+]; */
 const MainContent = () => {
-  const [showModal, setShowModal] = useState(false);
+/*   const [showModal, setShowModal] = useState(false);
 
   return (
     <VStack className="h-full w-full mb-16 md:mb-0">
@@ -625,7 +625,8 @@ const MainContent = () => {
       </ScrollView>
     </VStack>
   );
-};
+}; */
+}
 const MobileScreen = () => {
   const {
     control,
@@ -1528,8 +1529,8 @@ export const Profile = () => {
   return (
     <SafeAreaView className="h-full w-full">
       <DashboardLayout title="Company Name" isSidebarVisible={true}>
-        <MainContent />
-      </DashboardLayout>
+{/*         <MainContent />
+ */}      </DashboardLayout>
       <MobileFooter footerIcons={bottomTabsList} />
     </SafeAreaView>
   );

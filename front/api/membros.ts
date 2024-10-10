@@ -1,13 +1,20 @@
 import type { IResponse } from "../interfaces";
-import { Membro, MembroResponse } from "../interfaces/membros";
+import { Membro, MembrosResponse } from "../interfaces/membros";
 import { API, objectCatch } from "./api";
-import { createMembroAtleticaEndpoint, deleteMembroAtleticaEndpoint, getMembroAtleticaEndpoint, updateMembroAtleticaEndpoint } from "./routes/membros";
+import {
+  createMembroAtleticaEndpoint,
+  deleteMembroAtleticaEndpoint,
+  getMembroAtleticaEndpoint,
+  updateMembroAtleticaEndpoint,
+} from "./routes/membros";
 
-export const getMembros = async (): Promise<
-  IResponse.Default<MembroResponse>
-> => {
+export const getMembros = async (
+  atleticaId: string
+): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.get(getMembroAtleticaEndpoint);
+    const { data, status } = await API.get(
+      `${getMembroAtleticaEndpoint}/${atleticaId}`
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -16,9 +23,12 @@ export const getMembros = async (): Promise<
 
 export const adicionarMembro = async (
   addMembro: Membro
-): Promise<IResponse.Default<MembroResponse>> => {
+): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(createMembroAtleticaEndpoint, addMembro);
+    const { data, status } = await API.post(
+      createMembroAtleticaEndpoint,
+      addMembro
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -26,12 +36,12 @@ export const adicionarMembro = async (
 };
 
 export const editarMembro = async (
-  id: string,
+  email: string,
   atleticaMembro: Membro
-): Promise<IResponse.Default<MembroResponse>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.put(
-      `${updateMembroAtleticaEndpoint}/${id}`,
+      `${updateMembroAtleticaEndpoint}/${email}`,
       atleticaMembro
     );
     return { data, success: status === 200 };
@@ -41,11 +51,11 @@ export const editarMembro = async (
 };
 
 export const deletarMembro = async (
-  id: string
+  email: string
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.delete(
-      `${deleteMembroAtleticaEndpoint}/${id}`
+      `${deleteMembroAtleticaEndpoint}/${email}`
     );
     return { data, success: status === 200 };
   } catch (error) {

@@ -21,6 +21,8 @@ import { ModalAtletica } from "./atletica-modal";
 import { DeleteModal } from "./delete-modal";
 import { getAtletica } from "../../../../api/atleticas";
 import type { Atletica } from "../../../../interfaces/atleticas";
+import { getMembros } from "../../../../api/membros";
+import { useMembros } from "../../../hooks/MembrosContext";
 
 const Atleticas = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
@@ -62,9 +64,18 @@ const MainContent = () => {
   const [atleticaIdToDelete, setAtleticaIdToDelete] = useState<number | null>(
     null
   );
+  const { setMembros } = useMembros();
 
-  const handleCardPress = (id: number) => {
-    router.push(`/dashboard/membros-atletica/${id}`);
+  const handleCardPress = async (atleticaId: string) => {
+    const response = await getMembros(atleticaId);
+    if (response.success) {
+      if (response.data) {
+        setMembros(response.data);
+      } else {
+        console.error("Dados dos membros não encontrados");
+      }
+      router.push("/dashboard/membros-atletica");
+    }
   };
 
   const handleCadastrarAtleticaPress = () => {
@@ -174,11 +185,9 @@ const MainContent = () => {
                       </VStack>
                     </HStack>
                     <HStack space="md">
-                        <Pressable
-                          onPress={() => handleEditAtleticaPress(item)}
-                        >
-                          <Icon as={EditIcon} className="text-typography-600"/>
-                        </Pressable>
+                      <Pressable onPress={() => handleEditAtleticaPress(item)}>
+                        <Icon as={EditIcon} className="text-typography-600" />
+                      </Pressable>
                       <Pressable
                         onPress={() =>
                           item.id !== undefined &&
@@ -192,9 +201,7 @@ const MainContent = () => {
                   <Button
                     variant="outline"
                     className="gap-3 relative"
-                    onPress={() =>
-                      item.id !== undefined && handleCardPress(item.id)
-                    }
+                    onPress={() => handleCardPress(String(item.id))}
                   >
                     <ButtonText>Gerenciar Membros</ButtonText>
                   </Button>

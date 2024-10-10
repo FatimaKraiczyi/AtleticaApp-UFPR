@@ -52,9 +52,9 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { getCursos } from "../../../../api/cursos";
-import { CursoProps } from "../../../../interfaces/cursos";
+import { type CursoProps } from "../../../../interfaces/cursos";
 import { createUser } from "../../../../api/users";
-import { UserProps } from "../../../../interfaces/users";
+import { type UserProps } from "../../../../interfaces/users";
 import { createUserError } from "../../../../api/errors/usersErrors";
 
 const signUpSchema = z.object({

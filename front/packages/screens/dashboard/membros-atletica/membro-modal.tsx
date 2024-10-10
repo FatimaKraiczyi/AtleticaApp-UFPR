@@ -7,8 +7,8 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
 } from "@/components/ui/form-control";
-import { ChevronDownIcon, CloseIcon, Icon } from "@/components/ui/icon";
-import { AlertTriangle } from "lucide-react-native";
+import { CloseIcon, Icon } from "@/components/ui/icon";
+import { AlertTriangle} from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -28,20 +28,8 @@ import { Keyboard, Switch } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { CursoProps } from "../../../../interfaces/cursos";
-import { getCursos } from "../../../../api/cursos";
-import {
-  Select,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectIcon,
-  SelectInput,
-  SelectItem,
-  SelectPortal,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { adicionarMembro, editarMembro } from "../../../../api/membros";
+import type { Membro } from "../../../../interfaces/membros";
 
 const userSchema = z.object({
   email: z
@@ -49,22 +37,23 @@ const userSchema = z.object({
     .min(1, "Email é obrigatório")
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
-  name: z
-    .string()
-    .min(1, "Nome é obrigatório")
-    .max(50, "Name must be less than 50 characters"),
-  curso: z.string().min(1, "Curso é obrigatório"),
-  isAdmin: z.boolean(),
-  position: z.string().optional(),
+		nomeAtletica: z.string().min(1, "Descrição é obrigatória"),
+		administrador: z.boolean(),
 });
 type userSchemaDetails = z.infer<typeof userSchema>;
 
 export const ModalMembros = ({
   showModal,
   setShowModal,
+  addMembros,
+  editMembro,
+  membroData,
 }: {
   showModal: boolean;
   setShowModal: any;
+  addMembros?: (newMembro: Membro) => void;
+  editMembro?: (membro: Membro) => void;
+  membroData?: Membro;
 }) => {
   const ref = useRef(null);
   const {
@@ -72,6 +61,7 @@ export const ModalMembros = ({
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
   });
@@ -81,30 +71,56 @@ export const ModalMembros = ({
   };
 
   const [isAdmin, setIsAdmin] = useState(false);
-  const [cursos, setCursos] = useState<CursoProps[]>([]);
 
+/* 
   useEffect(() => {
-    const fetchCursos = async () => {
-      const response = await getCursos();
-      if (response.success) {
-        setCursos(response.data ?? []);
-      }
-    };
-    fetchCursos();
-  }, []);
+    if (showModal) {
+			reset();
+    }
 
-  const onSubmit = (_data: userSchemaDetails) => {
-    setShowModal(false);
-    reset();
-  };
+    if (membroData) {
+      if (membroData) {
+        setValue("email", membroData);
+      }
+      setValue("nomeAtletica", membroData.nomeAtletica);
+      setValue("administrador", membroData.administrador);
+    }
+  }, [showModal, membroData, setValue]);
+ */
+
+  const onSubmit = async (data: userSchemaDetails) => {
+   /*  const membroPayload = {
+      email: data.email,
+      nomeAtletica: data.nomeAtletica,
+      administrador: data.administrador,
+    };
+
+    try {
+      if (membroData) {
+        if (membroData.Usuario && membroData.Usuario.email !== undefined) {
+          const response = await editarMembro(
+            membroData.Usuario.email,
+            membroPayload
+          );
+          if (response.success) {
+            editMembro && editMembro(membroPayload);
+          }
+        }
+      } else {
+        const response = await adicionarMembro(membroPayload);
+        if (response.success) {
+          addMembros && addMembros(membroPayload);
+        }
+      }
+ */
+      setShowModal(false);
+      reset();
+    }  
 
   return (
     <Modal
       isOpen={showModal}
-      onClose={() => {
-        setShowModal(false);
-      }}
-      finalFocusRef={ref}
+     finalFocusRef={ref}
       size="lg"
     >
       <ModalBackdrop />
@@ -131,7 +147,7 @@ export const ModalMembros = ({
             Adicionar Membro
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6">
+       {/*  <ModalBody className="px-10 py-6">
           <VStack space="xl">
             <FormControl isInvalid={!!errors.email}>
               <FormControlLabel className="mb-2">
@@ -162,75 +178,8 @@ export const ModalMembros = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <FormControl isInvalid={!!errors.name}>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>Nome completo</FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                defaultValue=""
-                name="name"
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input>
-                    <InputField
-                      placeholder="Nome completo"
-                      type="text"
-                      value={value}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      onSubmitEditing={handleKeyPress}
-                      enterKeyHint="done"
-                    />
-                  </Input>
-                )}
-              />
-              <FormControlError>
-                <FormControlErrorIcon size="md" as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.name?.message}
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
-            <FormControl isInvalid={!!errors.curso}>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>Curso</FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                name="curso"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Select selectedValue={value} onValueChange={onChange}>
-                    <SelectTrigger variant="outline" size="md">
-                      <SelectInput placeholder="Selecione um curso" />
-                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                    </SelectTrigger>
-                    <SelectPortal>
-                      <SelectBackdrop />
-                      <SelectContent>
-                        <SelectDragIndicatorWrapper>
-                          <SelectDragIndicator />
-                        </SelectDragIndicatorWrapper>
-                        {cursos.map((curso) => (
-                          <SelectItem
-                            key={curso.id}
-                            value={String(curso.id)}
-                            label={curso.nome}
-                          />
-                        ))}
-                      </SelectContent>
-                    </SelectPortal>
-                  </Select>
-                )}
-              />
-              <FormControlError>
-                <FormControlErrorIcon size="sm" as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.curso?.message}
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
-            <FormControl>
-              <FormControlLabel className="mb-2">
+						<FormControl>
+						<FormControlLabel className="mb-2">
                 <FormControlLabelText>Administrador</FormControlLabelText>
               </FormControlLabel>
               <Switch
@@ -238,37 +187,7 @@ export const ModalMembros = ({
                 onValueChange={(value) => setIsAdmin(value)}
               />
             </FormControl>
-            {isAdmin && (
-              <FormControl isInvalid={!!errors.position}>
-                <FormControlLabel className="mb-2">
-                  <FormControlLabelText>Cargo</FormControlLabelText>
-                </FormControlLabel>
-                <Controller
-                  defaultValue=""
-                  name="position"
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input>
-                      <InputField
-                        placeholder="Cargo"
-                        type="text"
-                        value={value}
-                        onChangeText={onChange}
-                        onBlur={onBlur}
-                        onSubmitEditing={handleKeyPress}
-                        enterKeyHint="done"
-                      />
-                    </Input>
-                  )}
-                />
-                <FormControlError>
-                  <FormControlErrorIcon size="md" as={AlertTriangle} />
-                  <FormControlErrorText>
-                    {errors?.position?.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              </FormControl>
-            )}
+           
             <Button
               onPress={() => {
                 handleSubmit(onSubmit)();
@@ -278,8 +197,8 @@ export const ModalMembros = ({
               <ButtonText>Salvar</ButtonText>
             </Button>
           </VStack>
-        </ModalBody>
+        </ModalBody> */}
       </ModalContent>
     </Modal>
   );
-};
+};	

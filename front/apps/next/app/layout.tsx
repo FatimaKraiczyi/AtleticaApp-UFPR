@@ -3,6 +3,7 @@
 import { Inter } from "next/font/google";
 import StyledJsxRegistry from "./registry";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { MembrosProvider } from "../../../packages/hooks/MembrosContext";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function RootLayout({
@@ -13,9 +14,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} style={{ display: "flex" }}>
+			<MembrosProvider>
         <StyledJsxRegistry>
           <GluestackUIProvider mode="light">{children}</GluestackUIProvider>
         </StyledJsxRegistry>
+				</MembrosProvider>
       </body>
     </html>
   );

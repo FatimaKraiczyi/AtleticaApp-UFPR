@@ -5,11 +5,11 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
-import useRouter from "@unitools/router";
+import { useRouter } from "next/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { MobileHeader } from "../../components/MobileHeader";
@@ -17,29 +17,13 @@ import { WebHeader } from "../../components/WebHeader";
 import { Sidebar } from "../../components/Sidebar";
 import { MobileFooter } from "../../components/MobileFooter";
 import { ModalMembros } from "./membro-modal";
-
-interface CardData {
-  id: number;
-  nome: string;
-  cargo?: string;
-}
-
-const HeadingCards: CardData[] = [
-  {
-    id: 1,
-    nome: "Membro 1",
-    cargo: "Presidente",
-  },
-  {
-    id: 2,
-    nome: "Membro 2",
-    cargo: " ",
-  },
-];
+import { DeleteModal } from "../gerenciar-atleticas/delete-modal";
+import { getMembros } from "../../../../api/membros";
+import { MembrosProvider, useMembros } from "../../../hooks/MembrosContext";
 
 const Membros = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible,
+    props.isSidebarVisible
   );
 
   function toggleSidebar() {
@@ -67,19 +51,40 @@ const Membros = (props: any) => {
 };
 
 const MainContent = () => {
-  const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const handleCardPress = (id: number) => {
-    router.push(`/dashboard/membros-atletica/${id}`);
-  };
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [membroToEdit, setMembroToEdit] = useState<string | null>(null);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [membroEmailToDelete, setMembroEmailToDelete] = useState<string | null>(
+    null
+  );
+  const { membros } = useMembros();
+  console.log("membros", membros);
 
   const handleCadastrarMembroPress = () => {
     setIsModalVisible(true);
+    setIsEditMode(false);
+    setMembroToEdit(null);
+  };
+
+  const handleEditMembroPress = (email: string) => {
+    setIsModalVisible(true);
+    setIsEditMode(true);
+    setMembroToEdit(email);
   };
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
+  };
+
+  const handleOpenDeleteModal = (email: string) => {
+    setMembroEmailToDelete(email);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalVisible(false);
+    setMembroEmailToDelete(null);
   };
 
   return (
@@ -94,7 +99,7 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Welcome Alexander
+            Bem-vindo, Alexander
           </Heading>
 
           <VStack space="lg" className="items-center">
@@ -106,9 +111,9 @@ const MainContent = () => {
             </Button>
           </VStack>
 
-          <Grid className="gap-5">
-            {HeadingCards.map((item, index) => {
-              return (
+          <Grid _extra={{ className: "gap-5" }}>
+            {membros && membros.length > 0 ? (
+              membros.map((item, index) => (
                 <GridItem
                   _extra={{
                     className: "col-span-12 sm:col-span-6 lg:col-span-4",
@@ -122,19 +127,31 @@ const MainContent = () => {
                     <HStack space="xl" className="items-center justify-between">
                       <HStack space="xl" className="items-center">
                         <VStack>
-                          <Text className="font-semibold text-typography-900 line-clamp-1">
-                            {item.nome}
+                          <Text className="font-semibold text-gray-900 dark:text-gray-100 line-clamp-1">
+                            {item.Usuario.nome}
                           </Text>
-                          <Text className="line-clamp-1">
-                            {item.cargo ? item.cargo : ""}
+                          <Text className="italic text-gray-700 dark:text-gray-300 line-clamp-1">
+                            {item.Usuario.email}
+                          </Text>
+                          <Text className="text-gray-500 dark:text-gray-400 line-clamp-1">
+                            {item.administrador ? "Administrador" : "Membro"}
                           </Text>
                         </VStack>
                       </HStack>
                       <HStack space="md">
-                        <Pressable onPress={() => handleCardPress(item.id)}>
+                        <Pressable
+                          onPress={() =>
+                            handleEditMembroPress(item.Usuario.email)
+                          }
+                        >
                           <Icon as={EditIcon} className="text-typography-600" />
                         </Pressable>
-                        <Pressable onPress={() => handleCardPress(item.id)}>
+                        <Pressable
+                          onPress={() =>
+                            item.Usuario?.email !== undefined &&
+                            handleOpenDeleteModal(item.Usuario.email)
+                          }
+                        >
                           <Icon
                             as={TrashIcon}
                             className="text-typography-600"
@@ -144,16 +161,26 @@ const MainContent = () => {
                     </HStack>
                   </VStack>
                 </GridItem>
-              );
-            })}
+              ))
+            ) : (
+              <Text className="text-center">Nenhum membro encontrado.</Text>
+            )}
           </Grid>
         </VStack>
       </ScrollView>
 
-      <ModalMembros
+      {/*       <ModalMembros
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
+        membroData={isEditMode && membroToEdit ? membroToEdit : undefined}
       />
+ */}
+      {/* <DeleteModal
+        showModal={isDeleteModalVisible}
+        setShowModal={handleCloseDeleteModal}
+        membroEmail={membroEmailToDelete!}
+        updateMembrosList={updateMembrosList}
+      /> */}
     </Box>
   );
 };
