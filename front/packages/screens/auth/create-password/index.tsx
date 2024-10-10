@@ -22,7 +22,7 @@ import { AlertTriangle } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-import { newPasswordRequest } from "../../../../api/users";
+import { newPassword } from "../../../../api/users";
 
 const createPasswordSchema = z.object({
   password: z
@@ -61,7 +61,7 @@ const CreatePasswordWithLeftBackground = () => {
   const toast = useToast();
 
   const onSubmit = async (data: CreatePasswordSchemaType) => {
-    const response = await newPasswordRequest(
+    const response = await newPassword(
       data.password,
       data.confirmpassword,
     );

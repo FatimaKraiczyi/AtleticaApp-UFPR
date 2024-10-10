@@ -54,7 +54,12 @@ const ValidateTokenWithLeftBackground = () => {
         ),
       });
       reset();
-      router.push("/auth/signup");
+      if (response.data.acao === 'cadastro'){
+        router.push("/auth/signup");
+      }
+      else if (response.data.acao === "recSenha"){
+        router.push("/auth/create-password");
+      }
     } else {
       toast.show({
         placement: "bottom right",
@@ -88,9 +93,8 @@ const ValidateTokenWithLeftBackground = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Create new password
+            Valide seu token
           </Heading>
-          <Text className="md:text-center">Your new password must be...</Text>
         </VStack>
       </VStack>
       <VStack className="w-full">
