@@ -11,42 +11,10 @@ import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
-import { MobileHeader } from "../../components/MobileHeader";
-import { WebHeader } from "../../components/WebHeader";
-import { Sidebar } from "../../components/Sidebar";
 import { MobileFooter } from "../../components/MobileFooter";
 import { ModalMembros } from "./membro-modal";
-import { DeleteModal } from "../gerenciar-atleticas/delete-modal";
 import { useMembros } from "../../../hooks/MembrosContext";
-
-const Membros = (props: any) => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
-  );
-
-  function toggleSidebar() {
-    setIsSidebarVisible(!isSidebarVisible);
-  }
-
-  return (
-    <VStack className="h-full w-full bg-background-0">
-      <Box className="md:hidden">
-        <MobileHeader title={props.title} />
-      </Box>
-      <Box className="hidden md:flex">
-        <WebHeader toggleSidebar={toggleSidebar} title={props.title} />
-      </Box>
-      <VStack className="h-full w-full">
-        <HStack className="h-full w-full">
-          <Box className="hidden md:flex h-full">
-            {isSidebarVisible && <Sidebar />}
-          </Box>
-          <VStack className="w-full">{props.children}</VStack>
-        </HStack>
-      </VStack>
-    </VStack>
-  );
-};
+import { LayoutComponents } from "../../components/LayoutComponents";
 
 const MainContent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -57,7 +25,6 @@ const MainContent = () => {
     null
   );
   const { membros, setMembros } = useMembros();
-  console.log("membros", membros);
 
   const handleCadastrarMembroPress = () => {
     setIsModalVisible(true);
@@ -194,9 +161,9 @@ const MainContent = () => {
 export const GerenciarMembros = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <Membros title="Gerenciar Membros" isSidebarVisible={true}>
+      <LayoutComponents title="Gerenciar Membros" isSidebarVisible={true}>
         <MainContent />
-      </Membros>
+      </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>
   );

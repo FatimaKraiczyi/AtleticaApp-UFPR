@@ -5,23 +5,23 @@ import { Icon, ChevronRightIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
-import { useState } from "react";
 import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { Sidebar } from "../../components/Sidebar";
-import { WebHeader } from "../../components/WebHeader";
 import { MobileFooter } from "../../components/MobileFooter";
-import { MobileHeader } from "../../components/MobileHeader";
+import { LayoutComponents } from "../../components/LayoutComponents";
 
 interface CardData {
   bannerUri: string;
   title: string;
   description: string;
+  userType?: string;
 }
+
+const userType = sessionStorage.getItem("userType");
 
 const HeadingCards: CardData[] = [
   {
@@ -48,47 +48,28 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
+    userType: "ADMIN",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
     title: "Gerenciar Atléticas",
     description: "Set a target to accomplish",
+    userType: "master",
   },
 ];
-
-const DashboardLayout = (props: any) => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible,
-  );
-  function toggleSidebar() {
-    setIsSidebarVisible(!isSidebarVisible);
-  }
-
-  return (
-    <VStack className="h-full w-full bg-background-0">
-      <Box className="md:hidden">
-        <MobileHeader title={props.title} />
-      </Box>
-      <Box className="hidden md:flex">
-        <WebHeader toggleSidebar={toggleSidebar} title={props.title} />
-      </Box>
-      <VStack className="h-full w-full">
-        <HStack className="h-full w-full">
-          <Box className="hidden md:flex h-full">
-            {isSidebarVisible && <Sidebar />}
-          </Box>
-          <VStack className="w-full">{props.children}</VStack>
-        </HStack>
-      </VStack>
-    </VStack>
-  );
-};
 
 const MainContent = () => {
   const router = useRouter();
 
+  const filteredCards = HeadingCards.filter((card) => {
+    if (card.userType && card.userType !== userType) {
+      return false;
+    }
+    return true;
+  });
+
   const handleCardPress = () => {
-    router.push("/dashboard/gerenciar-atleticas");
+    router.push("/dashboard/atleticas");
   };
 
   return (
@@ -106,10 +87,12 @@ const MainContent = () => {
             Bem vindo
           </Heading>
 
-          <Grid _extra={{
-						className: "gap-5"
-					}}>
-            {HeadingCards.map((item, index) => {
+          <Grid
+            _extra={{
+              className: "gap-5",
+            }}
+          >
+            {filteredCards.map((item, index) => {
               return (
                 <GridItem
                   _extra={{
@@ -152,9 +135,9 @@ const MainContent = () => {
 export const Dashboard = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <DashboardLayout title="Início" isSidebarVisible={true}>
+      <LayoutComponents title="Início" isSidebarVisible={true}>
         <MainContent />
-      </DashboardLayout>
+      </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>
   );

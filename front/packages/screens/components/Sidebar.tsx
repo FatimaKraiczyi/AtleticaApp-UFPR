@@ -1,4 +1,3 @@
-import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
 import useRouter from "@unitools/router";
@@ -6,25 +5,33 @@ import { useState } from "react";
 import { HomeIcon } from "../dashboard/assets/home";
 import { GlobeIcon } from "../dashboard/assets/globe";
 import { CartIcon } from "../dashboard/assets/cart";
-import type { LucideIcon } from "lucide-react-native";
 import { ProfileIcon } from "../dashboard/assets/profile";
+import { Text } from "@/components/ui/text";
+import type { LucideIcon } from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
 
 type Icons = {
   iconName: LucideIcon | typeof Icon;
+  label: string;
 };
 
 const list: Icons[] = [
   {
     iconName: HomeIcon,
+    label: "Início",
   },
   {
     iconName: GlobeIcon,
+    label: "Atléticas",
   },
   {
     iconName: CartIcon,
+    label: "Carrinho",
   },
   {
     iconName: ProfileIcon,
+    label: "Meu Perfil",
   },
 ];
 
@@ -46,22 +53,29 @@ export const Sidebar = () => {
   };
 
   return (
-    <VStack
-      className="w-14 pt-5 h-full items-center border-r border-border-300"
-      space="xl"
-    >
+    <VStack className="w-48 h-full border-r border-border-300">
       {list.map((item, index) => (
         <Pressable
           key={index}
-          className="hover:bg-background-50"
+          className="w-full hover:bg-background-50"
           onPress={() => handlePress(index)}
         >
-          <Icon
-            as={item.iconName}
-            className={`w-[55px] h-9 stroke-background-800 ${
-              index === selectedIndex ? "fill-background-800" : "fill-none"
+          <HStack
+            className={`items-center px-4 py-3 h-12 w-full ${
+              index === selectedIndex ? "bg-background-200" : ""
             }`}
-          />
+            style={{ justifyContent: 'flex-start' }} 
+          >
+            <Icon
+              as={item.iconName}
+              className={`w-6 h-6 stroke-background-800 ${
+                index === selectedIndex ? "fill-background-800" : "fill-none"
+              }`}
+            />
+            <Text className="ml-4 text-background-800 font-medium">
+              {item.label}
+            </Text>
+          </HStack>
         </Pressable>
       ))}
     </VStack>

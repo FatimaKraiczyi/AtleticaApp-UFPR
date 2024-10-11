@@ -64,25 +64,28 @@ const LoginWithLeftBackground = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = async (data: LoginSchemaType) => {
-    const response = await userAuthentication(data.email, data.password);
-
-    if (response.success) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="accent" action="success">
-            <ToastTitle>Logado com sucesso!</ToastTitle>
-          </Toast>
-        ),
-      });
-      router.push("/dashboard/dashboard-layout");
-      reset();
-    } else {
-      setValidated({ emailValid: false, passwordValid: false });
-    }
-  };
-
+	const onSubmit = async (data: LoginSchemaType) => {
+		const response = await userAuthentication(data.email, data.password);
+	
+		if (response.success) {
+			sessionStorage.setItem("token", response.data.token);
+			sessionStorage.setItem("userType", response.data.tipo);
+			
+			toast.show({
+				placement: "bottom right",
+				render: ({ id }) => (
+					<Toast nativeID={id} variant="accent" action="success">
+						<ToastTitle>Logado com sucesso!</ToastTitle>
+					</Toast>
+				),
+			});
+			router.push("/dashboard/dashboard-layout");
+			reset();
+		} else {
+			setValidated({ emailValid: false, passwordValid: false });
+		}
+	};
+	
   const handleState = () => {
     setShowPassword((showState) => {
       return !showState;

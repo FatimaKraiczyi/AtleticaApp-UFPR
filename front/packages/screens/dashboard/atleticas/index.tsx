@@ -13,45 +13,14 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
-import { MobileHeader } from "../../components/MobileHeader";
-import { WebHeader } from "../../components/WebHeader";
 import { MobileFooter } from "../../components/MobileFooter";
-import { Sidebar } from "../../components/Sidebar";
 import { ModalAtletica } from "./atletica-modal";
 import { DeleteModal } from "./delete-modal";
 import { getAtletica } from "../../../../api/atleticas";
 import type { Atletica } from "../../../../interfaces/atleticas";
 import { getMembros } from "../../../../api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
-
-const Atleticas = (props: any) => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
-  );
-
-  function toggleSidebar() {
-    setIsSidebarVisible(!isSidebarVisible);
-  }
-
-  return (
-    <VStack className="h-full w-full bg-background-0">
-      <Box className="md:hidden">
-        <MobileHeader title={props.title} />
-      </Box>
-      <Box className="hidden md:flex">
-        <WebHeader toggleSidebar={toggleSidebar} title={props.title} />
-      </Box>
-      <VStack className="h-full w-full">
-        <HStack className="h-full w-full">
-          <Box className="hidden md:flex h-full">
-            {isSidebarVisible && <Sidebar />}
-          </Box>
-          <VStack className="w-full">{props.children}</VStack>
-        </HStack>
-      </VStack>
-    </VStack>
-  );
-};
+import { LayoutComponents } from "../../components/LayoutComponents";
 
 const MainContent = () => {
   const router = useRouter();
@@ -64,7 +33,9 @@ const MainContent = () => {
   const [atleticaIdToDelete, setAtleticaIdToDelete] = useState<number | null>(
     null
   );
-  const { setMembros } = useMembros();
+	const { setMembros } = useMembros();
+
+  const userType = sessionStorage.getItem("userType"); 
 
   const handleCardPress = async (atleticaId: string) => {
     const response = await getMembros(atleticaId);
@@ -143,12 +114,14 @@ const MainContent = () => {
           </Heading>
 
           <VStack space="lg" className="items-center">
-            <Button
-              className="gap-3 relative"
-              onPress={handleCadastrarAtleticaPress}
-            >
-              <ButtonText>Cadastrar Atlética</ButtonText>
-            </Button>
+            {userType === "master" && (
+              <Button
+                className="gap-3 relative"
+                onPress={handleCadastrarAtleticaPress}
+              >
+                <ButtonText>Cadastrar Atlética</ButtonText>
+              </Button>
+            )}
           </VStack>
 
           <Grid
@@ -184,20 +157,31 @@ const MainContent = () => {
                         <Text className="line-clamp-1">{item.descricao}</Text>
                       </VStack>
                     </HStack>
-                    <HStack space="md">
-                      <Pressable onPress={() => handleEditAtleticaPress(item)}>
-                        <Icon as={EditIcon} className="text-typography-600" />
-                      </Pressable>
-                      <Pressable
-                        onPress={() =>
-                          item.id !== undefined &&
-                          handleOpenDeleteModal(item.id)
-                        }
-                      >
-                        <Icon as={TrashIcon} className="text-typography-600" />
-                      </Pressable>
-                    </HStack>
+                    {userType === "master" && (
+                      <HStack space="md">
+                        <Pressable
+                          onPress={() => handleEditAtleticaPress(item)}
+                        >
+                          <Icon
+                            as={EditIcon}
+                            className="text-typography-600"
+                          />
+                        </Pressable>
+                        <Pressable
+                          onPress={() =>
+                            item.id !== undefined &&
+                            handleOpenDeleteModal(item.id)
+                          }
+                        >
+                          <Icon
+                            as={TrashIcon}
+                            className="text-typography-600"
+                          />
+                        </Pressable>
+                      </HStack>
+                    )}
                   </HStack>
+									{userType === "master" && (
                   <Button
                     variant="outline"
                     className="gap-3 relative"
@@ -205,6 +189,7 @@ const MainContent = () => {
                   >
                     <ButtonText>Gerenciar Membros</ButtonText>
                   </Button>
+									)}
                 </VStack>
               </GridItem>
             ))}
@@ -233,9 +218,9 @@ const MainContent = () => {
 export const GerenciarAtleticas = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <Atleticas title="Gerenciar Atléticas" isSidebarVisible={true}>
+      <LayoutComponents title="Gerenciar Atléticas" isSidebarVisible={true}>
         <MainContent />
-      </Atleticas>
+      </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>
   );
