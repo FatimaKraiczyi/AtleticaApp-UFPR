@@ -16,7 +16,7 @@ import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { MobileFooter } from "../../components/MobileFooter";
 import { ModalAtletica } from "./atletica-modal";
-import { DeleteModal } from "./delete-modal";
+import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica } from "../../../../api/atleticas";
 import type { Atletica } from "../../../../interfaces/atleticas";
 import { getMembros } from "../../../../api/membros";
@@ -213,7 +213,7 @@ const MainContent = () => {
         atleticaData={isEditMode && atleticaToEdit ? atleticaToEdit : undefined}
       />
 
-      <DeleteModal
+      <DeleteAtletica
         showModal={isDeleteModalVisible}
         setShowModal={handleCloseDeleteModal}
         atleticaId={atleticaIdToDelete!}

@@ -15,6 +15,7 @@ import { MobileFooter } from "../../components/MobileFooter";
 import { ModalMembros } from "./membro-modal";
 import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
+import { DeleteMembro } from "./delete-membro";
 
 const MainContent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -148,12 +149,12 @@ const MainContent = () => {
 				addMembros={handleCadastrarMembroPress}
       />
 
-      {/* <DeleteModal
+      <DeleteMembro
         showModal={isDeleteModalVisible}
         setShowModal={handleCloseDeleteModal}
-        membroEmail={membroEmailToDelete!}
-        updateMembrosList={updateMembrosList}
-      /> */}
+        email={membroEmailToDelete!}
+        setMembros={setMembros}
+      /> 
     </Box>
   );
 };
