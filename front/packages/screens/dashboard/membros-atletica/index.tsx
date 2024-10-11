@@ -15,6 +15,7 @@ import { MobileFooter } from "../../components/MobileFooter";
 import { ModalMembros } from "./membro-modal";
 import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
+import { DeleteMembro } from "./delete-membro";
 
 const MainContent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -64,7 +65,7 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Bem-vindo, Alexander
+            Bem-vindo
           </Heading>
 
           <VStack space="lg" className="items-center">
@@ -148,12 +149,12 @@ const MainContent = () => {
 				addMembros={handleCadastrarMembroPress}
       />
 
-      {/* <DeleteModal
+      <DeleteMembro
         showModal={isDeleteModalVisible}
         setShowModal={handleCloseDeleteModal}
-        membroEmail={membroEmailToDelete!}
-        updateMembrosList={updateMembrosList}
-      /> */}
+        email={membroEmailToDelete!}
+        setMembros={setMembros}
+      /> 
     </Box>
   );
 };

@@ -2,6 +2,7 @@ import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
 import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
@@ -15,12 +16,13 @@ import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { MobileFooter } from "../../components/MobileFooter";
 import { ModalAtletica } from "./atletica-modal";
-import { DeleteModal } from "./delete-modal";
+import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica } from "../../../../api/atleticas";
 import type { Atletica } from "../../../../interfaces/atleticas";
 import { getMembros } from "../../../../api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
+import { Center } from "@/components/ui/center";
 
 const MainContent = () => {
   const router = useRouter();
@@ -95,7 +97,13 @@ const MainContent = () => {
   }, []);
 
   if (loading) {
-    return <Text>Carregando...</Text>;
+    return (
+      <Center className="flex-1 justify-center items-center ">
+        <Progress value={46} className="w-96 h-2" size="sm">
+          <ProgressFilledTrack  className="bg-primary-600" />
+        </Progress>
+      </Center>
+    );
   }
 
   return (
@@ -110,7 +118,7 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Bem-vindo, Alexander
+            Bem-vindo
           </Heading>
 
           <VStack space="lg" className="items-center">
@@ -205,7 +213,7 @@ const MainContent = () => {
         atleticaData={isEditMode && atleticaToEdit ? atleticaToEdit : undefined}
       />
 
-      <DeleteModal
+      <DeleteAtletica
         showModal={isDeleteModalVisible}
         setShowModal={handleCloseDeleteModal}
         atleticaId={atleticaIdToDelete!}

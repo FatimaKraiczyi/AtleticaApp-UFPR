@@ -2,7 +2,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon, MenuIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
+import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 
 type HeaderProps = {
   title: string;
@@ -24,7 +24,9 @@ export const WebHeader = (props: HeaderProps) => {
       </HStack>
 
       <Avatar className="h-9 w-9">
-        <AvatarFallbackText className="font-light">A</AvatarFallbackText>
+			<AvatarImage
+            source={require("@/assets/auth/logo.png")}
+          />
       </Avatar>
     </HStack>
   );

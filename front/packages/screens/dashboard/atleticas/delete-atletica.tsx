@@ -16,19 +16,19 @@ import { deleteAtletica } from "../../../../api/atleticas";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 
-interface DeleteModalProps {
+interface DeleteAtleticaProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   atleticaId: number;
   updateAtleticasList: () => void;
 }
 
-export const DeleteModal = ({
+export const DeleteAtletica = ({
   showModal,
   setShowModal,
   atleticaId,
   updateAtleticasList,
-}: DeleteModalProps) => {
+}: DeleteAtleticaProps) => {
   const handleDelete = async () => {
     try {
       const response = await deleteAtletica(atleticaId);
