@@ -39,6 +39,7 @@ const ForgotPasswordScreen = () => {
     resolver: zodResolver(forgotPasswordSchema),
   });
   const toast = useToast();
+  const router = useRouter();
 
   const onSubmit = async (_data: forgotPasswordSchemaType) => {
     const response = await resetPasswordRequest(_data.email);
@@ -55,6 +56,7 @@ const ForgotPasswordScreen = () => {
         },
       });
       reset();
+      router.push("/auth/token");
     } else {
       toast.show({
         placement: "bottom right",
@@ -73,7 +75,7 @@ const ForgotPasswordScreen = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();
   };
-  const router = useRouter();
+
   return (
     <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
@@ -122,7 +124,7 @@ const ForgotPasswordScreen = () => {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   onSubmitEditing={handleKeyPress}
-                  enterKeyHint="done"
+                  returnKeyType="done"
                 />
               </Input>
             )}

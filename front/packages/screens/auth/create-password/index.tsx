@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
@@ -27,23 +26,35 @@ import { newPassword } from "../../../../api/users";
 const createPasswordSchema = z.object({
   password: z
     .string()
-    .min(6, "Must be at least 8 characters in length")
-    .regex(new RegExp(".*[A-Z].*"), "One uppercase character")
-    .regex(new RegExp(".*[a-z].*"), "One lowercase character")
-    .regex(new RegExp(".*\\d.*"), "One number")
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .regex(
+      new RegExp(".*[A-Z].*"),
+      "Deve conter pelo menos uma letra maiúscula"
+    )
+    .regex(
+      new RegExp(".*[a-z].*"),
+      "Deve conter pelo menos uma letra minúscula"
+    )
+    .regex(new RegExp(".*\\d.*"), "Deve conter pelo menos um número")
     .regex(
       new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "One special character",
+      "Deve conter pelo menos um caractere especial"
     ),
   confirmpassword: z
     .string()
-    .min(6, "Must be at least 8 characters in length")
-    .regex(new RegExp(".*[A-Z].*"), "One uppercase character")
-    .regex(new RegExp(".*[a-z].*"), "One lowercase character")
-    .regex(new RegExp(".*\\d.*"), "One number")
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .regex(
+      new RegExp(".*[A-Z].*"),
+      "Deve conter pelo menos uma letra maiúscula"
+    )
+    .regex(
+      new RegExp(".*[a-z].*"),
+      "Deve conter pelo menos uma letra minúscula"
+    )
+    .regex(new RegExp(".*\\d.*"), "Deve conter pelo menos um número")
     .regex(
       new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "One special character",
+      "Deve conter pelo menos um caractere especial"
     ),
 });
 
@@ -59,56 +70,60 @@ const CreatePasswordWithLeftBackground = () => {
     resolver: zodResolver(createPasswordSchema),
   });
   const toast = useToast();
+  const router = useRouter();
 
   const onSubmit = async (data: CreatePasswordSchemaType) => {
-    const response = await newPassword(
-      data.password,
-      data.confirmpassword,
-    );
-
-    if (data.password === data.confirmpassword) {
+    if (data.password !== data.confirmpassword) {
       toast.show({
         placement: "bottom right",
-        render: ({ id }) => {
-          return (
-            <Toast nativeID={id} variant="accent" action="success">
-              <ToastTitle>Senha criada com sucesso</ToastTitle>
-            </Toast>
-          );
-        },
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="accent" action="error">
+            <ToastTitle>Senhas não correspondem</ToastTitle>
+          </Toast>
+        ),
+      });
+      return;
+    }
+
+    const response = await newPassword(data.password, data.confirmpassword);
+
+    if (response.success) {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="accent" action="success">
+            <ToastTitle>Senha criada com sucesso</ToastTitle>
+          </Toast>
+        ),
       });
       reset();
+      router.push("/auth/signin");
     } else {
       toast.show({
         placement: "bottom right",
-        render: ({ id }) => {
-          return (
-            <Toast nativeID={id} variant="accent" action="error">
-              <ToastTitle>Senhas não correspondem</ToastTitle>
-            </Toast>
-          );
-        },
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="accent" action="error">
+            <ToastTitle>Erro ao criar senha</ToastTitle>
+          </Toast>
+        ),
       });
     }
   };
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleState = () => {
-    setShowPassword((showState) => {
-      return !showState;
-    });
+    setShowPassword((showState) => !showState);
   };
   const handleConfirmPwState = () => {
-    setShowConfirmPassword((showState) => {
-      return !showState;
-    });
+    setShowConfirmPassword((showState) => !showState);
   };
   const handleKeyPress = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();
   };
-  const router = useRouter();
+
   return (
     <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
@@ -209,7 +224,6 @@ const CreatePasswordWithLeftBackground = () => {
                     enterKeyHint="done"
                     type={showConfirmPassword ? "text" : "password"}
                   />
-
                   <InputSlot onPress={handleConfirmPwState} className="pr-3">
                     <InputIcon
                       as={showConfirmPassword ? EyeIcon : EyeOffIcon}
