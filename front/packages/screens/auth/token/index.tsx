@@ -54,10 +54,9 @@ const ValidateTokenWithLeftBackground = () => {
         ),
       });
       reset();
-      if (response.data.acao === 'cadastro'){
+      if (response.data && response.data.acao === 'cadastro') {
         router.push("/auth/signup");
-      }
-      else if (response.data.acao === "recSenha"){
+      } else if (response.data && response.data.acao === "recSenha") {
         router.push("/auth/create-password");
       }
     } else {

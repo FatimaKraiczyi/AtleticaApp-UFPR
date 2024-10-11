@@ -55,7 +55,7 @@ export const validateUserToken = async (
   token: string,
 ): Promise<IResponse.Default<UserNovaSenha>> => {
   try {
-    const { data, status } = await API.post(validateToken, { token });
+    const { data, status } = await API.post(validateToken);
 
     if (status === 200) {
       if (Platform.OS === "web") {

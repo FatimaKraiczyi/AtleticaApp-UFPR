@@ -5,11 +5,10 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
-import { useRouter } from "next/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { MobileHeader } from "../../components/MobileHeader";
@@ -18,8 +17,7 @@ import { Sidebar } from "../../components/Sidebar";
 import { MobileFooter } from "../../components/MobileFooter";
 import { ModalMembros } from "./membro-modal";
 import { DeleteModal } from "../gerenciar-atleticas/delete-modal";
-import { getMembros } from "../../../../api/membros";
-import { MembrosProvider, useMembros } from "../../../hooks/MembrosContext";
+import { useMembros } from "../../../hooks/MembrosContext";
 
 const Membros = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
@@ -58,7 +56,7 @@ const MainContent = () => {
   const [membroEmailToDelete, setMembroEmailToDelete] = useState<string | null>(
     null
   );
-  const { membros } = useMembros();
+  const { membros, setMembros } = useMembros();
   console.log("membros", membros);
 
   const handleCadastrarMembroPress = () => {
@@ -67,10 +65,10 @@ const MainContent = () => {
     setMembroToEdit(null);
   };
 
-  const handleEditMembroPress = (email: string) => {
+  const handleEditMembroPress = (membro: any) => {
     setIsModalVisible(true);
     setIsEditMode(true);
-    setMembroToEdit(email);
+    setMembroToEdit(membro);
   };
 
   const handleCloseModal = () => {
@@ -141,7 +139,8 @@ const MainContent = () => {
                       <HStack space="md">
                         <Pressable
                           onPress={() =>
-                            handleEditMembroPress(item.Usuario.email)
+                            item.Usuario?.email !== undefined &&
+                            handleEditMembroPress(item)
                           }
                         >
                           <Icon as={EditIcon} className="text-typography-600" />
@@ -169,12 +168,19 @@ const MainContent = () => {
         </VStack>
       </ScrollView>
 
-      {/*       <ModalMembros
+      <ModalMembros
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
+        editMembro={(membroEditado) => {
+          const novosMembros = membros.map((membro) =>
+            membro.email === membroEditado.email ? membroEditado : membro
+          );
+          setMembros(novosMembros);
+        }}
         membroData={isEditMode && membroToEdit ? membroToEdit : undefined}
+				addMembros={handleCadastrarMembroPress}
       />
- */}
+
       {/* <DeleteModal
         showModal={isDeleteModalVisible}
         setShowModal={handleCloseDeleteModal}

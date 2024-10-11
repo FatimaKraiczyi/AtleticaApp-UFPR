@@ -21,14 +21,9 @@ export const getMembros = async (
   }
 };
 
-export const adicionarMembro = async (
-  addMembro: Membro
-): Promise<IResponse.Default<any>> => {
+export const adicionarMembro = async (membroData): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(
-      createMembroAtleticaEndpoint,
-      addMembro
-    );
+    const { data, status } = await API.post(createMembroAtleticaEndpoint, membroData);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -37,12 +32,12 @@ export const adicionarMembro = async (
 
 export const editarMembro = async (
   email: string,
-  atleticaMembro: Membro
+  administrador: boolean
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.put(
       `${updateMembroAtleticaEndpoint}/${email}`,
-      atleticaMembro
+      administrador
     );
     return { data, success: status === 200 };
   } catch (error) {

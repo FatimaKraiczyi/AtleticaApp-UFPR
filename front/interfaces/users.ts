@@ -13,5 +13,5 @@ export interface UserNovaSenha {
   msg?: string;
   nome?: string;
   email?: string;
-  acao?: "cadsatro" | "recSenha";
+  acao?: "cadastro" | "recSenha";
 }

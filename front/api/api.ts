@@ -12,7 +12,10 @@ API.interceptors.request.use(
         ? "http://localhost:3001"
         : `http://192.168.15.6:3001`;
 
+    // Obtenha sempre um novo token
     const token = await getToken();
+
+    console.log("Novo Token: ", token); // Log para verificar o token
 
     if (token) {
       config.headers["x-access-token"] = token;
@@ -21,7 +24,7 @@ API.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 const objectCatch: IResponse.Default<undefined> = {

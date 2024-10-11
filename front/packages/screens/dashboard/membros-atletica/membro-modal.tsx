@@ -8,7 +8,7 @@ import {
   FormControlErrorText,
 } from "@/components/ui/form-control";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import { AlertTriangle} from "lucide-react-native";
+import { AlertTriangle } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -37,8 +37,8 @@ const userSchema = z.object({
     .min(1, "Email é obrigatório")
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
-		nomeAtletica: z.string().min(1, "Descrição é obrigatória"),
-		administrador: z.boolean(),
+  nomeAtletica: z.string().min(1, "Descrição é obrigatória"),
+  administrador: z.boolean(),
 });
 type userSchemaDetails = z.infer<typeof userSchema>;
 
@@ -51,9 +51,9 @@ export const ModalMembros = ({
 }: {
   showModal: boolean;
   setShowModal: any;
-  addMembros?: (newMembro: Membro) => void;
-  editMembro?: (membro: Membro) => void;
-  membroData?: Membro;
+  addMembros: (newMembro: Membro) => void;
+  editMembro?: (membro: any) => void;
+  membroData?: any;
 }) => {
   const ref = useRef(null);
   const {
@@ -72,24 +72,23 @@ export const ModalMembros = ({
 
   const [isAdmin, setIsAdmin] = useState(false);
 
-/* 
   useEffect(() => {
     if (showModal) {
-			reset();
+      reset();
+      console.log("Modal aberto, limpando formulário.");
     }
 
     if (membroData) {
-      if (membroData) {
-        setValue("email", membroData);
-      }
-      setValue("nomeAtletica", membroData.nomeAtletica);
+      console.log("Dados do membro:", membroData);
+      setValue("email", membroData.Usuario.email);
       setValue("administrador", membroData.administrador);
+      setIsAdmin(membroData.administrador);
     }
   }, [showModal, membroData, setValue]);
- */
 
   const onSubmit = async (data: userSchemaDetails) => {
-   /*  const membroPayload = {
+    console.log("Formulário enviado:", data);
+    const membroPayload = {
       email: data.email,
       nomeAtletica: data.nomeAtletica,
       administrador: data.administrador,
@@ -97,32 +96,30 @@ export const ModalMembros = ({
 
     try {
       if (membroData) {
-        if (membroData.Usuario && membroData.Usuario.email !== undefined) {
-          const response = await editarMembro(
-            membroData.Usuario.email,
-            membroPayload
-          );
-          if (response.success) {
-            editMembro && editMembro(membroPayload);
-          }
+        const response = await editarMembro(
+          membroData.email,
+          membroPayload.administrador
+        );
+        console.log("Response editarMembro:", response); // Verifique a resposta aqui
+        if (response.success) {
+          editMembro && editMembro(membroPayload);
         }
       } else {
         const response = await adicionarMembro(membroPayload);
+        console.log("Response adicionarMembro:", response); // Verifique a resposta aqui
         if (response.success) {
-          addMembros && addMembros(membroPayload);
+          addMembros(membroPayload);
         }
       }
- */
-      setShowModal(false);
-      reset();
-    }  
+      setShowModal(false); // Fecha o modal após sucesso
+      reset(); // Limpa o formulário
+    } catch (error) {
+      console.error("Erro ao adicionar/editar membro:", error);
+    }
+  };
 
   return (
-    <Modal
-      isOpen={showModal}
-     finalFocusRef={ref}
-      size="lg"
-    >
+    <Modal isOpen={showModal} finalFocusRef={ref} size="lg">
       <ModalBackdrop />
       <ModalContent>
         <Box className={"w-full h-[110px] "}>
@@ -134,7 +131,7 @@ export const ModalMembros = ({
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
-          <ModalCloseButton>
+          <ModalCloseButton onPress={() => setShowModal(false)}>
             <Icon
               as={CloseIcon}
               size="md"
@@ -144,10 +141,10 @@ export const ModalMembros = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            Adicionar Membro
+            {membroData ? "Editar Membro" : "Adicionar Membro"}
           </Heading>
         </Center>
-       {/*  <ModalBody className="px-10 py-6">
+        <ModalBody className="px-10 py-6">
           <VStack space="xl">
             <FormControl isInvalid={!!errors.email}>
               <FormControlLabel className="mb-2">
@@ -178,8 +175,37 @@ export const ModalMembros = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-						<FormControl>
-						<FormControlLabel className="mb-2">
+            <FormControl isInvalid={!!errors.nomeAtletica}>
+              <FormControlLabel className="mb-2">
+                <FormControlLabelText>Nome da Atlética</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                name="nomeAtletica"
+                defaultValue=""
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input>
+                    <InputField
+                      placeholder="Nome da Atlética"
+                      type="text"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      onSubmitEditing={handleKeyPress}
+                      enterKeyHint="done"
+                    />
+                  </Input>
+                )}
+              />
+              <FormControlError>
+                <FormControlErrorIcon as={AlertTriangle} size="md" />
+                <FormControlErrorText>
+                  {errors?.nomeAtletica?.message}
+                </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+            <FormControl>
+              <FormControlLabel className="mb-2">
                 <FormControlLabelText>Administrador</FormControlLabelText>
               </FormControlLabel>
               <Switch
@@ -187,18 +213,15 @@ export const ModalMembros = ({
                 onValueChange={(value) => setIsAdmin(value)}
               />
             </FormControl>
-           
             <Button
-              onPress={() => {
-                handleSubmit(onSubmit)();
-              }}
+              onPress={handleSubmit(onSubmit)}
               className="flex-1 p-2 mt-8"
             >
               <ButtonText>Salvar</ButtonText>
             </Button>
           </VStack>
-        </ModalBody> */}
+        </ModalBody>
       </ModalContent>
     </Modal>
   );
-};	
+};
