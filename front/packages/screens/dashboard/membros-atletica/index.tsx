@@ -64,7 +64,7 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Bem-vindo, Alexander
+            Bem-vindo
           </Heading>
 
           <VStack space="lg" className="items-center">

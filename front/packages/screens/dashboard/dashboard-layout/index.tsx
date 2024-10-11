@@ -25,33 +25,33 @@ const userType = sessionStorage.getItem("userType");
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
+    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image3.png"),
     title: "Jogos",
     description: "Add your details",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image2.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
     title: "Festas",
     description: "Add your skills here",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image4.png"),
     title: "Produtos",
     description: "Set a target to accomplish",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image5.png"),
     title: "Planos de assinatura",
     description: "Set a target to accomplish",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
     userType: "ADMIN",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Gerenciar Atléticas",
     description: "Set a target to accomplish",
     userType: "master",
@@ -84,7 +84,7 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Bem vindo
+            Bem-vindo
           </Heading>
 
           <Grid
