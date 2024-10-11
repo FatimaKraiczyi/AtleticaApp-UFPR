@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
@@ -11,8 +9,8 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { ArrowLeftIcon, EyeIcon, EyeOffIcon, Icon } from "@/components/ui/icon";
+import { Input, InputField } from "@/components/ui/input";
+import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";

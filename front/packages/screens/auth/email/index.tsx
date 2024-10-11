@@ -33,12 +33,7 @@ const EmailSchema = z.object({
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
   name: z.string().min(1, "Nome é obrigatório"),
-  terms: z.literal(true, {
-    errorMap: () => ({
-      message: "Você deve aceitar os Termos de Uso e Política de Privacidade",
-    }),
-  }),
-});
+  });
 type EmailSchemaType = z.infer<typeof EmailSchema>;
 
 const EmailWithLeftBackground = () => {
@@ -49,9 +44,6 @@ const EmailWithLeftBackground = () => {
     formState: { errors },
   } = useForm<EmailSchemaType>({
     resolver: zodResolver(EmailSchema),
-    defaultValues: {
-      terms: true,
-    },
   });
   const toast = useToast();
   const router = useRouter();
@@ -64,7 +56,7 @@ const EmailWithLeftBackground = () => {
         placement: "bottom right",
         render: ({ id }) => (
           <Toast nativeID={id} variant="accent" action="success">
-            <ToastTitle>Success</ToastTitle>
+            <ToastTitle>Sucesso</ToastTitle>
           </Toast>
         ),
       });
@@ -87,9 +79,9 @@ const EmailWithLeftBackground = () => {
       <VStack className="md:items-center" space="md">
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Sign up
+            Cadastro
           </Heading>
-          <Text>Sign up and start using gluestack</Text>
+          <Text>Cadastre-se e comece a usar o AtléticaApp</Text>
         </VStack>
       </VStack>
       <VStack className="w-full">
@@ -147,35 +139,6 @@ const EmailWithLeftBackground = () => {
               <FormControlErrorIcon size="md" as={AlertTriangle} />
               <FormControlErrorText>
                 {errors?.email?.message}
-              </FormControlErrorText>
-            </FormControlError>
-          </FormControl>
-          <FormControl isInvalid={!!errors.terms}>
-            <Controller
-              name="terms"
-              control={control}
-              defaultValue={true}
-              render={({ field: { onChange, value } }) => (
-                <Checkbox
-                  size="sm"
-                  value="terms"
-                  aria-label="terms"
-                  isChecked={value}
-                  onChange={onChange}
-                >
-                  <CheckboxIndicator>
-                    <CheckboxIcon />
-                  </CheckboxIndicator>
-                  <CheckboxLabel>
-                    Eu aceito os Termos de Uso e Política de Privacidade
-                  </CheckboxLabel>
-                </Checkbox>
-              )}
-            />
-            <FormControlError>
-              <FormControlErrorIcon size="sm" as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.terms?.message}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>

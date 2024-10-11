@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
@@ -36,7 +36,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, ChevronDownIcon } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
-import axios from "axios";
 import { AuthLayout } from "../layout";
 import {
   Select,
@@ -63,18 +62,33 @@ const signUpSchema = z.object({
     .min(8, "A senha deve ter no mínimo 8 caracteres")
     .regex(
       new RegExp(".*[A-Z].*"),
-      "Deve conter pelo menos uma letra maiúscula",
+      "Deve conter pelo menos uma letra maiúscula"
     )
     .regex(
       new RegExp(".*[a-z].*"),
-      "Deve conter pelo menos uma letra minúscula",
+      "Deve conter pelo menos uma letra minúscula"
     )
     .regex(new RegExp(".*\\d.*"), "Deve conter pelo menos um número")
     .regex(
       new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
-      "Deve conter pelo menos um caractere especial",
+      "Deve conter pelo menos um caractere especial"
     ),
-  confirmpassword: z.string().min(8, "A senha deve ter no mínimo 8 caracteres"),
+  confirmpassword: z
+    .string()
+    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .regex(
+      new RegExp(".*[A-Z].*"),
+      "Deve conter pelo menos uma letra maiúscula"
+    )
+    .regex(
+      new RegExp(".*[a-z].*"),
+      "Deve conter pelo menos uma letra minúscula"
+    )
+    .regex(new RegExp(".*\\d.*"), "Deve conter pelo menos um número")
+    .regex(
+      new RegExp(".*[`~<>?,./!@#$%^&*()\\-_+=\"'|{}\\[\\];:\\\\].*"),
+      "Deve conter pelo menos um caractere especial"
+    ),
   curso: z.string().min(1, "Curso é obrigatório"),
   telefone: z
     .string()
@@ -181,9 +195,9 @@ const SignUpWithLeftBackground = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Sign up
+            Cadastre-se
           </Heading>
-          <Text>Sign up and start using gluestack</Text>
+          <Text>Cadastre-se e comece a usar o AtléticaApp</Text>
         </VStack>
       </VStack>
       <VStack className="w-full">
@@ -400,7 +414,7 @@ const SignUpWithLeftBackground = () => {
                   <CheckboxIcon as={CheckIcon} />
                 </CheckboxIndicator>
                 <CheckboxLabel>
-                  I accept the Terms of Use & Privacy Policy
+                  Eu aceito os Termos de Uso e a Política de Privacidade
                 </CheckboxLabel>
               </Checkbox>
             )}
@@ -409,17 +423,17 @@ const SignUpWithLeftBackground = () => {
 
         <VStack className="w-full my-7" space="lg">
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-            <ButtonText className="font-medium">Sign up</ButtonText>
+            <ButtonText className="font-medium">Cadastre-se</ButtonText>
           </Button>
         </VStack>
         <HStack className="self-center">
-          <Text size="md">Already have an account?</Text>
+          <Text size="md">Já tem uma conta?</Text>
           <Link href="/auth/signin">
             <LinkText
               className="font-medium text-primary-700 ml-1 group-hover/link:text-primary-600 group-hover/pressed:text-primary-700"
               size="md"
             >
-              Login
+              Entrar
             </LinkText>
           </Link>
         </HStack>

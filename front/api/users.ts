@@ -17,24 +17,27 @@ import { getToken } from "./token";
 export const userAuthentication = async (
   email: string,
   senha: string,
-): Promise<IResponse.Default<UserProps>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(userAuthenticationEndpoint, {
       email,
       senha,
     });
 
-    if (status === 200 && data && data.token) {
+    if (status === 200 && data?.token) {
+      const token = data.token;
+
       if (Platform.OS === "web") {
-        sessionStorage.setItem("x-access-token", data.token);
+        sessionStorage.setItem("x-access-token", token);
       } else {
-        await AsyncStorage.setItem("x-access-token", data.token);
+        await AsyncStorage.setItem("x-access-token", token);
       }
     }
 
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch };
+    console.error("Erro na autenticação:", error);
+    return { ...objectCatch, error };
   }
 };
 

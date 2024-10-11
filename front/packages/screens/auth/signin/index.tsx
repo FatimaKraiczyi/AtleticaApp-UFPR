@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
@@ -28,7 +28,7 @@ import {
   EyeOffIcon,
   Icon,
 } from "@/components/ui/icon";
-import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -40,8 +40,8 @@ import { AuthLayout } from "../layout";
 import { userAuthentication } from "../../../../api/users";
 
 const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email(),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().min(1, "Email é obrigatório").email("Email inválido"),
+  password: z.string().min(1, "Senha é obrigatória"),
   rememberme: z.boolean().optional(),
 });
 
@@ -88,6 +88,7 @@ const LoginWithLeftBackground = () => {
       return !showState;
     });
   };
+
   const handleKeyPress = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();
@@ -109,7 +110,7 @@ const LoginWithLeftBackground = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Seja Bem Vindo!
+            Seja Bem-Vindo!
           </Heading>
         </VStack>
       </VStack>
@@ -139,7 +140,7 @@ const LoginWithLeftBackground = () => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input>
                   <InputField
-                    placeholder="Informe o email"
+                    placeholder="Informe seu email"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -153,11 +154,10 @@ const LoginWithLeftBackground = () => {
               <FormControlErrorIcon as={AlertTriangle} />
               <FormControlErrorText>
                 {errors?.email?.message ||
-                  (!validated.emailValid && "email invalido")}
+                  (!validated.emailValid && "Email inválido")}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>
-          {/* Label Message */}
           <FormControl
             isInvalid={!!errors.password || !validated.passwordValid}
             className="w-full"
@@ -183,7 +183,7 @@ const LoginWithLeftBackground = () => {
                 <Input>
                   <InputField
                     type={showPassword ? "text" : "password"}
-                    placeholder="Informe a senha"
+                    placeholder="Informe sua senha"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -200,11 +200,11 @@ const LoginWithLeftBackground = () => {
               <FormControlErrorIcon as={AlertTriangle} />
               <FormControlErrorText>
                 {errors?.password?.message ||
-                  (!validated.passwordValid && "senha invalida")}
+                  (!validated.passwordValid && "Senha inválida")}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>
-          <HStack className="w-full justify-between ">
+          <HStack className="w-full justify-between">
             <Controller
               name="rememberme"
               defaultValue={false}
@@ -220,7 +220,7 @@ const LoginWithLeftBackground = () => {
                   <CheckboxIndicator>
                     <CheckboxIcon as={CheckIcon} />
                   </CheckboxIndicator>
-                  <CheckboxLabel>Salvar dados de login</CheckboxLabel>
+                  <CheckboxLabel>Lembrar-me</CheckboxLabel>
                 </Checkbox>
               )}
             />
@@ -231,19 +231,19 @@ const LoginWithLeftBackground = () => {
             </Link>
           </HStack>
         </VStack>
-        <VStack className="w-full my-7 " space="lg">
+        <VStack className="w-full my-7" space="lg">
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-            <ButtonText className="font-medium">Acessar</ButtonText>
+            <ButtonText className="font-medium">Entrar</ButtonText>
           </Button>
         </VStack>
-        <HStack className="self-center ">
-          <Text size="md">Não tem cadastro?</Text>
+        <HStack className="self-center">
+          <Text size="md">Não tem uma conta?</Text>
           <Link href="/auth/email">
             <LinkText
-              className="font-medium text-primary-700 ml-1 group-hover/link:text-primary-600  group-hover/pressed:text-primary-700"
+              className="font-medium text-primary-700 ml-1 group-hover/link:text-primary-600 group-hover/pressed:text-primary-700"
               size="md"
             >
-              Realizar cadastro
+              Cadastre-se
             </LinkText>
           </Link>
         </HStack>

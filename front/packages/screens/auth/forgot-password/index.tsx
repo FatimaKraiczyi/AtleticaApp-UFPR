@@ -1,7 +1,6 @@
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,

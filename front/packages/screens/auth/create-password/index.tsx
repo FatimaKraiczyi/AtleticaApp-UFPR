@@ -140,7 +140,7 @@ const CreatePasswordWithLeftBackground = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Criar nova senha
+            Recuperação de Senha
           </Heading>
         </VStack>
       </VStack>
@@ -148,7 +148,7 @@ const CreatePasswordWithLeftBackground = () => {
         <VStack space="xl" className="w-full">
           <FormControl isInvalid={!!errors.password}>
             <FormControlLabel>
-              <FormControlLabelText>Senha</FormControlLabelText>
+              <FormControlLabelText>Nova senha</FormControlLabelText>
             </FormControlLabel>
             <Controller
               defaultValue=""
@@ -194,7 +194,9 @@ const CreatePasswordWithLeftBackground = () => {
           </FormControl>
           <FormControl isInvalid={!!errors.confirmpassword}>
             <FormControlLabel>
-              <FormControlLabelText>Repita a senha</FormControlLabelText>
+              <FormControlLabelText>
+                Confirme sua nova senha
+              </FormControlLabelText>
             </FormControlLabel>
             <Controller
               defaultValue=""
@@ -244,7 +246,7 @@ const CreatePasswordWithLeftBackground = () => {
 
         <VStack className="mt-7 w-full">
           <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-            <ButtonText className="font-medium">Atualizar senha</ButtonText>
+            <ButtonText className="font-medium">Alterar sua senha</ButtonText>
           </Button>
         </VStack>
       </VStack>

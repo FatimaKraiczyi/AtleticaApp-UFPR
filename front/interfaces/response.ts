@@ -1,5 +1,5 @@
 export interface Default<T> {
-  data: T | undefined;
+  data: T ;
   success: boolean;
   message?: string;
 	error?: any;
