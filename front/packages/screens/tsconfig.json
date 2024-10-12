@@ -1,6 +1,6 @@
 {
   "include": ["./**/*.tsx", "./**/*.ts"],
-  "exclude": ["node_modules", "example", "dist"],
+  "exclude": ["node_modules", "example"],
   "path": {},
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
@@ -27,6 +27,6 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "outDir": "./dist"
+    "outDir": "."
   }
 }

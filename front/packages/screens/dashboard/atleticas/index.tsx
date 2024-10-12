@@ -2,7 +2,6 @@ import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
 import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
@@ -14,7 +13,6 @@ import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { MobileFooter } from "../../components/MobileFooter";
-import { Image } from "react-native";
 import { ModalAtletica } from "./atletica-modal";
 import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica } from "../../../../api/atleticas";
@@ -22,7 +20,6 @@ import type { Atletica } from "../../../../interfaces/atleticas";
 import { getMembros } from "../../../../api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
-import { Center } from "@/components/ui/center";
 import { LoadingState } from "../../components/LoadingState";
 import { NoItemsFound } from "../../components/NoItemsFound";
 
@@ -50,7 +47,7 @@ const MainContent = () => {
         console.error("Dados dos membros não encontrados");
       }
     }
-    router.push("/dashboard/membros-atletica");
+    router.push("/dashboard/membros");
   };
 
   const handleCadastrarAtleticaPress = () => {
