@@ -8,15 +8,14 @@ import {
   sendEmail,
   validateToken,
   resetPassword,
-  password,
   createUserEndpoint,
   newPasswordResquest,
 } from "./routes/routes";
-import { getToken } from "./token";
+import { getToken, setToken } from "./token";
 
 export const userAuthentication = async (
   email: string,
-  senha: string,
+  senha: string
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(userAuthenticationEndpoint, {
@@ -26,6 +25,10 @@ export const userAuthentication = async (
 
     if (status === 200 && data?.token) {
       const token = data.token;
+      const userType = data.userType;
+
+      await setToken(token);
+      sessionStorage.setItem("userType", userType);
 
       if (Platform.OS === "web") {
         sessionStorage.setItem("x-access-token", token);
@@ -43,7 +46,7 @@ export const userAuthentication = async (
 
 export const sendEmailRequest = async (
   email: string,
-  nome: string,
+  nome: string
 ): Promise<IResponse.Default<null>> => {
   try {
     const { data, status } = await API.post(sendEmail, { email, nome });
@@ -55,10 +58,10 @@ export const sendEmailRequest = async (
 };
 
 export const validateUserToken = async (
-  token: string,
+  token: string
 ): Promise<IResponse.Default<UserNovaSenha>> => {
   try {
-    const { data, status } = await API.post(validateToken,{ token });
+    const { data, status } = await API.post(validateToken, { token });
 
     if (status === 200) {
       if (Platform.OS === "web") {
@@ -75,7 +78,7 @@ export const validateUserToken = async (
 };
 
 export const resetPasswordRequest = async (
-  email: string,
+  email: string
 ): Promise<IResponse.Default<null>> => {
   try {
     const { data, status } = await API.post(resetPassword, { email });
@@ -88,10 +91,13 @@ export const resetPasswordRequest = async (
 
 export const newPassword = async (
   senha: string,
-  repSenha: string,
+  repSenha: string
 ): Promise<IResponse.Default<null>> => {
   try {
-    const { data, status } = await API.put(newPasswordResquest, { senha, repSenha });
+    const { data, status } = await API.put(newPasswordResquest, {
+      senha,
+      repSenha,
+    });
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -99,7 +105,7 @@ export const newPassword = async (
 };
 
 export const createUser = async (
-  user: UserProps,
+  user: UserProps
 ): Promise<IResponse.Default<UserProps>> => {
   try {
     const token = await getToken();
@@ -114,7 +120,7 @@ export const createUser = async (
         headers: {
           "x-access-token": token,
         },
-      },
+      }
     );
 
     return { data, success: status === 201 };

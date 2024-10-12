@@ -59,7 +59,8 @@ export const Sidebar = () => {
   }, [window.location.pathname]);
 
   const handleLogout = () => {
-    sessionStorage.clear();
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("userType");
     router.push("/auth/signin");
   };
 
@@ -119,9 +120,7 @@ export const Sidebar = () => {
             as={LogoutIcon}
             className="w-6 h-6 stroke-background-800 fill-background-800"
           />
-          <Text className="ml-4 text-background-800 font-medium">
-            Sair
-          </Text>
+          <Text className="ml-4 text-background-800 font-medium">Sair</Text>
         </HStack>
       </Pressable>
     </VStack>

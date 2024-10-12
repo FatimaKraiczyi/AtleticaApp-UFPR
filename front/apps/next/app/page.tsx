@@ -1,9 +1,12 @@
 "use client";
+import { Center } from "@/components/ui/center";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Page = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = sessionStorage.getItem("x-access-token");
@@ -13,20 +16,21 @@ const Page = () => {
     } else {
       router.replace("auth/signin");
     }
+
+    setLoading(false);
   }, [router]);
+
+  if (loading) {
+    return (
+      <Center className="flex-1 justify-center items-center ">
+        <Progress value={46} className="w-96 h-2" size="sm">
+          <ProgressFilledTrack className="bg-primary-600" />
+        </Progress>
+      </Center>
+    );
+  }
 
   return null;
 };
 
-// outras rotas do front
-
-/* 
-router.push("auth/signup");
-router.push("auth/forgot-password");
-router.push("auth/create-password");
-router.push("news-feed/news-and-feed");
-router.push("profile/profile");
-
-
- */
 export default Page;

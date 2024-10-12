@@ -7,7 +7,6 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { useState, useEffect } from "react";
-import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -35,9 +34,9 @@ const MainContent = () => {
   const [atleticaIdToDelete, setAtleticaIdToDelete] = useState<number | null>(
     null
   );
-	const { setMembros } = useMembros();
+  const { setMembros } = useMembros();
 
-  const userType = sessionStorage.getItem("userType"); 
+  const userType = sessionStorage.getItem("userType");
 
   const handleCardPress = async (atleticaId: string) => {
     const response = await getMembros(atleticaId);
@@ -47,8 +46,8 @@ const MainContent = () => {
       } else {
         console.error("Dados dos membros não encontrados");
       }
-      router.push("/dashboard/membros-atletica");
     }
+    router.push("/dashboard/membros-atletica");
   };
 
   const handleCadastrarAtleticaPress = () => {
@@ -100,7 +99,7 @@ const MainContent = () => {
     return (
       <Center className="flex-1 justify-center items-center ">
         <Progress value={46} className="w-96 h-2" size="sm">
-          <ProgressFilledTrack  className="bg-primary-600" />
+          <ProgressFilledTrack className="bg-primary-600" />
         </Progress>
       </Center>
     );
@@ -117,10 +116,6 @@ const MainContent = () => {
         className="flex-1 mb-20 md:mb-2"
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
-          <Heading size="2xl" className="font-roboto">
-            Bem-vindo
-          </Heading>
-
           <VStack space="lg" className="items-center">
             {userType === "master" && (
               <Button
@@ -170,10 +165,7 @@ const MainContent = () => {
                         <Pressable
                           onPress={() => handleEditAtleticaPress(item)}
                         >
-                          <Icon
-                            as={EditIcon}
-                            className="text-typography-600"
-                          />
+                          <Icon as={EditIcon} className="text-typography-600" />
                         </Pressable>
                         <Pressable
                           onPress={() =>
@@ -189,15 +181,15 @@ const MainContent = () => {
                       </HStack>
                     )}
                   </HStack>
-									{userType === "master" && (
-                  <Button
-                    variant="outline"
-                    className="gap-3 relative"
-                    onPress={() => handleCardPress(String(item.id))}
-                  >
-                    <ButtonText>Gerenciar Membros</ButtonText>
-                  </Button>
-									)}
+                  {userType === "master" && (
+                    <Button
+                      variant="outline"
+                      className="gap-3 relative"
+                      onPress={() => handleCardPress(String(item.id))}
+                    >
+                      <ButtonText>Gerenciar Membros</ButtonText>
+                    </Button>
+                  )}
                 </VStack>
               </GridItem>
             ))}

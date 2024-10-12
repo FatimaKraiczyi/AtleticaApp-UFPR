@@ -6,7 +6,6 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { useState } from "react";
-import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
@@ -64,10 +63,6 @@ const MainContent = () => {
         className="flex-1 mb-20 md:mb-2"
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
-          <Heading size="2xl" className="font-roboto">
-            Bem-vindo
-          </Heading>
-
           <VStack space="lg" className="items-center">
             <Button
               className="gap-3 relative"
@@ -146,7 +141,7 @@ const MainContent = () => {
           setMembros(novosMembros);
         }}
         membroData={isEditMode && membroToEdit ? membroToEdit : undefined}
-				addMembros={handleCadastrarMembroPress}
+        addMembros={handleCadastrarMembroPress}
       />
 
       <DeleteMembro
@@ -154,7 +149,7 @@ const MainContent = () => {
         setShowModal={handleCloseDeleteModal}
         email={membroEmailToDelete!}
         setMembros={setMembros}
-      /> 
+      />
     </Box>
   );
 };

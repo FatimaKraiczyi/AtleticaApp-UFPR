@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
@@ -20,8 +21,6 @@ interface CardData {
   description: string;
   userType?: string;
 }
-
-const userType = sessionStorage.getItem("userType");
 
 const HeadingCards: CardData[] = [
   {
@@ -60,6 +59,12 @@ const HeadingCards: CardData[] = [
 
 const MainContent = () => {
   const router = useRouter();
+  const [userType, setUserType] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUserType = sessionStorage.getItem("userType");
+    setUserType(storedUserType);
+  }, []);
 
   const filteredCards = HeadingCards.filter((card) => {
     if (card.userType && card.userType !== userType) {
