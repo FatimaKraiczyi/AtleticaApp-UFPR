@@ -46,7 +46,6 @@ import {
   SelectIcon,
   SelectInput,
   SelectItem,
-  SelectItemText,
   SelectPortal,
   SelectTrigger,
 } from "@/components/ui/select";
@@ -146,8 +145,8 @@ const SignUpWithLeftBackground = () => {
         toast.show({
           placement: "bottom right",
           render: ({ id }) => (
-            <Toast nativeID={id} variant="accent" action="success">
-              <ToastTitle>Usuário criado com sucesso!</ToastTitle>
+            <Toast nativeID={id} action="success">
+              <ToastTitle>Usuário cadastrado com sucesso!</ToastTitle>
             </Toast>
           ),
         });
@@ -158,7 +157,7 @@ const SignUpWithLeftBackground = () => {
         toast.show({
           placement: "bottom right",
           render: ({ id }) => (
-            <Toast nativeID={id} variant="error" action="error">
+            <Toast nativeID={id} action="error">
               <ToastTitle>{errorMessage}</ToastTitle>
             </Toast>
           ),

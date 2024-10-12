@@ -161,7 +161,7 @@ const MainContent = () => {
 export const GerenciarMembros = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Gerenciar Membros" isSidebarVisible={true}>
+      <LayoutComponents title="Membros" isSidebarVisible={true}>
         <MainContent />
       </LayoutComponents>
       <MobileFooter />

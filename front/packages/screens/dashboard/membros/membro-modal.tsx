@@ -100,19 +100,19 @@ export const ModalMembros = ({
           membroData.email,
           membroPayload.administrador
         );
-        console.log("Response editarMembro:", response); // Verifique a resposta aqui
+        console.log("Response editarMembro:", response); 
         if (response.success) {
           editMembro && editMembro(membroPayload);
         }
       } else {
         const response = await adicionarMembro(membroPayload);
-        console.log("Response adicionarMembro:", response); // Verifique a resposta aqui
+        console.log("Response adicionarMembro:", response); 
         if (response.success) {
           addMembros(membroPayload);
         }
       }
-      setShowModal(false); // Fecha o modal após sucesso
-      reset(); // Limpa o formulário
+      setShowModal(false); 
+      reset(); 
     } catch (error) {
       console.error("Erro ao adicionar/editar membro:", error);
     }

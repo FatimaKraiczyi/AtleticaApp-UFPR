@@ -21,6 +21,7 @@ interface CardData {
   title: string;
   description: string;
   userType?: string;
+  route: string;
 }
 
 const HeadingCards: CardData[] = [
@@ -28,33 +29,39 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image3.png"),
     title: "Jogos",
     description: "Add your details",
+    route: "/dashboard/jogos",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
     title: "Festas",
     description: "Add your skills here",
+    route: "/dashboard/festas",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image4.png"),
     title: "Produtos",
     description: "Set a target to accomplish",
+    route: "/dashboard/produtos",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image5.png"),
     title: "Planos de assinatura",
     description: "Set a target to accomplish",
+    route: "/dashboard/planos",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
     userType: "ADMIN",
+    route: "/dashboard/atleticas",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Gerenciar Atléticas",
     description: "Set a target to accomplish",
     userType: "master",
+    route: "/dashboard/atleticas",
   },
 ];
 
@@ -76,8 +83,8 @@ const MainContent = () => {
     return true;
   });
 
-  const handleCardPress = () => {
-    router.push("/dashboard/atleticas");
+  const handleCardPress = (route: string) => {
+    router.push(route);
   };
 
   if (loading) {
@@ -130,7 +137,7 @@ const MainContent = () => {
                         <Text className="line-clamp-1">{item.description}</Text>
                       </VStack>
                     </HStack>
-                    <Pressable onPress={() => handleCardPress()}>
+                    <Pressable onPress={() => handleCardPress(item.route)}>
                       <Icon as={ChevronRightIcon} size="md" />
                     </Pressable>
                   </HStack>

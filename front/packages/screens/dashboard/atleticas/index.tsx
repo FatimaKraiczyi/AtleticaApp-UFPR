@@ -213,7 +213,7 @@ const MainContent = () => {
 export const GerenciarAtleticas = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Gerenciar Atléticas" isSidebarVisible={true}>
+      <LayoutComponents title="Atléticas" isSidebarVisible={true}>
         <MainContent />
       </LayoutComponents>
       <MobileFooter />

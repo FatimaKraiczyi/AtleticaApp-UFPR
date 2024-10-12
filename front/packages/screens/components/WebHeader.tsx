@@ -2,7 +2,7 @@ import { HStack } from "@/components/ui/hstack";
 import { Pressable } from "@/components/ui/pressable";
 import { Icon, MenuIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 type HeaderProps = {
   title: string;

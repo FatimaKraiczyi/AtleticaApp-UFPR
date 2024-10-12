@@ -1,4 +1,4 @@
-export const ProfileIcon2: any = () => {
+export const ProfileIcon: any = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

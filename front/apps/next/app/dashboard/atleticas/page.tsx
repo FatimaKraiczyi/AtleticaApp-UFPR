@@ -1,5 +1,5 @@
 "use client";
 
-import { GerenciarAtleticas } from "@/screens/dashboard/atleticas";
+import { GerenciarAtleticas } from "@/screens/dashboard/atleticas/";
 
 export default GerenciarAtleticas;
