@@ -14,6 +14,7 @@ import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { MobileFooter } from "../../components/MobileFooter";
+import { Image } from "react-native";
 import { ModalAtletica } from "./atletica-modal";
 import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica } from "../../../../api/atleticas";
@@ -22,6 +23,8 @@ import { getMembros } from "../../../../api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
 import { Center } from "@/components/ui/center";
+import { LoadingState } from "../../components/LoadingState";
+import { NoItemsFound } from "../../components/NoItemsFound";
 
 const MainContent = () => {
   const router = useRouter();
@@ -96,107 +99,99 @@ const MainContent = () => {
   }, []);
 
   if (loading) {
-    return (
-      <Center className="flex-1 justify-center items-center ">
-        <Progress value={46} className="w-96 h-2" size="sm">
-          <ProgressFilledTrack className="bg-primary-600" />
-        </Progress>
-      </Center>
-    );
+		return <LoadingState />;
   }
 
-  return (
-    <Box className="flex-1">
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: isWeb ? 0 : 100,
-          flexGrow: 1,
-        }}
-        className="flex-1 mb-20 md:mb-2"
-      >
-        <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
-          <VStack space="lg" className="items-center">
+	const renderNoAtleticas = () => (
+    <NoItemsFound message="Nenhuma atlética encontrada." />
+  );
+
+  const renderAtleticas = () => (
+    <Grid _extra={{ className: "gap-5" }}>
+      {atleticas.map((item, index) => (
+        <GridItem
+          _extra={{
+            className: "col-span-12 sm:col-span-6 lg:col-span-4",
+          }}
+          key={index}
+        >
+          <VStack
+            space="md"
+            className="border border-border-300 rounded-lg p-4"
+          >
+            <HStack space="xl" className="items-center justify-between">
+              <HStack space="xl" className="items-center">
+                <Avatar>
+                  <AvatarImage
+                    source={
+                      item.imagem ||
+                      require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+                    }
+                  />
+                </Avatar>
+                <VStack>
+                  <Text className="font-semibold text-typography-900 line-clamp-1">
+                    {item.nome}
+                  </Text>
+                  <Text className="line-clamp-1">{item.descricao}</Text>
+                </VStack>
+              </HStack>
+              {userType === "master" && (
+                <HStack space="md">
+                  <Pressable onPress={() => handleEditAtleticaPress(item)}>
+                    <Icon as={EditIcon} className="text-typography-600" />
+                  </Pressable>
+                  <Pressable
+                    onPress={() =>
+                      item.id !== undefined && handleOpenDeleteModal(item.id)
+                    }
+                  >
+                    <Icon as={TrashIcon} className="text-typography-600" />
+                  </Pressable>
+                </HStack>
+              )}
+            </HStack>
             {userType === "master" && (
               <Button
+                variant="outline"
                 className="gap-3 relative"
-                onPress={handleCadastrarAtleticaPress}
+                onPress={() => handleCardPress(String(item.id))}
               >
-                <ButtonText>Cadastrar Atlética</ButtonText>
+                <ButtonText>Gerenciar Membros</ButtonText>
               </Button>
             )}
           </VStack>
+        </GridItem>
+      ))}
+    </Grid>
+  );
 
-          <Grid
-            _extra={{
-              className: "gap-5",
-            }}
-          >
-            {atleticas.map((item, index) => (
-              <GridItem
-                _extra={{
-                  className: "col-span-12 sm:col-span-6 lg:col-span-4",
-                }}
-                key={index}
-              >
-                <VStack
-                  space="md"
-                  className="border border-border-300 rounded-lg p-4"
-                >
-                  <HStack space="xl" className="items-center justify-between">
-                    <HStack space="xl" className="items-center">
-                      <Avatar>
-                        <AvatarImage
-                          source={
-                            item.imagem ||
-                            require("@/shared/assets/dashboard/dashboard-layout/image2.png")
-                          }
-                        />
-                      </Avatar>
-                      <VStack>
-                        <Text className="font-semibold text-typography-900 line-clamp-1">
-                          {item.nome}
-                        </Text>
-                        <Text className="line-clamp-1">{item.descricao}</Text>
-                      </VStack>
-                    </HStack>
-                    {userType === "master" && (
-                      <HStack space="md">
-                        <Pressable
-                          onPress={() => handleEditAtleticaPress(item)}
-                        >
-                          <Icon as={EditIcon} className="text-typography-600" />
-                        </Pressable>
-                        <Pressable
-                          onPress={() =>
-                            item.id !== undefined &&
-                            handleOpenDeleteModal(item.id)
-                          }
-                        >
-                          <Icon
-                            as={TrashIcon}
-                            className="text-typography-600"
-                          />
-                        </Pressable>
-                      </HStack>
-                    )}
-                  </HStack>
-                  {userType === "master" && (
-                    <Button
-                      variant="outline"
-                      className="gap-3 relative"
-                      onPress={() => handleCardPress(String(item.id))}
-                    >
-                      <ButtonText>Gerenciar Membros</ButtonText>
-                    </Button>
-                  )}
-                </VStack>
-              </GridItem>
-            ))}
-          </Grid>
+  return (
+    <Box className="flex-1">
+      <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
+        <VStack space="lg" className="items-center">
+          {userType === "master" && (
+            <Button
+              className="gap-3 relative"
+              onPress={handleCadastrarAtleticaPress}
+            >
+              <ButtonText>Cadastrar Atlética</ButtonText>
+            </Button>
+          )}
         </VStack>
-      </ScrollView>
-
+        {atleticas.length === 0 ? renderNoAtleticas() : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: isWeb ? 0 : 100,
+              flexGrow: 1,
+            }}
+            className="flex-1 mb-20 md:mb-2"
+          >
+            {renderAtleticas()}
+          </ScrollView>
+        )}
+      </VStack>
       <ModalAtletica
         showModal={isModalVisible}
         setShowModal={handleCloseModal}

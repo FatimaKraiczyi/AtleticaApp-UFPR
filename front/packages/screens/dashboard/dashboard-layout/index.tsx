@@ -14,6 +14,7 @@ import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { MobileFooter } from "../../components/MobileFooter";
 import { LayoutComponents } from "../../components/LayoutComponents";
+import { LoadingState } from "../../components/LoadingState";
 
 interface CardData {
   bannerUri: string;
@@ -60,10 +61,12 @@ const HeadingCards: CardData[] = [
 const MainContent = () => {
   const router = useRouter();
   const [userType, setUserType] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUserType = sessionStorage.getItem("userType");
     setUserType(storedUserType);
+    setLoading(false);
   }, []);
 
   const filteredCards = HeadingCards.filter((card) => {
@@ -76,6 +79,10 @@ const MainContent = () => {
   const handleCardPress = () => {
     router.push("/dashboard/atleticas");
   };
+
+  if (loading) {
+    return <LoadingState />;
+  }
 
   return (
     <Box className="flex-1 ">

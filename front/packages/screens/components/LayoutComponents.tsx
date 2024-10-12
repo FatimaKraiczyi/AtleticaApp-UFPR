@@ -4,7 +4,7 @@ import { Box } from "@/components/ui/box";
 import { useState } from "react";
 import { MobileHeader } from "./MobileHeader";
 import { WebHeader } from "./WebHeader";
-import { Sidebar } from "./Sidebar";
+import { WebSidebar } from "./WebSidebar";
 
 interface LayoutComponents {
   title: string;
@@ -33,7 +33,7 @@ export const LayoutComponents = (props: LayoutComponents) => {
       <VStack className="h-full w-full">
         <HStack className="h-full w-full">
           <Box className="hidden md:flex h-full">
-            {isSidebarVisible && <Sidebar />}
+            {isSidebarVisible && <WebSidebar />}
           </Box>
           <VStack
             className={`w-full ${

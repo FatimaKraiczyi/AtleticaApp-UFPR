@@ -41,7 +41,7 @@ const list: Icons[] = [
   },
 ];
 
-export const Sidebar = () => {
+export const WebSidebar = () => {
   const router = useRouter();
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 

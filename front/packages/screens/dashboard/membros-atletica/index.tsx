@@ -6,7 +6,6 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import { useState } from "react";
-import { Image } from "react-native";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
@@ -16,7 +15,7 @@ import { ModalMembros } from "./membro-modal";
 import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
 import { DeleteMembro } from "./delete-membro";
-import { Center } from "@/components/ui/center";
+import { NoItemsFound } from "../../components/NoItemsFound";
 
 const MainContent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -55,18 +54,7 @@ const MainContent = () => {
   };
 
   const renderNoMembers = () => (
-    <Center className="flex-1 mt-14 justify-center items-center h-full">
-      <Image
-        source={{
-          uri: "https://img.icons8.com/external-outline-andi-nur-abdillah/100/external-Empty-empty-state-(outline)-outline-andi-nur-abdillah.png",
-        }}
-        style={{ width: 100, height: 100, tintColor: "#8E8E8E" }}
-        resizeMode="contain"
-      />
-      <Text className="text-center text-gray-500 dark:text-gray-400 mt-4">
-        Nenhum membro encontrado.
-      </Text>
-    </Center>
+    <NoItemsFound message="Nenhum membro encontrado." />
   );
 
   const renderMembers = () => (
