@@ -30,6 +30,7 @@ export const DeleteMembro = ({
   email,
   setMembros,
 }: DeleteMembroProps) => {
+	
   const handleDelete = async () => {
     try {
       const response = await deletarMembro(email);

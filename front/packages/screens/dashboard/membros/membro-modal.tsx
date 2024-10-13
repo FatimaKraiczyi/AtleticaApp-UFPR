@@ -29,7 +29,7 @@ import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { adicionarMembro, editarMembro } from "../../../../api/membros";
-import type { Membro } from "../../../../interfaces/membros";
+import type { Membro, MembrosResponse } from "../../../../interfaces/membros";
 
 const userSchema = z.object({
   email: z
@@ -48,12 +48,14 @@ export const ModalMembros = ({
   addMembros,
   editMembro,
   membroData,
+  setMembros,
 }: {
   showModal: boolean;
   setShowModal: any;
   addMembros: (newMembro: Membro) => void;
   editMembro?: (membro: any) => void;
   membroData?: any;
+  setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
 }) => {
   const ref = useRef(null);
   const {
@@ -73,11 +75,6 @@ export const ModalMembros = ({
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (showModal) {
-      reset();
-      console.log("Modal aberto, limpando formulário.");
-    }
-
     if (membroData) {
       console.log("Dados do membro:", membroData);
       setValue("email", membroData.Usuario.email);
@@ -100,19 +97,20 @@ export const ModalMembros = ({
           membroData.email,
           membroPayload.administrador
         );
-        console.log("Response editarMembro:", response); 
+        console.log("Response editarMembro:", response);
         if (response.success) {
           editMembro && editMembro(membroPayload);
         }
       } else {
         const response = await adicionarMembro(membroPayload);
-        console.log("Response adicionarMembro:", response); 
+        console.log("Response adicionarMembro:", response);
         if (response.success) {
           addMembros(membroPayload);
         }
+        setMembros(response.data);
       }
-      setShowModal(false); 
-      reset(); 
+      setShowModal(false);
+      reset();
     } catch (error) {
       console.error("Erro ao adicionar/editar membro:", error);
     }
@@ -208,9 +206,19 @@ export const ModalMembros = ({
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Administrador</FormControlLabelText>
               </FormControlLabel>
-              <Switch
-                value={isAdmin}
-                onValueChange={(value) => setIsAdmin(value)}
+              <Controller
+                name="administrador"
+                control={control}
+                defaultValue={false}
+                render={({ field: { onChange, value } }) => (
+                  <Switch
+                    value={value}
+                    onValueChange={(value) => {
+                      onChange(value);
+                      setIsAdmin(value);
+                    }}
+                  />
+                )}
               />
             </FormControl>
             <Button

@@ -146,6 +146,7 @@ const MainContent = () => {
         }}
         membroData={isEditMode && membroToEdit ? membroToEdit : undefined}
         addMembros={handleCadastrarMembroPress}
+        setMembros={setMembros}
       />
 
       <DeleteMembro
