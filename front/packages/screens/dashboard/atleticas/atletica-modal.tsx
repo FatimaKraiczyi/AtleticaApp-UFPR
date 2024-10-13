@@ -53,6 +53,7 @@ const userSchema = z.object({
     .string()
     .min(1, "Nome é obrigatório")
     .max(50, "O nome deve ter menos de 10 caracteres"),
+  departamento: z.string().min(1, "Departamento é obrigatório"),
   cursoIds: z.array(z.string()).min(1, "Curso é obrigatório"),
   imagem: z.string().optional(),
   descricao: z.string().min(1, "Descrição é obrigatória"),
@@ -91,16 +92,36 @@ export const ModalAtletica = ({
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["cursoIds"]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [departamentos, setDepartamentos] = useState<string[]>([]);
+  const [departamentoSelecionado, setDepartamentoSelecionado] = useState<
+    string | null
+  >(null);
+  const [cursosFiltrados, setCursosFiltrados] = useState<CursoProps[]>([]);
 
   useEffect(() => {
     const fetchCursos = async () => {
       const response = await getCursos();
       if (response.success) {
-        setCursos(response.data ?? []);
+        setCursos(response.data);
+        const uniqueDepartamentos = Array.from(
+          new Set(response.data.map((curso) => curso.departamento))
+        );
+        setDepartamentos(uniqueDepartamentos);
       }
     };
     fetchCursos();
   }, []);
+
+  useEffect(() => {
+    if (departamentoSelecionado) {
+      const filtrados = cursos.filter(
+        (curso) => curso.departamento === departamentoSelecionado
+      );
+      setCursosFiltrados(filtrados);
+    } else {
+      setCursosFiltrados([]);
+    }
+  }, [departamentoSelecionado, cursos]);
 
   const addCursoField = () => {
     setCursoFields([...cursoFields, `cursoIds${cursoFields.length}`]);
@@ -119,7 +140,7 @@ export const ModalAtletica = ({
       setValue("nome", atleticaData.nome);
       setValue("descricao", atleticaData.descricao);
       setValue("atividades", atleticaData.atividades);
-      setValue("cursoIds", atleticaData.cursoIds ?? []);
+      setValue("cursoIds", atleticaData.cursos?.map((curso) => String(curso.id)) || []);
       setProfileImage(atleticaData.imagem || null);
     }
   }, [showModal, atleticaData, setValue]);
@@ -130,13 +151,14 @@ export const ModalAtletica = ({
     setProfileImage(null);
   };
 
-  const onSubmit = async (data: userSchemaDetails) => {
+  const onSubmit = async (data: any) => {
+    console.log("Dados enviados:", data);
     const atleticaPayload = {
       nome: data.nome,
       descricao: data.descricao,
       atividades: data.atividades,
       imagem: profileImage,
-      cursoIds: (data.cursoIds ?? []).filter((id) => id !== ""),
+      cursoIds: (data.cursoIds ?? []).filter((id: any) => id !== ""),
     };
 
     try {
@@ -260,7 +282,7 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <FormControl isInvalid={!!errors.descricao}>
+                 <FormControl isInvalid={!!errors.descricao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Descrição</FormControlLabelText>
               </FormControlLabel>
@@ -289,6 +311,50 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
+						<FormControl isInvalid={!!errors.departamento}>
+              <FormControlLabel className="mb-2">
+                <FormControlLabelText>Departamento</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                defaultValue=""
+                name="departamento"
+                control={control}
+                render={({ field: { onChange } }) => (
+                  <Select onValueChange={(value) => {
+                    onChange(value);
+                    setDepartamentoSelecionado(value);
+                  }} className="flex-1">
+                    <SelectTrigger variant="outline" size="md">
+                      <SelectInput placeholder="Selecione um departamento" />
+                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    </SelectTrigger>
+                    <SelectPortal>
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        {departamentos.map((departamento) => (
+                          <SelectItem
+                            key={departamento}
+                            value={departamento}
+                            label={departamento}
+                          >
+                            {departamento}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </SelectPortal>
+                  </Select>
+                )}
+              />
+              <FormControlError>
+                <FormControlErrorIcon size="md" as={AlertTriangle} />
+                <FormControlErrorText>
+                  {errors?.departamento?.message}
+                </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
             {cursoFields.map((field, index) => (
               <FormControl key={field} isInvalid={!!errors.cursoIds}>
                 <FormControlLabel className="mb-2 flex items-center">
@@ -300,7 +366,9 @@ export const ModalAtletica = ({
                     name={`cursoIds.${index}`}
                     control={control}
                     render={({ field: { onChange } }) => (
-                      <Select onValueChange={onChange} className="flex-1">
+                      <Select onValueChange={onChange} 
+											isDisabled={!departamentoSelecionado}
+											className="flex-1">
                         <SelectTrigger variant="outline" size="md">
                           <SelectInput placeholder="Selecione um curso" />
                           <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -311,7 +379,7 @@ export const ModalAtletica = ({
                             <SelectDragIndicatorWrapper>
                               <SelectDragIndicator />
                             </SelectDragIndicatorWrapper>
-                            {cursos.map((curso) => (
+                            {cursosFiltrados.map((curso) => (
                               <SelectItem
                                 key={curso.id}
                                 value={String(curso.id)}
@@ -331,6 +399,7 @@ export const ModalAtletica = ({
                       className="ml-2 p-1"
                       variant="outline"
                       size="sm"
+											disabled={!departamentoSelecionado}
                     >
                       <Icon as={PlusIcon} size="sm" />
                     </Button>
