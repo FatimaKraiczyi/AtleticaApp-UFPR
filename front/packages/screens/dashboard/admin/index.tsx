@@ -27,41 +27,34 @@ interface CardData {
 const HeadingCards: CardData[] = [
   {
     bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image3.png"),
-    title: "Jogos",
+    title: "Gerenciar Jogos",
     description: "Add your details",
-    route: "/dashboard/jogos",
+    route: "/dashboard/admin/jogos",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
-    title: "Festas",
+    title: "Gerenciar Festas",
     description: "Add your skills here",
-    route: "/dashboard/festas",
+    route: "/dashboard/admin/festas",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image4.png"),
-    title: "Produtos",
+    title: "Gerenciar Loja",
     description: "Set a target to accomplish",
-    route: "/dashboard/produtos",
+    route: "/dashboard/admin/loja",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image5.png"),
-    title: "Planos de assinatura",
+    title: "Gerenciar Planos de assinatura",
     description: "Set a target to accomplish",
-    route: "/dashboard/planos",
+    route: "/dashboard/admin/assinatura",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
-    title: "Admin Atlética",
+    title: "Gerenciar Membros",
     description: "Set a target to accomplish",
-    route: "/dashboard/admin",
-  },
-  {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
-    title: "Gerenciar Atléticas",
-    description: "Set a target to accomplish",
-    userType: "master",
-    route: "/dashboard/atleticas",
-  },
+    route: "/dashboard/admin/membros",
+  }
 ];
 
 const MainContent = () => {
@@ -102,7 +95,7 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Bem-vindo
+           AQUI SERA O NOME DA ATLÉTICA
           </Heading>
 
           <Grid
@@ -150,10 +143,10 @@ const MainContent = () => {
   );
 };
 
-export const Dashboard = () => {
+export const AdminAtletica = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Início" isSidebarVisible={true}>
+      <LayoutComponents title="Administrar Atlética" isSidebarVisible={true}>
         <MainContent />
       </LayoutComponents>
       <MobileFooter />
