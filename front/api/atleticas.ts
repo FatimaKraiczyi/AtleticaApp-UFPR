@@ -9,9 +9,7 @@ import {
   getAtleticaByIdEndpoint,
 } from "./routes/atleticas";
 
-export const getAtletica = async (): Promise<
-  IResponse.Default<AtleticaResponse>
-> => {
+export const getAtletica = async (): Promise<IResponse.Default<AtleticaResponse[]>> => {
   try {
     const { data, status } = await API.get(getAtleticaEndpoint);
     return { data, success: status === 200 };

@@ -16,7 +16,7 @@ import { MobileFooter } from "../../components/MobileFooter";
 import { ModalAtletica } from "./atletica-modal";
 import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica } from "../../../../api/atleticas";
-import type { Atletica } from "../../../../interfaces/atleticas";
+import type { Atletica, AtleticaResponse } from "../../../../interfaces/atleticas";
 import { getMembros } from "../../../../api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
@@ -29,7 +29,7 @@ const MainContent = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [atleticaToEdit, setAtleticaToEdit] = useState<Atletica | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [atleticas, setAtleticas] = useState<Atletica[]>([]);
+	const [atleticas, setAtleticas] = useState<AtleticaResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [atleticaIdToDelete, setAtleticaIdToDelete] = useState<number | null>(
     null
@@ -76,21 +76,21 @@ const MainContent = () => {
     setAtleticaIdToDelete(null);
   };
 
-  const updateAtleticasList = async () => {
-    try {
-      const response = await getAtletica();
-      if (response.success && response.data) {
-        setAtleticas(response.data.atletica);
-      } else {
-        console.error("Erro ao buscar atléticas");
-      }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+	const updateAtleticasList = async () => {
+		try {
+			const response = await getAtletica();
+			if (response.success && response.data) {
+				setAtleticas(response.data);
+			} else {
+				console.error("Erro ao buscar atléticas");
+			}
+		} catch (error) {
+			console.error("Erro na requisição:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+	
   useEffect(() => {
     updateAtleticasList();
   }, []);
@@ -104,65 +104,73 @@ const MainContent = () => {
   );
 
   const renderAtleticas = () => (
-    <Grid _extra={{ className: "gap-5" }}>
-      {atleticas.map((item, index) => (
-        <GridItem
-          _extra={{
-            className: "col-span-12 sm:col-span-6 lg:col-span-4",
-          }}
-          key={index}
-        >
-          <VStack
-            space="md"
-            className="border border-border-300 rounded-lg p-4"
-          >
-            <HStack space="xl" className="items-center justify-between">
-              <HStack space="xl" className="items-center">
-                <Avatar>
-                  <AvatarImage
-                    source={
-                      item.imagem ||
-                      require("@/shared/assets/dashboard/dashboard-layout/image2.png")
-                    }
-                  />
-                </Avatar>
-                <VStack>
-                  <Text className="font-semibold text-typography-900 line-clamp-1">
-                    {item.nome}
-                  </Text>
-                  <Text className="line-clamp-1">{item.descricao}</Text>
-                </VStack>
-              </HStack>
-              {userType === "master" && (
-                <HStack space="md">
-                  <Pressable onPress={() => handleEditAtleticaPress(item)}>
-                    <Icon as={EditIcon} className="text-typography-600" />
-                  </Pressable>
-                  <Pressable
-                    onPress={() =>
-                      item.id !== undefined && handleOpenDeleteModal(item.id)
-                    }
-                  >
-                    <Icon as={TrashIcon} className="text-typography-600" />
-                  </Pressable>
-                </HStack>
-              )}
-            </HStack>
-            {userType === "master" && (
-              <Button
-                variant="outline"
-                className="gap-3 relative"
-                onPress={() => handleCardPress(String(item.id))}
-              >
-                <ButtonText>Gerenciar Membros</ButtonText>
-              </Button>
-            )}
-          </VStack>
-        </GridItem>
-      ))}
-    </Grid>
-  );
-
+		<Grid _extra={{ className: "gap-5" }}>
+			{atleticas.map((item, index) => (
+				<GridItem
+					_extra={{
+						className: "col-span-12 sm:col-span-6 lg:col-span-4",
+					}}
+					key={index}
+				>
+					<VStack
+						space="md"
+						className="border border-border-300 rounded-lg p-4"
+					>
+						<HStack space="xl" className="items-center justify-between">
+							<HStack space="xl" className="items-center">
+								<Avatar>
+									<AvatarImage
+										source={
+											item.atletica.imagem ||
+											require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+										}
+									/>
+								</Avatar>
+								<VStack>
+									<Text className="font-semibold text-typography-900 line-clamp-1">
+										{item.atletica.nome}
+									</Text>
+									<Text className="line-clamp-1">{item.atletica.descricao}</Text>
+									<Text className="line-clamp-1">
+										Atividades: {item.atletica.atividades}
+									</Text>
+									{item.cursos && (
+										<Text className="line-clamp-1">
+											Cursos: {item.cursos.map(curso => curso.nome).join(", ")}
+										</Text>
+									)}
+								</VStack>
+							</HStack>
+							{userType === "master" && (
+								<HStack space="md">
+									<Pressable onPress={() => handleEditAtleticaPress(item.atletica)}>
+										<Icon as={EditIcon} className="text-typography-600" />
+									</Pressable>
+									<Pressable
+										onPress={() =>
+											item.atletica.id !== undefined && handleOpenDeleteModal(item.atletica.id)
+										}
+									>
+										<Icon as={TrashIcon} className="text-typography-600" />
+									</Pressable>
+								</HStack>
+							)}
+						</HStack>
+						{userType === "master" && (
+							<Button
+								variant="outline"
+								className="gap-3 relative"
+								onPress={() => handleCardPress(String(item.atletica.id))}
+							>
+								<ButtonText>Gerenciar Membros</ButtonText>
+							</Button>
+						)}
+					</VStack>
+				</GridItem>
+			))}
+		</Grid>
+	);
+	
   return (
     <Box className="flex-1">
       <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
