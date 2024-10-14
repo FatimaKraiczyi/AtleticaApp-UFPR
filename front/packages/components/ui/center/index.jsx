@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import "react";
+import React from "react";
 import { centerStyle } from "./styles";
 const Center = ({ className, ...props }) => {
     return <View className={centerStyle({ class: className })} {...props}/>;
