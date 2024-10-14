@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import "react";
 import UnitoolsImage from "@unitools/image";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { cssInterop } from "@gluestack-ui/nativewind-utils/cssInterop";

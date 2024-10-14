@@ -1,4 +1,4 @@
-import React from "react";
+import "react";
 import { gridStyle, gridItemStyle } from "./styles";
 const Grid = ({ className, _extra, ...props }) => {
     const gridClass = _extra?.className;
