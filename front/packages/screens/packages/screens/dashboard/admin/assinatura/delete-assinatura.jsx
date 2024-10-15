@@ -1,14 +1,13 @@
 import { Modal, ModalBackdrop, ModalContent, ModalHeader, ModalCloseButton, ModalBody, } from "@/components/ui/modal";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import Image from "@unitools/image";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { deleteAssinatura } from "../../../../../api/assinatura";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-export const DeleteAssinaturas = ({ showModal, setShowModal, assinaturaId, updateAssinaturaList, }) => {
+export const DeleteAssinatura = ({ showModal, setShowModal, assinaturaId, updateAssinaturaList, }) => {
     const handleDelete = async () => {
         try {
             const response = await deleteAssinatura(assinaturaId);
@@ -24,9 +23,6 @@ export const DeleteAssinaturas = ({ showModal, setShowModal, assinaturaId, updat
     return (<Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
         <ModalBackdrop />
         <ModalContent>
-          <Box className={"w-full h-[110px] "}>
-            <Image source={require("@/assets/profile-screens/profile/image2.png")} height={"100%"} width={"100%"} alt="Banner Image"/>
-          </Box>
           <ModalHeader className="absolute w-full flex justify-end">
             <ModalCloseButton>
               <Icon as={CloseIcon} size="md" className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"/>

@@ -37,20 +37,22 @@ export const WebSidebar = () => {
     const router = useRouter();
     const [selectedIndex, setSelectedIndex] = useState(0);
     useEffect(() => {
-        const path = window.location.pathname;
-        if (path.includes("dashboard-layout")) {
-            setSelectedIndex(0);
+        if (typeof window !== "undefined") {
+            const path = window.location.pathname;
+            if (path.includes("dashboard-layout")) {
+                setSelectedIndex(0);
+            }
+            else if (path.includes("atleticas")) {
+                setSelectedIndex(1);
+            }
+            else if (path.includes("carrinho")) {
+                setSelectedIndex(2);
+            }
+            else if (path.includes("meu-perfil")) {
+                setSelectedIndex(3);
+            }
         }
-        else if (path.includes("atleticas")) {
-            setSelectedIndex(1);
-        }
-        else if (path.includes("carrinho")) {
-            setSelectedIndex(2);
-        }
-        else if (path.includes("meu-perfil")) {
-            setSelectedIndex(3);
-        }
-    }, [window.location.pathname]);
+    }, []);
     const handleLogout = () => {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userType");

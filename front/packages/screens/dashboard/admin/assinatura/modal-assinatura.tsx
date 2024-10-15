@@ -26,7 +26,6 @@ import { useForm, Controller } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
-import { Box } from "@/components/ui/box";
 import { createAssinatura, updateAssinatura } from "../../../api/assinatura";
 import type { Assinatura } from "../../../interfaces/assinatura";
 
@@ -39,6 +38,7 @@ const AssinaturaSchema = z.object({
   descricao: z.string().min(1, "Descrição é obrigatória"),
   duracao: z.string().min(1, "Duração é obrigatória"),
 });
+
 type AssianaturaSchemaDetails = z.infer<typeof AssinaturaSchema>;
 
 export const ModalAssinatura = ({
@@ -199,7 +199,6 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
 
             <FormControl isInvalid={!!errors.descricao}>
               <FormControlLabel className="mb-2">

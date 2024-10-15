@@ -20,7 +20,7 @@ export const getAssinatura = async (): Promise<IResponse.Default<AssinaturaRespo
 
 export const createAssinatura = async (
   assinatura: Assinatura
-): Promise<IResponse.Default<AssinaturaResponse>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(createPlanoassinatura, assinatura);
     return { data, success: status === 201 };
@@ -32,7 +32,7 @@ export const createAssinatura = async (
 export const updateAssinatura = async (
   id: number,
   assinatura: Assinatura
-): Promise<IResponse.Default<AssinaturaResponse>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.put(
       `${updatePlanoassinatura}/${id}`,
@@ -59,7 +59,7 @@ export const deleteAssinatura = async (
 
 export const getAssinaturaId = async (
   id: number
-): Promise<IResponse.Default<any>> => {
+): Promise<IResponse.Default<AssinaturaResponse>> => {
   try {
     const { data, status } = await API.get(`${getPlanoassinaturaById}/${id}`);
     return { data, success: status === 200 };

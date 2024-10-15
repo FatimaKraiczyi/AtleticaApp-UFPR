@@ -12,7 +12,6 @@ import { useForm, Controller } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
-import { Box } from "@/components/ui/box";
 import { createAssinatura, updateAssinatura } from "../../../api/assinatura";
 const AssinaturaSchema = z.object({
     nome: z
@@ -118,7 +117,6 @@ export const ModalAssinatura = ({ showModal, setShowModal, addAssinatura, editAs
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
 
             <FormControl isInvalid={!!errors.descricao}>
               <FormControlLabel className="mb-2">
