@@ -33,9 +33,9 @@ const HeadingCards: CardData[] = [
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
-    title: "Gerenciar Festas",
+    title: "Gerenciar Eventos",
     description: "Add your skills here",
-    route: "/dashboard/admin/festas",
+    route: "/dashboard/admin/eventos",
   },
   {
     bannerUri: require("@/assets/dashboard/dashboard-layout/image4.png"),
