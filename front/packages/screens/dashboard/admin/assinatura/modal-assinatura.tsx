@@ -26,8 +26,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
-import { createAssinatura, updateAssinatura } from "../../../api/assinatura";
-import type { Assinatura } from "../../../interfaces/assinatura";
+import type { Assinatura } from "../../../../../interfaces/assinatura";
+import { createAssinatura, updateAssinatura } from "../../../../../api/assinatura";
 
 const AssinaturaSchema = z.object({
   nome: z

@@ -15,7 +15,7 @@ import { MobileFooter } from "../../../components/MobileFooter";
 import { LayoutComponents } from "../../../components/LayoutComponents";
 import { LoadingState } from "../../../components/LoadingState";
 import { NoItemsFound } from "../../../components/NoItemsFound";
-import type { Assinatura, AssinaturaResponse } from "../../../../../interfaces/assinatura";
+import type { Assinatura as AssinaturaType, AssinaturaResponse } from "../../../../../interfaces/assinatura";
 import { getAssinatura } from "../../../../../api/assinatura";
 import { DeleteAssinatura } from "./delete-assinatura";
 import { ModalAssinatura } from "./modal-assinatura";
@@ -24,7 +24,7 @@ const MainContent = () => {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [assinaturaToEdit, setAssinaturaToEdit] = useState<Assinatura | null>(null);
+  const [assinaturaToEdit, setAssinaturaToEdit] = useState<AssinaturaType | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [assinatura, setAssinatura] = useState<AssinaturaResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ const MainContent = () => {
     setAssinaturaToEdit(null);
   };
 
-  const handleEditAssinaturaPress = (assinatura: Assinatura) => {
+  const handleEditAssinaturaPress = (assinatura: AssinaturaType) => {
     setIsModalVisible(true);
     setIsEditMode(true);
     setAssinaturaToEdit(assinatura);
@@ -160,7 +160,7 @@ const MainContent = () => {
   );
 };
 
-export const Assinaturas = () => {
+export const AdminPlanos = () => {
   return (
     <SafeAreaView className="h-full w-full">
       <LayoutComponents title="Assinaturas" isSidebarVisible={true}>
