@@ -5,7 +5,7 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
-import { useState } from "react";
+import { useState, type SetStateAction } from "react";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
@@ -16,27 +16,19 @@ import { useMembros } from "../../../hooks/MembrosContext";
 import { LayoutComponents } from "../../components/LayoutComponents";
 import { DeleteMembro } from "./delete-membro";
 import { NoItemsFound } from "../../components/NoItemsFound";
+import type { MembrosResponse } from "../../../../interfaces/membros";
 
 const MainContent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [membroToEdit, setMembroToEdit] = useState<string | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [membroEmailToDelete, setMembroEmailToDelete] = useState<string | null>(
     null
   );
   const { membros, setMembros } = useMembros();
 
-  const handleCadastrarMembroPress = () => {
+  const handleCadastrarMembroPress = (membros: SetStateAction<MembrosResponse[]>) => {
+		setMembros(membros);
     setIsModalVisible(true);
-    setIsEditMode(false);
-    setMembroToEdit(null);
-  };
-
-  const handleEditMembroPress = (membro: any) => {
-    setIsModalVisible(true);
-    setIsEditMode(true);
-    setMembroToEdit(membro);
   };
 
   const handleCloseModal = () => {
@@ -74,10 +66,10 @@ const MainContent = () => {
               <HStack space="xl" className="items-center">
                 <VStack>
                   <Text className="font-semibold text-gray-900 dark:text-gray-100 line-clamp-1">
-                    {item.Usuario.nome}
+                    {item.Usuario?.nome}
                   </Text>
                   <Text className="italic text-gray-700 dark:text-gray-300 line-clamp-1">
-                    {item.Usuario.email}
+                    {item.Usuario?.email}
                   </Text>
                   <Text className="text-gray-500 dark:text-gray-400 line-clamp-1">
                     {item.administrador ? "Administrador" : "Membro"}
@@ -85,12 +77,7 @@ const MainContent = () => {
                 </VStack>
               </HStack>
               <HStack space="md">
-                <Pressable
-                  onPress={() =>
-                    item.Usuario?.email !== undefined &&
-                    handleEditMembroPress(item)
-                  }
-                >
+                <Pressable>
                   <Icon as={EditIcon} className="text-typography-600" />
                 </Pressable>
                 <Pressable
@@ -115,7 +102,7 @@ const MainContent = () => {
         <VStack space="lg" className="items-center">
           <Button
             className="gap-3 relative"
-            onPress={handleCadastrarMembroPress}
+            onPress={() => handleCadastrarMembroPress(membros)}
           >
             <ButtonText>Cadastrar Membro</ButtonText>
           </Button>
@@ -129,7 +116,7 @@ const MainContent = () => {
               paddingBottom: isWeb ? 0 : 100,
               flexGrow: 1,
             }}
-            className="flex-1 mb-20 md:mb-2"	
+            className="flex-1 mb-20 md:mb-2"
           >
             {renderMembers()}
           </ScrollView>
@@ -138,15 +125,8 @@ const MainContent = () => {
       <ModalMembros
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
-        editMembro={(membroEditado) => {
-          const novosMembros = membros.map((membro) =>
-            membro.email === membroEditado.email ? membroEditado : membro
-          );
-          setMembros(novosMembros);
-        }}
-        membroData={isEditMode && membroToEdit ? membroToEdit : undefined}
-        addMembros={handleCadastrarMembroPress}
         setMembros={setMembros}
+				membros={membros}
       />
 
       <DeleteMembro

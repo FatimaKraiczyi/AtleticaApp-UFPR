@@ -22,14 +22,15 @@ import Image from "@unitools/image";
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Keyboard, Switch } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { adicionarMembro, editarMembro } from "../../../../api/membros";
-import type { Membro, MembrosResponse } from "../../../../interfaces/membros";
+import type { MembrosResponse } from "../../../../interfaces/membros";
+import { useMembros } from "../../../hooks/MembrosContext";
 
 const userSchema = z.object({
   email: z
@@ -37,25 +38,19 @@ const userSchema = z.object({
     .min(1, "Email é obrigatório")
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
-  nomeAtletica: z.string().min(1, "Descrição é obrigatória"),
   administrador: z.boolean(),
 });
+
 type userSchemaDetails = z.infer<typeof userSchema>;
 
 export const ModalMembros = ({
   showModal,
   setShowModal,
-  addMembros,
-  editMembro,
-  membroData,
-  setMembros,
 }: {
   showModal: boolean;
   setShowModal: any;
-  addMembros: (newMembro: Membro) => void;
-  editMembro?: (membro: any) => void;
-  membroData?: any;
   setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
+  membros: MembrosResponse[];
 }) => {
   const ref = useRef(null);
   const {
@@ -63,56 +58,42 @@ export const ModalMembros = ({
     formState: { errors },
     handleSubmit,
     reset,
-    setValue,
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
   });
+
+  const { membros, setMembros } = useMembros();
 
   const handleKeyPress = () => {
     Keyboard.dismiss();
   };
 
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    if (membroData) {
-      console.log("Dados do membro:", membroData);
-      setValue("email", membroData.Usuario.email);
-      setValue("administrador", membroData.administrador);
-      setIsAdmin(membroData.administrador);
-    }
-  }, [showModal, membroData, setValue]);
-
-  const onSubmit = async (data: userSchemaDetails) => {
-    console.log("Formulário enviado:", data);
-    const membroPayload = {
-      email: data.email,
-      nomeAtletica: data.nomeAtletica,
-      administrador: data.administrador,
-    };
-
+  const onSubmit = async (formData: userSchemaDetails) => {
     try {
-      if (membroData) {
-        const response = await editarMembro(
-          membroData.email,
-          membroPayload.administrador
-        );
-        console.log("Response editarMembro:", response);
-        if (response.success) {
-          editMembro && editMembro(membroPayload);
+      const response = await adicionarMembro({
+        email: formData.email,
+        administrador: formData.administrador,
+        atleticaId: membros[0].atleticaId,
+      });
+
+      if (response.success) {
+        if (response.data.novoMembro) {
+          const { id, usuarioId, administrador, atleticaId } =
+            response.data.novoMembro;
+
+          const novoMembro: MembrosResponse = {
+            id: id!,
+            usuarioId: usuarioId!,
+            administrador: administrador!,
+            atleticaId: atleticaId!,
+          };
+          setMembros((prevMembros) => [...prevMembros, novoMembro]);
         }
-      } else {
-        const response = await adicionarMembro(membroPayload);
-        console.log("Response adicionarMembro:", response);
-        if (response.success) {
-          addMembros(membroPayload);
-        }
-        setMembros(response.data);
       }
       setShowModal(false);
       reset();
     } catch (error) {
-      console.error("Erro ao adicionar/editar membro:", error);
+      console.error("Erro ao adicionar membro:", error);
     }
   };
 
@@ -139,7 +120,7 @@ export const ModalMembros = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            {membroData ? "Editar Membro" : "Adicionar Membro"}
+            "Adicionar Membro"
           </Heading>
         </Center>
         <ModalBody className="px-10 py-6">
@@ -173,35 +154,6 @@ export const ModalMembros = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <FormControl isInvalid={!!errors.nomeAtletica}>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>Nome da Atlética</FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                name="nomeAtletica"
-                defaultValue=""
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input>
-                    <InputField
-                      placeholder="Nome da Atlética"
-                      type="text"
-                      value={value}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      onSubmitEditing={handleKeyPress}
-                      enterKeyHint="done"
-                    />
-                  </Input>
-                )}
-              />
-              <FormControlError>
-                <FormControlErrorIcon as={AlertTriangle} size="md" />
-                <FormControlErrorText>
-                  {errors?.nomeAtletica?.message}
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
             <FormControl>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Administrador</FormControlLabelText>
@@ -215,7 +167,6 @@ export const ModalMembros = ({
                     value={value}
                     onValueChange={(value) => {
                       onChange(value);
-                      setIsAdmin(value);
                     }}
                   />
                 )}

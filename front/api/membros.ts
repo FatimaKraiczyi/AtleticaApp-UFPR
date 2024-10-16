@@ -10,20 +10,28 @@ import {
 
 export const getMembros = async (
   atleticaId: string
-): Promise<IResponse.Default<any>> => {
+): Promise<IResponse.Default<MembrosResponse[]>> => {
   try {
     const { data, status } = await API.get(
       `${getMembroAtleticaEndpoint}/${atleticaId}`
     );
-    return { data, success: status === 200 };
+    return {
+      data: Array.isArray(data) ? data : [data],
+      success: status === 200,
+    };
   } catch (error) {
     return { ...objectCatch };
   }
 };
 
-export const adicionarMembro = async (membroData): Promise<IResponse.Default<any>> => {
+export const adicionarMembro = async (
+  membroData: Membro
+): Promise<IResponse.Default<MembrosResponse>> => {
   try {
-    const { data, status } = await API.post(createMembroAtleticaEndpoint, membroData);
+    const { data, status } = await API.post(
+      createMembroAtleticaEndpoint,
+      membroData
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -33,11 +41,11 @@ export const adicionarMembro = async (membroData): Promise<IResponse.Default<any
 export const editarMembro = async (
   email: string,
   administrador: boolean
-): Promise<IResponse.Default<any>> => {
+): Promise<IResponse.Default<MembrosResponse>> => {
   try {
     const { data, status } = await API.put(
       `${updateMembroAtleticaEndpoint}/${email}`,
-      administrador
+      { administrador }
     );
     return { data, success: status === 200 };
   } catch (error) {
@@ -47,12 +55,12 @@ export const editarMembro = async (
 
 export const deletarMembro = async (
   email: string
-): Promise<IResponse.Default<any>> => {
+): Promise<IResponse.Default<null>> => {
   try {
-    const { data, status } = await API.delete(
+    const { status } = await API.delete(
       `${deleteMembroAtleticaEndpoint}/${email}`
     );
-    return { data, success: status === 200 };
+    return { data: null, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
   }
