@@ -120,7 +120,7 @@ const MainContent = () => {
             <ButtonText>Cadastrar Membro</ButtonText>
           </Button>
         </VStack>
-        {membros.length === 0 ? (
+        {membros && membros.length === 0 ? (
           renderNoMembers()
         ) : (
           <ScrollView
@@ -129,7 +129,7 @@ const MainContent = () => {
               paddingBottom: isWeb ? 0 : 100,
               flexGrow: 1,
             }}
-            className="flex-1 mb-20 md:mb-2"
+            className="flex-1 mb-20 md:mb-2"	
           >
             {renderMembers()}
           </ScrollView>

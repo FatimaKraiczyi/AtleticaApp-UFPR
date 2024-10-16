@@ -12,13 +12,13 @@ import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { MobileFooter } from "../../../components/MobileFooter";
-import { ModalAssinatura } from "./modal-assinatura";
-import { DeleteAssinatura } from "./delete-assinatura";
-import { getAssinatura, } from "../../../api/assinatura";
-import type { Assinatura, AssinaturaResponse } from "../../../interfaces/assinatura";
 import { LayoutComponents } from "../../../components/LayoutComponents";
 import { LoadingState } from "../../../components/LoadingState";
 import { NoItemsFound } from "../../../components/NoItemsFound";
+import type { Assinatura, AssinaturaResponse } from "../../../../../interfaces/assinatura";
+import { getAssinatura } from "../../../../../api/assinatura";
+import { DeleteAssinatura } from "./delete-assinatura";
+import { ModalAssinatura } from "./modal-assinatura";
 
 const MainContent = () => {
   const router = useRouter();
