@@ -1,5 +1,6 @@
 export interface MembrosResponse {
   email?: string;
+	nome?: string;
   id: string;
   administrador: boolean;
   atleticaId: string;
@@ -13,6 +14,8 @@ export interface MembrosResponse {
     usuarioId: string;
     administrador: boolean;
     atleticaId: string;
+		nome: string;
+		email: string;
   };
 }
 

@@ -24,15 +24,24 @@ const MainContent = () => {
   const [membroEmailToDelete, setMembroEmailToDelete] = useState<string | null>(
     null
   );
+  const [membroEdicao, setMembroEdicao] = useState<MembrosResponse | null>(
+    null
+  );
   const { membros, setMembros } = useMembros();
 
-  const handleCadastrarMembroPress = (membros: SetStateAction<MembrosResponse[]>) => {
-		setMembros(membros);
+  const handleCadastrarMembroPress = () => {
+    setMembroEdicao(null);
     setIsModalVisible(true);
   };
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
+    setMembroEdicao(null);
+  };
+
+  const handleEditMembro = (membro: MembrosResponse) => {
+    setMembroEdicao(membro);
+    setIsModalVisible(true);
   };
 
   const handleOpenDeleteModal = (email: string) => {
@@ -53,9 +62,7 @@ const MainContent = () => {
     <Grid _extra={{ className: "gap-5" }}>
       {membros.map((item, index) => (
         <GridItem
-          _extra={{
-            className: "col-span-12 sm:col-span-6 lg:col-span-4",
-          }}
+          _extra={{ className: "col-span-12 sm:col-span-6 lg:col-span-4" }}
           key={index}
         >
           <VStack
@@ -77,13 +84,12 @@ const MainContent = () => {
                 </VStack>
               </HStack>
               <HStack space="md">
-                <Pressable>
+                <Pressable onPress={() => handleEditMembro(item)}>
                   <Icon as={EditIcon} className="text-typography-600" />
                 </Pressable>
                 <Pressable
                   onPress={() =>
-                    item.Usuario?.email !== undefined &&
-                    handleOpenDeleteModal(item.Usuario.email)
+                    handleOpenDeleteModal(item.Usuario?.email ?? "")
                   }
                 >
                   <Icon as={TrashIcon} className="text-typography-600" />
@@ -102,7 +108,7 @@ const MainContent = () => {
         <VStack space="lg" className="items-center">
           <Button
             className="gap-3 relative"
-            onPress={() => handleCadastrarMembroPress(membros)}
+            onPress={() => handleCadastrarMembroPress()}
           >
             <ButtonText>Cadastrar Membro</ButtonText>
           </Button>
@@ -126,9 +132,10 @@ const MainContent = () => {
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
         setMembros={setMembros}
-				membros={membros}
+        membros={membros}
+        editMembro={membroEdicao}
       />
-
+			
       <DeleteMembro
         showModal={isDeleteModalVisible}
         setShowModal={handleCloseDeleteModal}

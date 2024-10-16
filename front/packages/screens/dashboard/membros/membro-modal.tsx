@@ -22,7 +22,7 @@ import Image from "@unitools/image";
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Keyboard, Switch } from "react-native";
 import { z } from "zod";
@@ -46,11 +46,13 @@ type userSchemaDetails = z.infer<typeof userSchema>;
 export const ModalMembros = ({
   showModal,
   setShowModal,
+  editMembro,
 }: {
   showModal: boolean;
   setShowModal: any;
   setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
   membros: MembrosResponse[];
+	editMembro: MembrosResponse | null;
 }) => {
   const ref = useRef(null);
   const {
@@ -68,32 +70,60 @@ export const ModalMembros = ({
     Keyboard.dismiss();
   };
 
+  useEffect(() => {
+    if (editMembro) {
+      reset({
+        email: editMembro.Usuario?.email,
+        administrador: editMembro.administrador,
+      });
+    }
+  }, [editMembro, reset]);
+
   const onSubmit = async (formData: userSchemaDetails) => {
     try {
-      const response = await adicionarMembro({
-        email: formData.email,
-        administrador: formData.administrador,
-        atleticaId: membros[0].atleticaId,
-      });
+      if (editMembro && editMembro.Usuario?.email) {
+        const response = await editarMembro(
+          editMembro.Usuario.email,
+          formData.administrador
+        );
 
-      if (response.success) {
-        if (response.data.novoMembro) {
-          const { id, usuarioId, administrador, atleticaId } =
-            response.data.novoMembro;
+        if (response.success) {
+          setMembros((prevMembros) =>
+            prevMembros.map((membro) =>
+              membro.Usuario?.email === editMembro.Usuario?.email
+                ? { ...membro, administrador: formData.administrador }
+                : membro
+            )
+          );
+        }
+      } else {
+        const response = await adicionarMembro({
+          email: formData.email,
+          administrador: formData.administrador,
+          atleticaId: membros[0].atleticaId,
+        });
 
-          const novoMembro: MembrosResponse = {
-            id: id!,
-            usuarioId: usuarioId!,
-            administrador: administrador!,
-            atleticaId: atleticaId!,
-          };
-          setMembros((prevMembros) => [...prevMembros, novoMembro]);
+        if (response.success) {
+          if (response.data.novoMembro) {
+            const { id, usuarioId, administrador, atleticaId, email } =
+              response.data.novoMembro;
+
+            const novoMembro: MembrosResponse = {
+              id: id!,
+              usuarioId: usuarioId!,
+              administrador: administrador!,
+              atleticaId: atleticaId!,
+							email: email!,
+							nome: response.data.novoMembro.nome!,
+            };
+            setMembros((prevMembros) => [...prevMembros, novoMembro]);
+          }
         }
       }
       setShowModal(false);
       reset();
     } catch (error) {
-      console.error("Erro ao adicionar membro:", error);
+      console.error("Erro ao adicionar/editar membro:", error);
     }
   };
 
@@ -120,7 +150,7 @@ export const ModalMembros = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            "Adicionar Membro"
+					{editMembro ? "Editar Membro" : "Adicionar Membro"}
           </Heading>
         </Center>
         <ModalBody className="px-10 py-6">
