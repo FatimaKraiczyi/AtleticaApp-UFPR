@@ -30,7 +30,6 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { adicionarMembro, editarMembro, getMembros } from "../../../../api/membros";
 import type { MembrosResponse } from "../../../../interfaces/membros";
-import { useMembros } from "../../../hooks/MembrosContext";
 
 const userSchema = z.object({
   email: z
@@ -47,14 +46,14 @@ export const ModalMembros = ({
   showModal,
   setShowModal,
   editMembro,
-	membros,
-	setMembros
+  membros,
+  setMembros
 }: {
   showModal: boolean;
   setShowModal: any;
   setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
   membros: MembrosResponse[];
-	editMembro: MembrosResponse | null;
+  editMembro: MembrosResponse | null;
 }) => {
   const ref = useRef(null);
   const {
@@ -71,52 +70,59 @@ export const ModalMembros = ({
   };
 
   useEffect(() => {
-    if (editMembro) {
-      reset({
-        email: editMembro.Usuario?.email,
-        administrador: editMembro.administrador,
-      });
+    if (showModal) {
+      if (editMembro) {
+        reset({
+          email: editMembro.Usuario?.email || '',
+          administrador: editMembro.administrador,
+        });
+      } else {
+        reset({
+          email: '',
+          administrador: false,
+        });
+      }
     }
-  }, [editMembro, reset]);
+  }, [editMembro, showModal, reset]);
 
-	const onSubmit = async (formData: userSchemaDetails) => {
-		try {
-			if (editMembro && editMembro.Usuario?.email) {
-				const response = await editarMembro(
-					editMembro.Usuario.email,
-					formData.administrador
-				);
-	
-				if (response.success) {
-					setMembros((prevMembros) =>
-						prevMembros.map((membro) =>
-							membro.Usuario?.email === editMembro.Usuario?.email
-								? { ...membro, administrador: formData.administrador }
-								: membro
-						)
-					);
-				}
-			} else {
-				const response = await adicionarMembro({
-					email: formData.email,
-					administrador: formData.administrador,
-					atleticaId: membros[0].atleticaId,
-				});
-	
-				if (response.success) {
-					const atleticaId = membros[0].atleticaId;
+  const onSubmit = async (formData: userSchemaDetails) => {
+    try {
+      if (editMembro && editMembro.Usuario?.email) {
+        const response = await editarMembro(
+          editMembro.Usuario.email,
+          formData.administrador
+        );
+
+        if (response.success) {
+          setMembros((prevMembros) =>
+            prevMembros.map((membro) =>
+              membro.Usuario?.email === editMembro.Usuario?.email
+                ? { ...membro, administrador: formData.administrador }
+                : membro
+            )
+          );
+        }
+      } else {
+        const response = await adicionarMembro({
+          email: formData.email,
+          administrador: formData.administrador,
+          atleticaId: membros[0].atleticaId,
+        });
+
+        if (response.success) {
+          const atleticaId = membros[0].atleticaId;
           const response = await getMembros(atleticaId);
           const updatedMembros: MembrosResponse[] = response.data;
-					setMembros(updatedMembros);
-				}
-			}
-			setShowModal(false);
-			reset();
-		} catch (error) {
-			console.error("Erro ao adicionar/editar membro:", error);
-		}
-	};
-	
+          setMembros(updatedMembros);
+        }
+      }
+      setShowModal(false);
+      reset();
+    } catch (error) {
+      console.error("Erro ao adicionar/editar membro:", error);
+    }
+  };
+
   return (
     <Modal isOpen={showModal} finalFocusRef={ref} size="lg">
       <ModalBackdrop />
@@ -140,7 +146,7 @@ export const ModalMembros = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-					{editMembro ? "Editar Membro" : "Adicionar Membro"}
+            {editMembro ? "Editar Membro" : "Adicionar Membro"}
           </Heading>
         </Center>
         <ModalBody className="px-10 py-6">
@@ -151,7 +157,6 @@ export const ModalMembros = ({
               </FormControlLabel>
               <Controller
                 name="email"
-                defaultValue=""
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input>
@@ -181,7 +186,6 @@ export const ModalMembros = ({
               <Controller
                 name="administrador"
                 control={control}
-                defaultValue={false}
                 render={({ field: { onChange, value } }) => (
                   <Switch
                     value={value}
