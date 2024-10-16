@@ -10,7 +10,7 @@ import {
     getPlanoassinaturaById,
 } from "./routes/assinatura";
 
-export const getAssinatura = async (): Promise<IResponse.Default<AssinaturaResponse[]>> => {
+export const getAssinatura = async (): Promise<IResponse.Default<AssinaturaResponse>> => {
   try {
     const { data, status } = await API.get(getPlanoassinatura);
     return { data, success: status === 200 };

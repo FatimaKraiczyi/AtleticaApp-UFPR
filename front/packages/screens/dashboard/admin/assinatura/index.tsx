@@ -15,18 +15,20 @@ import { MobileFooter } from "../../../components/MobileFooter";
 import { LayoutComponents } from "../../../components/LayoutComponents";
 import { LoadingState } from "../../../components/LoadingState";
 import { NoItemsFound } from "../../../components/NoItemsFound";
-import type { Assinatura as AssinaturaType, AssinaturaResponse } from "../../../../../interfaces/assinatura";
+import type {
+  Assinatura as AssinaturaType,
+  AssinaturaResponse,
+} from "../../../../../interfaces/assinatura";
 import { getAssinatura } from "../../../../../api/assinatura";
 import { DeleteAssinatura } from "./delete-assinatura";
 import { ModalAssinatura } from "./modal-assinatura";
 
 const MainContent = () => {
-  const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [assinaturaToEdit, setAssinaturaToEdit] = useState<AssinaturaType | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [assinatura, setAssinatura] = useState<AssinaturaResponse[]>([]);
+  const [assinatura, setAssinatura] = useState<AssinaturaType[]>([]);
   const [loading, setLoading] = useState(true);
   const [assinaturaIdToDelete, setAssinaturaIdToDelete] = useState<number | null>(null);
 
@@ -57,22 +59,21 @@ const MainContent = () => {
   };
 
   const updateAssinaturaList = async () => {
-    try {
-      const response = await getAssinatura();
-    
-      if (response.success && response.data) {
-        setAssinatura(response.data);
-        console.log(response.data);
-      } else {
-        console.error("Erro ao buscar assinaturas");
-      }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+		try {
+			const response = await getAssinatura();
+			if (response.success && response.data?.planos) {
+				setAssinatura(response.data.planos);
+				console.log("Dados das assinaturas encontrados:", response.data.planos);
+			} else {
+				console.error("Erro ao buscar assinaturas");
+			}
+		} catch (error) {
+			console.error("Erro na requisição:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+	
   useEffect(() => {
     updateAssinaturaList();
   }, []);
@@ -89,26 +90,23 @@ const MainContent = () => {
     <Grid _extra={{ className: "gap-5" }}>
       {assinatura.map((item, index: number) => (
         <GridItem _extra={{ className: "col-span-12 sm:col-span-6 lg:col-span-4" }} key={index}>
-          console.log(item);
           <VStack space="md" className="border border-border-300 rounded-lg p-4">
             <HStack space="xl" className="items-center justify-between">
               <HStack space="xl" className="items-center">
-                {/*<VStack>
-                  <Text className="font-semibold text-typography-900 line-clamp-1">{item.assinatura.nome}</Text>
-                  <Text className="line-clamp-1">{item.assinatura.descricao}</Text>
-                  <Text className="line-clamp-1">{item.assinatura.valor}</Text>
-                  <Text className="line-clamp-1">{item.assinatura.duracao}</Text>
+                <VStack>
+                  <Text className="font-semibold text-typography-900 line-clamp-1">{item.nome}</Text>
+                  <Text className="line-clamp-1">{item.descricao}</Text>
+                  <Text className="line-clamp-1">{item.valor}</Text>
+                  <Text className="line-clamp-1">{item.duracao}</Text>
                 </VStack>
               </HStack>
-                 
-             <HStack space="md">
-                <Pressable onPress={() => handleEditAssinaturaPress(item.assinatura)}>
+              <HStack space="md">
+                <Pressable onPress={() => handleEditAssinaturaPress(item)}>
                   <Icon as={EditIcon} className="text-typography-600" />
                 </Pressable>
-                <Pressable onPress={() =>
-                  item.assinatura.id !== undefined && handleOpenDeleteModal(item.assinatura.id)}>
+                <Pressable onPress={() => item.id !== undefined && handleOpenDeleteModal(item.id)}>
                   <Icon as={TrashIcon} className="text-typography-600" />
-                </Pressable>*/}
+                </Pressable>
               </HStack>
             </HStack>
           </VStack>

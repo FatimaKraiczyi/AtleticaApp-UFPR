@@ -6,5 +6,5 @@ export interface Assinatura {
 	duracao: string;
 }
 export interface AssinaturaResponse {
-	assinatura: Assinatura[];
+	planos: Assinatura[];
 }
