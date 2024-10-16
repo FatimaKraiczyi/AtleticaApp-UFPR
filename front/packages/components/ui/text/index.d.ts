@@ -1,5 +1,5 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 declare const Text: React.ForwardRefExoticComponent<{
     className?: string | undefined;
 } & import("react-native").TextProps & VariantProps<import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
@@ -16,17 +16,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -51,17 +51,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -94,7 +94,7 @@ declare const Text: React.ForwardRefExoticComponent<{
         };
     };
     size: {
-        '2xs': import("tailwind-merge").ClassNameValue | {
+        "2xs": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
         xs: import("tailwind-merge").ClassNameValue | {
@@ -112,19 +112,19 @@ declare const Text: React.ForwardRefExoticComponent<{
         xl: import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '2xl': import("tailwind-merge").ClassNameValue | {
+        "2xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '3xl': import("tailwind-merge").ClassNameValue | {
+        "3xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '4xl': import("tailwind-merge").ClassNameValue | {
+        "4xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '5xl': import("tailwind-merge").ClassNameValue | {
+        "5xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '6xl': import("tailwind-merge").ClassNameValue | {
+        "6xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
     };
@@ -157,17 +157,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -192,17 +192,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -227,17 +227,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -262,17 +262,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -297,17 +297,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -332,17 +332,17 @@ declare const Text: React.ForwardRefExoticComponent<{
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;

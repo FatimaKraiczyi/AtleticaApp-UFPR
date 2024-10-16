@@ -1,6 +1,6 @@
-import React from 'react';
-import { textStyle } from './styles';
-const Text = React.forwardRef(({ className, isTruncated, bold, underline, strikeThrough, size = 'md', sub, italic, highlight, ...props }, ref) => {
+import React from "react";
+import { textStyle } from "./styles";
+const Text = React.forwardRef(({ className, isTruncated, bold, underline, strikeThrough, size = "md", sub, italic, highlight, ...props }, ref) => {
     return (<span className={textStyle({
             isTruncated,
             bold,
@@ -13,5 +13,5 @@ const Text = React.forwardRef(({ className, isTruncated, bold, underline, strike
             class: className,
         })} {...props} ref={ref}/>);
 });
-Text.displayName = 'Text';
+Text.displayName = "Text";
 export { Text };

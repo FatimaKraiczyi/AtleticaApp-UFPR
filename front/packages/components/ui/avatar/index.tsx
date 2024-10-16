@@ -28,7 +28,7 @@ cssInterop(UIAvatar.Group, { className: "style" });
 cssInterop(
   UIAvatar.Image,
   //@ts-ignore
-  Image.displayName === "NextImage" ? {} : { className: "style" }
+  Image.displayName === "NextImage" ? {} : { className: "style" },
 );
 cssInterop(UIAvatar.FallbackText, { className: "style" });
 
@@ -88,7 +88,7 @@ type IAvatarProps = Omit<React.ComponentProps<typeof UIAvatar>, "context"> &
 export const Avatar = React.forwardRef(
   (
     { className, size = "md", ...props }: { className?: string } & IAvatarProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAvatar
@@ -98,7 +98,7 @@ export const Avatar = React.forwardRef(
         context={{ size }}
       />
     );
-  }
+  },
 );
 
 type IAvatarBadgeProps = React.ComponentProps<typeof UIAvatar.Badge> &
@@ -106,7 +106,7 @@ type IAvatarBadgeProps = React.ComponentProps<typeof UIAvatar.Badge> &
 export const AvatarBadge = React.forwardRef(
   (
     { className, size, ...props }: { className?: string } & IAvatarBadgeProps,
-    ref?: any
+    ref?: any,
   ) => {
     const { size: parentSize } = useStyleContext(SCOPE);
 
@@ -123,7 +123,7 @@ export const AvatarBadge = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 type IAvatarFallbackTextProps = React.ComponentProps<
@@ -137,7 +137,7 @@ export const AvatarFallbackText = React.forwardRef(
       size,
       ...props
     }: { className?: string } & IAvatarFallbackTextProps,
-    ref?: any
+    ref?: any,
   ) => {
     const { size: parentSize } = useStyleContext(SCOPE);
 
@@ -154,7 +154,7 @@ export const AvatarFallbackText = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 type IAvatarImageProps = React.ComponentProps<typeof UIAvatar.Image> &
@@ -162,7 +162,7 @@ type IAvatarImageProps = React.ComponentProps<typeof UIAvatar.Image> &
 export const AvatarImage = React.forwardRef(
   (
     { className, ...props }: { className?: string } & IAvatarImageProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAvatar.Image
@@ -173,7 +173,7 @@ export const AvatarImage = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );
 
 type IAvatarGroupProps = React.ComponentProps<typeof UIAvatar.Group> &
@@ -181,7 +181,7 @@ type IAvatarGroupProps = React.ComponentProps<typeof UIAvatar.Group> &
 export const AvatarGroup = React.forwardRef(
   (
     { className, ...props }: { className?: string } & IAvatarGroupProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAvatar.Group
@@ -192,5 +192,5 @@ export const AvatarGroup = React.forwardRef(
         })}
       />
     );
-  }
+  },
 );

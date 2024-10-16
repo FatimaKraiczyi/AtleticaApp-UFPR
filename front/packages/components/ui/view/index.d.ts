@@ -1,1 +1,1 @@
-export { View } from 'react-native';
+export { View } from "react-native";

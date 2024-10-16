@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
@@ -11,8 +9,8 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { ArrowLeftIcon, EyeIcon, EyeOffIcon, Icon } from "@/components/ui/icon";
+import { Input, InputField } from "@/components/ui/input";
+import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
@@ -54,7 +52,11 @@ const ValidateTokenWithLeftBackground = () => {
         ),
       });
       reset();
-      router.push("/auth/signup");
+      if (response.data && response.data.acao === 'cadastro') {
+        router.push("/auth/signup");
+      } else if (response.data && response.data.acao === "recSenha") {
+        router.push("/auth/create-password");
+      }
     } else {
       toast.show({
         placement: "bottom right",
@@ -88,11 +90,8 @@ const ValidateTokenWithLeftBackground = () => {
         </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
-            Create new password
+            Valide seu token
           </Heading>
-          <Text className="md:text-center">
-            Your new password must be...
-          </Text>
         </VStack>
       </VStack>
       <VStack className="w-full">
@@ -126,7 +125,7 @@ const ValidateTokenWithLeftBackground = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}

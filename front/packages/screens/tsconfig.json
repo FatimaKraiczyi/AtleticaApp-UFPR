@@ -1,7 +1,7 @@
 {
   "include": ["./**/*.tsx", "./**/*.ts"],
-  "exclude": ["node_modules", "example", "dist"],
-	"path": {},
+  "exclude": ["node_modules", "example"],
+  "path": {},
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "noEmit": false,
@@ -10,7 +10,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": true,
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
     "jsxImportSource": "nativewind",
@@ -27,6 +27,6 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "outDir": "./dist"
+    "outDir": "."
   }
 }

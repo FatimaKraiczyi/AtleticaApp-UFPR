@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React from "react";
+import { Text, View } from "react-native";
 type ITableHeadProps = React.ComponentProps<typeof View | typeof Text> & {
     useRNView?: boolean;
 };

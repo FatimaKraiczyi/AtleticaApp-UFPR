@@ -1,22 +1,22 @@
-import { memo } from 'react';
-import { headingStyle } from './styles';
-const Heading = memo(({ className, size = 'lg', as: AsComp, ...props }) => {
+import { memo } from "react";
+import { headingStyle } from "./styles";
+const Heading = memo(({ className, size = "lg", as: AsComp, ...props }) => {
     const MappedHeading = ({ size }) => {
         switch (size) {
-            case '5xl':
-            case '4xl':
-            case '3xl':
+            case "5xl":
+            case "4xl":
+            case "3xl":
                 return (<h1 className={headingStyle({ size, class: className })} {...props}/>);
-            case '2xl':
+            case "2xl":
                 return (<h2 className={headingStyle({ size, class: className })} {...props}/>);
-            case 'xl':
+            case "xl":
                 return (<h3 className={headingStyle({ size, class: className })} {...props}/>);
-            case 'lg':
+            case "lg":
                 return (<h4 className={headingStyle({ size, class: className })} {...props}/>);
-            case 'md':
+            case "md":
                 return (<h5 className={headingStyle({ size, class: className })} {...props}/>);
-            case 'sm':
-            case 'xs':
+            case "sm":
+            case "xs":
                 return (<h6 className={headingStyle({ size, class: className })} {...props}/>);
             default:
                 return (<h4 className={headingStyle({ size, class: className })} {...props}/>);
@@ -27,5 +27,5 @@ const Heading = memo(({ className, size = 'lg', as: AsComp, ...props }) => {
     }
     return <MappedHeading size={size}/>;
 });
-Heading.displayName = 'Heading';
+Heading.displayName = "Heading";
 export { Heading };

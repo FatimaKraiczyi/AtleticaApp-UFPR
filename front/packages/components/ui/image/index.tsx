@@ -25,7 +25,7 @@ const UIImage = UnitoolsImage;
 cssInterop(
   UIImage,
   //@ts-ignore
-  UnitoolsImage.displayName === "NextImage" ? {} : { className: "style" }
+  UnitoolsImage.displayName === "NextImage" ? {} : { className: "style" },
 );
 
 type ImageProps = VariantProps<typeof imageStyle> &

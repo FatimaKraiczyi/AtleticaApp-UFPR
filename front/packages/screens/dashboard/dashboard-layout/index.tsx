@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
@@ -5,91 +6,91 @@ import { Icon, ChevronRightIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
-import { useState } from "react";
 import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { Sidebar } from "../../components/Sidebar";
-import { WebHeader } from "../../components/WebHeader";
 import { MobileFooter } from "../../components/MobileFooter";
-import { MobileHeader } from "../../components/MobileHeader";
+import { LayoutComponents } from "../../components/LayoutComponents";
+import { LoadingState } from "../../components/LoadingState";
 
 interface CardData {
   bannerUri: string;
   title: string;
   description: string;
+  userType?: string;
+  route: string;
 }
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
+    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image3.png"),
     title: "Jogos",
     description: "Add your details",
+    route: "/dashboard/jogos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image2.png"),
-    title: "Festas",
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
+    title: "Eventos",
     description: "Add your skills here",
+    route: "/dashboard/eventos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image4.png"),
     title: "Produtos",
     description: "Set a target to accomplish",
+    route: "/dashboard/produtos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image5.png"),
     title: "Planos de assinatura",
     description: "Set a target to accomplish",
+    route: "/dashboard/admin/assinatura",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
+    route: "/dashboard/admin",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Gerenciar Atléticas",
     description: "Set a target to accomplish",
+    userType: "master",
+    route: "/dashboard/atleticas",
   },
 ];
 
-const DashboardLayout = (props: any) => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible
-  );
-  function toggleSidebar() {
-    setIsSidebarVisible(!isSidebarVisible);
-  }
-
-  return (
-    <VStack className="h-full w-full bg-background-0">
-      <Box className="md:hidden">
-        <MobileHeader title={props.title} />
-      </Box>
-      <Box className="hidden md:flex">
-        <WebHeader toggleSidebar={toggleSidebar} title={props.title} />
-      </Box>
-      <VStack className="h-full w-full">
-        <HStack className="h-full w-full">
-          <Box className="hidden md:flex h-full">
-            {isSidebarVisible && <Sidebar />}
-          </Box>
-          <VStack className="w-full">{props.children}</VStack>
-        </HStack>
-      </VStack>
-    </VStack>
-  );
-};
-
 const MainContent = () => {
   const router = useRouter();
+  const [userType, setUserType] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleCardPress = () => {
-    router.push("/dashboard/gerenciar-atleticas");
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUserType = sessionStorage.getItem("userType");
+      setUserType(storedUserType);
+    }
+    setLoading(false);
+  }, []);
+
+  const filteredCards = HeadingCards.filter((card) => {
+    if (card.userType && card.userType !== userType) {
+      return false;
+    }
+    return true;
+  });
+
+  const handleCardPress = (route: string) => {
+    router.push(route);
   };
+
+  if (loading) {
+    return <LoadingState />;
+  }
 
   return (
     <Box className="flex-1 ">
@@ -103,11 +104,15 @@ const MainContent = () => {
       >
         <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            Welcome Alexander
+            Bem-vindo
           </Heading>
 
-          <Grid className="gap-5">
-            {HeadingCards.map((item, index) => {
+          <Grid
+            _extra={{
+              className: "gap-5",
+            }}
+          >
+            {filteredCards.map((item, index) => {
               return (
                 <GridItem
                   _extra={{
@@ -133,7 +138,7 @@ const MainContent = () => {
                         <Text className="line-clamp-1">{item.description}</Text>
                       </VStack>
                     </HStack>
-                    <Pressable onPress={() => handleCardPress()}>
+                    <Pressable onPress={() => handleCardPress(item.route)}>
                       <Icon as={ChevronRightIcon} size="md" />
                     </Pressable>
                   </HStack>
@@ -150,9 +155,9 @@ const MainContent = () => {
 export const Dashboard = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <DashboardLayout title="Início" isSidebarVisible={true}>
+      <LayoutComponents title="Início" isSidebarVisible={true}>
         <MainContent />
-      </DashboardLayout>
+      </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>
   );

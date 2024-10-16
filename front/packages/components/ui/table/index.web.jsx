@@ -1,5 +1,5 @@
-import React, { createContext, useMemo, useContext } from 'react';
-import { tableStyle, tableHeaderStyle, tableBodyStyle, tableFooterStyle, tableHeadStyle, tableRowStyleStyle, tableDataStyle, tableCaptionStyle, } from './styles';
+import React, { createContext, useMemo, useContext } from "react";
+import { tableStyle, tableHeaderStyle, tableBodyStyle, tableFooterStyle, tableHeadStyle, tableRowStyleStyle, tableDataStyle, tableCaptionStyle, } from "./styles";
 const TableHeaderContext = createContext({});
 const TableFooterContext = createContext({});
 const Table = React.forwardRef(({ className, ...props }, ref) => {
@@ -46,12 +46,12 @@ const TableData = React.forwardRef(({ className, ...props }, ref) => {
 const TableCaption = React.forwardRef(({ className, ...props }, ref) => {
     return (<caption ref={ref} className={tableCaptionStyle({ class: className })} {...props}/>);
 });
-Table.displayName = 'Table';
-TableHeader.displayName = 'TableHeader';
-TableBody.displayName = 'TableBody';
-TableFooter.displayName = 'TableFooter';
-TableHead.displayName = 'TableHead';
-TableRow.displayName = 'TableRow';
-TableData.displayName = 'TableData';
-TableCaption.displayName = 'TableCaption';
+Table.displayName = "Table";
+TableHeader.displayName = "TableHeader";
+TableBody.displayName = "TableBody";
+TableFooter.displayName = "TableFooter";
+TableHead.displayName = "TableHead";
+TableRow.displayName = "TableRow";
+TableData.displayName = "TableData";
+TableCaption.displayName = "TableCaption";
 export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableData, TableCaption, };

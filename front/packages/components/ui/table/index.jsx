@@ -1,7 +1,7 @@
-import React, { createContext, useMemo, useContext } from 'react';
-import { Table as ExpoTable, THead as ExpoTHead, TBody as ExpoTBody, TFoot as ExpoTFoot, TR as ExpoTR, Caption as ExpoTCaption, } from '@expo/html-elements';
-import { tableStyle, tableHeaderStyle, tableBodyStyle, tableFooterStyle, tableHeadStyle, tableRowStyleStyle, tableDataStyle, tableCaptionStyle, } from './styles';
-import { Text, View } from 'react-native';
+import React, { createContext, useMemo, useContext } from "react";
+import { Table as ExpoTable, THead as ExpoTHead, TBody as ExpoTBody, TFoot as ExpoTFoot, TR as ExpoTR, Caption as ExpoTCaption, } from "@expo/html-elements";
+import { tableStyle, tableHeaderStyle, tableBodyStyle, tableFooterStyle, tableHeadStyle, tableRowStyleStyle, tableDataStyle, tableCaptionStyle, } from "./styles";
+import { Text, View } from "react-native";
 const TableHeaderContext = createContext({});
 const TableFooterContext = createContext({});
 const Table = React.forwardRef(({ className, ...props }, ref) => {
@@ -58,12 +58,12 @@ const TableData = React.forwardRef(({ useRNView = false, className, ...props }, 
 const TableCaption = React.forwardRef(({ className, ...props }, ref) => {
     return (<ExpoTCaption ref={ref} className={tableCaptionStyle({ class: className })} {...props}/>);
 });
-Table.displayName = 'Table';
-TableHeader.displayName = 'TableHeader';
-TableBody.displayName = 'TableBody';
-TableFooter.displayName = 'TableFooter';
-TableHead.displayName = 'TableHead';
-TableRow.displayName = 'TableRow';
-TableData.displayName = 'TableData';
-TableCaption.displayName = 'TableCaption';
+Table.displayName = "Table";
+TableHeader.displayName = "TableHeader";
+TableBody.displayName = "TableBody";
+TableFooter.displayName = "TableFooter";
+TableHead.displayName = "TableHead";
+TableRow.displayName = "TableRow";
+TableData.displayName = "TableData";
+TableCaption.displayName = "TableCaption";
 export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableData, TableCaption, };

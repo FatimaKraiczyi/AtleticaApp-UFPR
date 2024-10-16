@@ -1,5 +1,5 @@
-import React from 'react';
-import { boxStyle } from './styles';
+import React from "react";
+import { boxStyle } from "./styles";
 
 const Box = React.forwardRef(({ className, ...props }: any, ref) => {
   return (
@@ -7,5 +7,5 @@ const Box = React.forwardRef(({ className, ...props }: any, ref) => {
   );
 });
 
-Box.displayName = 'Box';
+Box.displayName = "Box";
 export { Box };

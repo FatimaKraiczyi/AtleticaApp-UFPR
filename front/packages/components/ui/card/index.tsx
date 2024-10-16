@@ -1,15 +1,15 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { View } from 'react-native';
-import { cardStyle } from './styles';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
+import { View } from "react-native";
+import { cardStyle } from "./styles";
 
 type ICardProps = React.ComponentProps<typeof View> &
   VariantProps<typeof cardStyle>;
 
 const Card = React.forwardRef(
   (
-    { className, size = 'md', variant = 'elevated', ...props }: ICardProps,
-    ref?: any
+    { className, size = "md", variant = "elevated", ...props }: ICardProps,
+    ref?: any,
   ) => {
     return (
       <View
@@ -18,9 +18,9 @@ const Card = React.forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );
 
-Card.displayName = 'Card';
+Card.displayName = "Card";
 
 export { Card };

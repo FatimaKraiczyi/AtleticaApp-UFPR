@@ -1,7 +1,7 @@
-import React from 'react';
-import { boxStyle } from './styles';
+import React from "react";
+import { boxStyle } from "./styles";
 const Box = React.forwardRef(({ className, ...props }, ref) => {
     return (<div ref={ref} className={boxStyle({ class: className })} {...props}/>);
 });
-Box.displayName = 'Box';
+Box.displayName = "Box";
 export { Box };

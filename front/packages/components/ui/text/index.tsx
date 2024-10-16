@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { Text as RNText } from 'react-native';
-import { textStyle } from './styles';
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
+import { Text as RNText } from "react-native";
+import { textStyle } from "./styles";
 
 type ITextProps = React.ComponentProps<typeof RNText> &
   VariantProps<typeof textStyle>;
@@ -15,13 +15,13 @@ const Text = React.forwardRef(
       bold,
       underline,
       strikeThrough,
-      size = 'md',
+      size = "md",
       sub,
       italic,
       highlight,
       ...props
     }: { className?: string } & ITextProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <RNText
@@ -40,9 +40,9 @@ const Text = React.forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );
 
-Text.displayName = 'Text';
+Text.displayName = "Text";
 
 export { Text };

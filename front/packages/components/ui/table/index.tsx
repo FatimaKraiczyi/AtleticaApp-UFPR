@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useContext } from 'react';
+import React, { createContext, useMemo, useContext } from "react";
 import {
   Table as ExpoTable,
   THead as ExpoTHead,
@@ -6,7 +6,7 @@ import {
   TFoot as ExpoTFoot,
   TR as ExpoTR,
   Caption as ExpoTCaption,
-} from '@expo/html-elements';
+} from "@expo/html-elements";
 import {
   tableStyle,
   tableHeaderStyle,
@@ -16,8 +16,8 @@ import {
   tableRowStyleStyle,
   tableDataStyle,
   tableCaptionStyle,
-} from './styles';
-import { Text, View } from 'react-native';
+} from "./styles";
+import { Text, View } from "react-native";
 
 const TableHeaderContext = createContext<any>({});
 const TableFooterContext = createContext<any>({});
@@ -44,7 +44,7 @@ const Table = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
 const TableHeader = React.forwardRef(
@@ -63,7 +63,7 @@ const TableHeader = React.forwardRef(
         />
       </TableHeaderContext.Provider>
     );
-  }
+  },
 );
 
 const TableBody = React.forwardRef(
@@ -75,7 +75,7 @@ const TableBody = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
 const TableFooter = React.forwardRef(
@@ -94,7 +94,7 @@ const TableFooter = React.forwardRef(
         />
       </TableFooterContext.Provider>
     );
-  }
+  },
 );
 
 const TableHead = React.forwardRef(
@@ -116,7 +116,7 @@ const TableHead = React.forwardRef(
         />
       );
     }
-  }
+  },
 );
 
 const TableRow = React.forwardRef(
@@ -135,7 +135,7 @@ const TableRow = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
 const TableData = React.forwardRef(
@@ -157,7 +157,7 @@ const TableData = React.forwardRef(
         />
       );
     }
-  }
+  },
 );
 
 const TableCaption = React.forwardRef(
@@ -169,17 +169,17 @@ const TableCaption = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
-Table.displayName = 'Table';
-TableHeader.displayName = 'TableHeader';
-TableBody.displayName = 'TableBody';
-TableFooter.displayName = 'TableFooter';
-TableHead.displayName = 'TableHead';
-TableRow.displayName = 'TableRow';
-TableData.displayName = 'TableData';
-TableCaption.displayName = 'TableCaption';
+Table.displayName = "Table";
+TableHeader.displayName = "TableHeader";
+TableBody.displayName = "TableBody";
+TableFooter.displayName = "TableFooter";
+TableHead.displayName = "TableHead";
+TableRow.displayName = "TableRow";
+TableData.displayName = "TableData";
+TableCaption.displayName = "TableCaption";
 
 export {
   Table,
