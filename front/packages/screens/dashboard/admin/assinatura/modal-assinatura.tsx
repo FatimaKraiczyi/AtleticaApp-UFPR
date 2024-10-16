@@ -28,18 +28,20 @@ import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import type { Assinatura } from "../../../../../interfaces/assinatura";
 import { createAssinatura, updateAssinatura } from "../../../../../api/assinatura";
-
+ 
 const AssinaturaSchema = z.object({
   nome: z
     .string()
     .min(1, "Nome é obrigatório")
     .max(50, "O nome deve ter menos de 50 caracteres"),
-  valor: z.string().min(1, "Preço é obrigatório"),
+  valor: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/, "Preço deve ser um número válido com até duas casas decimais"),
   descricao: z.string().min(1, "Descrição é obrigatória"),
   duracao: z.string().min(1, "Duração é obrigatória"),
 });
 type AssianaturaSchemaDetails = z.infer<typeof AssinaturaSchema>;
-
+ 
 export const ModalAssinatura = ({
   showModal,
   setShowModal,
@@ -63,12 +65,12 @@ export const ModalAssinatura = ({
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
   });
-
+ 
   useEffect(() => {
     if (showModal) {
       resetForm();
     }
-
+ 
     if (assinaturaData) {
       setValue("nome", assinaturaData.nome);
       setValue("descricao", assinaturaData.descricao);
@@ -76,19 +78,19 @@ export const ModalAssinatura = ({
       setValue("duracao", assinaturaData.duracao);
     }
   }, [showModal, assinaturaData, setValue]);
-
+ 
   const resetForm = () => {
     reset();
   };
-
+ 
   const onSubmit = async (data: any) => {
     const assinaturaPayload = {
       nome: data.nome,
       descricao: data.descricao,
-      valor: data.valor,
-      duracao: data.duracao,
+      valor: data.valor, // Mantendo como string
+      duracao: data.duracao, // Mantendo como string
     };
-
+ 
     try {
       if (assinaturaData) {
         if (assinaturaData.id !== undefined) {
@@ -103,14 +105,14 @@ export const ModalAssinatura = ({
           addAssinatura(assinaturaPayload);
         }
       }
-
+ 
       setShowModal(false);
       resetForm();
     } catch (error) {
       console.error("Erro:", error);
     }
   };
-
+ 
   return (
     <Modal
       isOpen={showModal}
@@ -168,7 +170,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
+ 
             <FormControl isInvalid={!!errors.valor}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Preço do Plano</FormControlLabelText>
@@ -181,9 +183,11 @@ export const ModalAssinatura = ({
                   <Input>
                     <InputField
                       placeholder="Valor"
-                      type="text"
                       value={value}
-                      onChangeText={onChange}
+                      onChangeText={(text) => {
+                        const numericValue = text.replace(/[^0-9.]/g, '');
+                        onChange(numericValue);
+                      }}
                       onBlur={onBlur}
                       onSubmitEditing={Keyboard.dismiss}
                       returnKeyType="done"
@@ -198,7 +202,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
+ 
             <FormControl isInvalid={!!errors.descricao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Descrição</FormControlLabelText>
@@ -228,7 +232,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
+ 
             <FormControl isInvalid={!!errors.duracao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Duração do Plano</FormControlLabelText>
@@ -240,8 +244,8 @@ export const ModalAssinatura = ({
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Duração do Plano"
                       type="text"
+                      placeholder="Duração do Plano"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -258,7 +262,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
+ 
             <Button
               onPress={handleSubmit(onSubmit)}
               className="flex-1 p-2 mt-8"
@@ -271,3 +275,4 @@ export const ModalAssinatura = ({
     </Modal>
   );
 };
+ 

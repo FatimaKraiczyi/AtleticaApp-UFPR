@@ -21,6 +21,7 @@ import type {
 } from "../../../../../interfaces/assinatura";
 import { getAssinatura } from "../../../../../api/assinatura";
 import { DeleteAssinatura } from "./delete-assinatura";
+import {getAssinantes} from "../../../../../api/assinatura";
 import { ModalAssinatura } from "./modal-assinatura";
 
 const MainContent = () => {
@@ -63,7 +64,6 @@ const MainContent = () => {
 			const response = await getAssinatura();
 			if (response.success && response.data?.planos) {
 				setAssinatura(response.data.planos);
-				console.log("Dados das assinaturas encontrados:", response.data.planos);
 			} else {
 				console.error("Erro ao buscar assinaturas");
 			}
@@ -121,11 +121,6 @@ const MainContent = () => {
         <VStack space="lg" className="items-center">
           <Button className="gap-3 relative" onPress={handleCadastrarAssinaturaPress}>
             <ButtonText>Cadastrar Assinatura</ButtonText>
-          </Button>
-        </VStack>
-        <VStack space="lg" className="items-center">
-          <Button className="gap-3 relative">
-            <ButtonText>Listar Assinantes</ButtonText>
           </Button>
         </VStack>
         {assinatura.length === 0 ? renderNoAssinatura() : (

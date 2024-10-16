@@ -8,6 +8,7 @@ import {
     updatePlanoassinatura,
     deletePlanoassinatura,
     getPlanoassinaturaById,
+    getAssinantesPlano,
 } from "./routes/assinatura";
 
 export const getAssinatura = async (): Promise<IResponse.Default<AssinaturaResponse>> => {
@@ -63,6 +64,15 @@ export const getAssinaturaId = async (
 ): Promise<IResponse.Default<AssinaturaResponse>> => {
   try {
     const { data, status } = await API.get(`${getPlanoassinaturaById}/${id}`);
+    return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+export const getAssinantes = async (): Promise<IResponse.Default<any>> => {
+  try {
+    const { data, status } = await API.get(getAssinantesPlano);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };

@@ -43,7 +43,6 @@ const MainContent = () => {
     if (response.success) {
       if (response.data) {
         setMembros(response.data);
-				console.log("Dados dos membros encontrados:", response.data);
       } else {
         console.error("Dados dos membros não encontrados");
       }
