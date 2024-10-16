@@ -28,7 +28,7 @@ import { Keyboard, Switch } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { adicionarMembro, editarMembro } from "../../../../api/membros";
+import { adicionarMembro, editarMembro, getMembros } from "../../../../api/membros";
 import type { MembrosResponse } from "../../../../interfaces/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
 
@@ -47,6 +47,8 @@ export const ModalMembros = ({
   showModal,
   setShowModal,
   editMembro,
+	membros,
+	setMembros
 }: {
   showModal: boolean;
   setShowModal: any;
@@ -64,8 +66,6 @@ export const ModalMembros = ({
     resolver: zodResolver(userSchema),
   });
 
-  const { membros, setMembros } = useMembros();
-
   const handleKeyPress = () => {
     Keyboard.dismiss();
   };
@@ -79,54 +79,44 @@ export const ModalMembros = ({
     }
   }, [editMembro, reset]);
 
-  const onSubmit = async (formData: userSchemaDetails) => {
-    try {
-      if (editMembro && editMembro.Usuario?.email) {
-        const response = await editarMembro(
-          editMembro.Usuario.email,
-          formData.administrador
-        );
-
-        if (response.success) {
-          setMembros((prevMembros) =>
-            prevMembros.map((membro) =>
-              membro.Usuario?.email === editMembro.Usuario?.email
-                ? { ...membro, administrador: formData.administrador }
-                : membro
-            )
-          );
-        }
-      } else {
-        const response = await adicionarMembro({
-          email: formData.email,
-          administrador: formData.administrador,
-          atleticaId: membros[0].atleticaId,
-        });
-
-        if (response.success) {
-          if (response.data.novoMembro) {
-            const { id, usuarioId, administrador, atleticaId, email } =
-              response.data.novoMembro;
-
-            const novoMembro: MembrosResponse = {
-              id: id!,
-              usuarioId: usuarioId!,
-              administrador: administrador!,
-              atleticaId: atleticaId!,
-							email: email!,
-							nome: response.data.novoMembro.nome!,
-            };
-            setMembros((prevMembros) => [...prevMembros, novoMembro]);
-          }
-        }
-      }
-      setShowModal(false);
-      reset();
-    } catch (error) {
-      console.error("Erro ao adicionar/editar membro:", error);
-    }
-  };
-
+	const onSubmit = async (formData: userSchemaDetails) => {
+		try {
+			if (editMembro && editMembro.Usuario?.email) {
+				const response = await editarMembro(
+					editMembro.Usuario.email,
+					formData.administrador
+				);
+	
+				if (response.success) {
+					setMembros((prevMembros) =>
+						prevMembros.map((membro) =>
+							membro.Usuario?.email === editMembro.Usuario?.email
+								? { ...membro, administrador: formData.administrador }
+								: membro
+						)
+					);
+				}
+			} else {
+				const response = await adicionarMembro({
+					email: formData.email,
+					administrador: formData.administrador,
+					atleticaId: membros[0].atleticaId,
+				});
+	
+				if (response.success) {
+					const atleticaId = membros[0].atleticaId;
+          const response = await getMembros(atleticaId);
+          const updatedMembros: MembrosResponse[] = response.data;
+					setMembros(updatedMembros);
+				}
+			}
+			setShowModal(false);
+			reset();
+		} catch (error) {
+			console.error("Erro ao adicionar/editar membro:", error);
+		}
+	};
+	
   return (
     <Modal isOpen={showModal} finalFocusRef={ref} size="lg">
       <ModalBackdrop />
