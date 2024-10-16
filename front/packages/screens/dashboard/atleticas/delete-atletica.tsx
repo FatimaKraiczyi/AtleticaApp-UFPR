@@ -54,7 +54,7 @@ export const DeleteAtletica = ({
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
-          <ModalCloseButton>
+          <ModalCloseButton onPress={() => setShowModal(false)}>
             <Icon
               as={CloseIcon}
               size="md"

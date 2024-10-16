@@ -140,7 +140,10 @@ export const ModalAtletica = ({
       setValue("nome", atleticaData.nome);
       setValue("descricao", atleticaData.descricao);
       setValue("atividades", atleticaData.atividades);
-      setValue("cursoIds", atleticaData.cursos?.map((curso) => String(curso.id)) || []);
+      setValue(
+        "cursoIds",
+        atleticaData.cursos?.map((curso) => String(curso.id)) || []
+      );
       setProfileImage(atleticaData.imagem || null);
     }
   }, [showModal, atleticaData, setValue]);
@@ -221,7 +224,7 @@ export const ModalAtletica = ({
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
-          <ModalCloseButton>
+          <ModalCloseButton onPress={() => setShowModal(false)}>
             <Icon
               as={CloseIcon}
               size="md"
@@ -282,7 +285,7 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-                 <FormControl isInvalid={!!errors.descricao}>
+            <FormControl isInvalid={!!errors.descricao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Descrição</FormControlLabelText>
               </FormControlLabel>
@@ -311,7 +314,7 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-						<FormControl isInvalid={!!errors.departamento}>
+            <FormControl isInvalid={!!errors.departamento}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Departamento</FormControlLabelText>
               </FormControlLabel>
@@ -320,10 +323,13 @@ export const ModalAtletica = ({
                 name="departamento"
                 control={control}
                 render={({ field: { onChange } }) => (
-                  <Select onValueChange={(value) => {
-                    onChange(value);
-                    setDepartamentoSelecionado(value);
-                  }} className="flex-1">
+                  <Select
+                    onValueChange={(value) => {
+                      onChange(value);
+                      setDepartamentoSelecionado(value);
+                    }}
+                    className="flex-1"
+                  >
                     <SelectTrigger variant="outline" size="md">
                       <SelectInput placeholder="Selecione um departamento" />
                       <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -366,9 +372,11 @@ export const ModalAtletica = ({
                     name={`cursoIds.${index}`}
                     control={control}
                     render={({ field: { onChange } }) => (
-                      <Select onValueChange={onChange} 
-											isDisabled={!departamentoSelecionado}
-											className="flex-1">
+                      <Select
+                        onValueChange={onChange}
+                        isDisabled={!departamentoSelecionado}
+                        className="flex-1"
+                      >
                         <SelectTrigger variant="outline" size="md">
                           <SelectInput placeholder="Selecione um curso" />
                           <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -399,7 +407,7 @@ export const ModalAtletica = ({
                       className="ml-2 p-1"
                       variant="outline"
                       size="sm"
-											disabled={!departamentoSelecionado}
+                      disabled={!departamentoSelecionado}
                     >
                       <Icon as={PlusIcon} size="sm" />
                     </Button>

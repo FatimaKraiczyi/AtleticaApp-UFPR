@@ -15,7 +15,6 @@ import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { deletarMembro } from "../../../../api/membros";
-import type { MembrosResponse } from "../../../../interfaces/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
 
 interface DeleteMembroProps {
@@ -29,22 +28,21 @@ export const DeleteMembro = ({
   setShowModal,
   email,
 }: DeleteMembroProps) => {
-  const {  setMembros } = useMembros();
+  const { setMembros } = useMembros();
 
-	const handleDelete = async () => {
-		try {
-			const response = await deletarMembro(email);
-			if (response.success) {
-				setMembros((prevMembros) =>
-					prevMembros.filter((membro) => membro.Usuario?.email !== email)
-				);
-			}
-			setShowModal(false);
-		} catch (error) {
-			console.error("Erro ao deletar membro:", error);
-		}
-	};
-	
+  const handleDelete = async () => {
+    try {
+      const response = await deletarMembro(email);
+      if (response.success) {
+        setMembros((prevMembros) =>
+          prevMembros.filter((membro) => membro.Usuario?.email !== email)
+        );
+      }
+      setShowModal(false);
+    } catch (error) {
+      console.error("Erro ao deletar membro:", error);
+    }
+  };
 
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
@@ -59,7 +57,7 @@ export const DeleteMembro = ({
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
-          <ModalCloseButton>
+          <ModalCloseButton onPress={() => setShowModal(false)}>
             <Icon
               as={CloseIcon}
               size="md"

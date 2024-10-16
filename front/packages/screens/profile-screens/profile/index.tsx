@@ -279,7 +279,7 @@ const Sidebar = () => {
 
 const DashboardLayout = (props: any) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
-    props.isSidebarVisible,
+    props.isSidebarVisible
   );
   function toggleSidebar() {
     setIsSidebarVisible(!isSidebarVisible);
@@ -312,13 +312,13 @@ function MobileFooter({ footerIcons }: { footerIcons: any }) {
       className={cn(
         "bg-background-0 justify-between w-full absolute left-0 bottom-0 right-0 p-3 overflow-hidden items-center  border-t-border-300  md:hidden border-t",
         { "pb-5": Platform.OS === "ios" },
-        { "pb-5": Platform.OS === "android" },
+        { "pb-5": Platform.OS === "android" }
       )}
     >
       {footerIcons.map(
         (
           item: { iconText: string; iconName: any },
-          index: React.Key | null | undefined,
+          index: React.Key | null | undefined
         ) => {
           return (
             <Pressable
@@ -336,7 +336,7 @@ function MobileFooter({ footerIcons }: { footerIcons: any }) {
               </Text>
             </Pressable>
           );
-        },
+        }
       )}
     </HStack>
   );
@@ -401,7 +401,7 @@ const userSchema = z.object({
     .string()
     .regex(
       /^\+?[1-9]\d{1,14}$/,
-      "Phone number must be a valid international phone number",
+      "Phone number must be a valid international phone number"
     ),
   city: z
     .string()
@@ -444,7 +444,7 @@ interface AccountCardType {
   },
 ]; */
 const MainContent = () => {
-/*   const [showModal, setShowModal] = useState(false);
+  /*   const [showModal, setShowModal] = useState(false);
 
   return (
     <VStack className="h-full w-full mb-16 md:mb-0">
@@ -626,7 +626,7 @@ const MainContent = () => {
     </VStack>
   );
 }; */
-}
+};
 const MobileScreen = () => {
   const {
     control,
@@ -1107,7 +1107,7 @@ const ModalComponent = ({
           <Heading size="2xl" className="text-typography-800">
             Edit Profile
           </Heading>
-          <ModalCloseButton>
+          <ModalCloseButton onPress={() => setShowModal(false)}>
             <Icon
               as={CloseIcon}
               size="md"
@@ -1529,8 +1529,9 @@ export const Profile = () => {
   return (
     <SafeAreaView className="h-full w-full">
       <DashboardLayout title="Company Name" isSidebarVisible={true}>
-{/*         <MainContent />
- */}      </DashboardLayout>
+        {/*         <MainContent />
+         */}{" "}
+      </DashboardLayout>
       <MobileFooter footerIcons={bottomTabsList} />
     </SafeAreaView>
   );

@@ -7,8 +7,10 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
 } from "@/components/ui/form-control";
-import { ChevronDownIcon, CloseIcon, Icon } from "@/components/ui/icon";
-import { AlertTriangle, PlusIcon, XIcon } from "lucide-react-native";
+import { CloseIcon, Icon } from "@/components/ui/icon";
+import { Box } from "@/components/ui/box";
+import Image from "@unitools/image";
+import { AlertTriangle } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -21,14 +23,17 @@ import {
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import type { Assinatura } from "../../../../../interfaces/assinatura";
-import { createAssinatura, updateAssinatura } from "../../../../../api/assinatura";
- 
+import {
+  createAssinatura,
+  updateAssinatura,
+} from "../../../../../api/assinatura";
+
 const AssinaturaSchema = z.object({
   nome: z
     .string()
@@ -36,12 +41,15 @@ const AssinaturaSchema = z.object({
     .max(50, "O nome deve ter menos de 50 caracteres"),
   valor: z
     .string()
-    .regex(/^\d+(\.\d{1,2})?$/, "Preço deve ser um número válido com até duas casas decimais"),
+    .regex(
+      /^\d+(\.\d{1,2})?$/,
+      "Preço deve ser um número válido com até duas casas decimais"
+    ),
   descricao: z.string().min(1, "Descrição é obrigatória"),
   duracao: z.string().min(1, "Duração é obrigatória"),
 });
 type AssianaturaSchemaDetails = z.infer<typeof AssinaturaSchema>;
- 
+
 export const ModalAssinatura = ({
   showModal,
   setShowModal,
@@ -65,12 +73,12 @@ export const ModalAssinatura = ({
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
   });
- 
+
   useEffect(() => {
     if (showModal) {
       resetForm();
     }
- 
+
     if (assinaturaData) {
       setValue("nome", assinaturaData.nome);
       setValue("descricao", assinaturaData.descricao);
@@ -78,23 +86,26 @@ export const ModalAssinatura = ({
       setValue("duracao", assinaturaData.duracao);
     }
   }, [showModal, assinaturaData, setValue]);
- 
+
   const resetForm = () => {
     reset();
   };
- 
+
   const onSubmit = async (data: any) => {
     const assinaturaPayload = {
       nome: data.nome,
       descricao: data.descricao,
-      valor: data.valor, // Mantendo como string
-      duracao: data.duracao, // Mantendo como string
+      valor: data.valor,
+      duracao: data.duracao,
     };
- 
+
     try {
       if (assinaturaData) {
         if (assinaturaData.id !== undefined) {
-          const response = await updateAssinatura(assinaturaData.id, assinaturaPayload);
+          const response = await updateAssinatura(
+            assinaturaData.id,
+            assinaturaPayload
+          );
           if (response.success) {
             editAssinatura && editAssinatura(assinaturaPayload);
           }
@@ -105,14 +116,14 @@ export const ModalAssinatura = ({
           addAssinatura(assinaturaPayload);
         }
       }
- 
+
       setShowModal(false);
       resetForm();
     } catch (error) {
       console.error("Erro:", error);
     }
   };
- 
+
   return (
     <Modal
       isOpen={showModal}
@@ -125,8 +136,16 @@ export const ModalAssinatura = ({
     >
       <ModalBackdrop />
       <ModalContent>
+        <Box className={"w-full h-[110px] "}>
+          <Image
+            source={require("@/assets/profile-screens/profile/image2.png")}
+            height={"100%"}
+            width={"100%"}
+            alt="Banner Image"
+          />
+        </Box>
         <ModalHeader className="absolute w-full flex justify-end">
-          <ModalCloseButton>
+          <ModalCloseButton onPress={() => setShowModal(false)}>
             <Icon
               as={CloseIcon}
               size="md"
@@ -170,7 +189,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
- 
+
             <FormControl isInvalid={!!errors.valor}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Preço do Plano</FormControlLabelText>
@@ -185,7 +204,7 @@ export const ModalAssinatura = ({
                       placeholder="Valor"
                       value={value}
                       onChangeText={(text) => {
-                        const numericValue = text.replace(/[^0-9.]/g, '');
+                        const numericValue = text.replace(/[^0-9.]/g, "");
                         onChange(numericValue);
                       }}
                       onBlur={onBlur}
@@ -202,7 +221,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
- 
+
             <FormControl isInvalid={!!errors.descricao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Descrição</FormControlLabelText>
@@ -232,7 +251,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
- 
+
             <FormControl isInvalid={!!errors.duracao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Duração do Plano</FormControlLabelText>
@@ -262,7 +281,7 @@ export const ModalAssinatura = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
- 
+
             <Button
               onPress={handleSubmit(onSubmit)}
               className="flex-1 p-2 mt-8"
@@ -275,4 +294,3 @@ export const ModalAssinatura = ({
     </Modal>
   );
 };
- 
