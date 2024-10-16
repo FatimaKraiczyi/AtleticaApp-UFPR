@@ -133,7 +133,6 @@ const MainContent = () => {
         showModal={isDeleteModalVisible}
         setShowModal={handleCloseDeleteModal}
         email={membroEmailToDelete!}
-        setMembros={setMembros}
       />
     </Box>
   );

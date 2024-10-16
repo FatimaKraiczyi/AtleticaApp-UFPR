@@ -16,32 +16,35 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { deletarMembro } from "../../../../api/membros";
 import type { MembrosResponse } from "../../../../interfaces/membros";
+import { useMembros } from "../../../hooks/MembrosContext";
 
 interface DeleteMembroProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   email: string;
-	setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
 }
 
 export const DeleteMembro = ({
   showModal,
   setShowModal,
   email,
-  setMembros,
 }: DeleteMembroProps) => {
+  const {  setMembros } = useMembros();
+
+	const handleDelete = async () => {
+		try {
+			const response = await deletarMembro(email);
+			if (response.success) {
+				setMembros((prevMembros) =>
+					prevMembros.filter((membro) => membro.Usuario?.email !== email)
+				);
+			}
+			setShowModal(false);
+		} catch (error) {
+			console.error("Erro ao deletar membro:", error);
+		}
+	};
 	
-  const handleDelete = async () => {
-    try {
-      const response = await deletarMembro(email);
-      if (response.success) {
-        setMembros(response.data);
-        setShowModal(false);
-      }
-    } catch (error) {
-      console.error("Erro ao deletar membro:", error);
-    }
-  };
 
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">

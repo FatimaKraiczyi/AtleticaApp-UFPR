@@ -55,12 +55,12 @@ export const editarMembro = async (
 
 export const deletarMembro = async (
   email: string
-): Promise<IResponse.Default<null>> => {
+): Promise<IResponse.Default<any>> => {
   try {
-    const { status } = await API.delete(
+    const { data, status } = await API.delete(
       `${deleteMembroAtleticaEndpoint}/${email}`
     );
-    return { data: null, success: status === 200 };
+    return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
   }
