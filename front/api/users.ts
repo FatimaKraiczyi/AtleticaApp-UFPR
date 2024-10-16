@@ -28,9 +28,11 @@ export const userAuthentication = async (
       const userType = data.userType;
 
       await setToken(token);
-      sessionStorage.setItem("userType", userType);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem("userType", userType);
+      }
 
-      if (Platform.OS === "web") {
+      if (Platform.OS === "web" && typeof window !== 'undefined') {
         sessionStorage.setItem("x-access-token", token);
       } else {
         await AsyncStorage.setItem("x-access-token", token);
@@ -64,7 +66,7 @@ export const validateUserToken = async (
     const { data, status } = await API.post(validateToken, { token });
 
     if (status === 200) {
-      if (Platform.OS === "web") {
+      if (Platform.OS === "web" && typeof window !== 'undefined') {
         sessionStorage.setItem("x-access-token", token);
       } else {
         await AsyncStorage.setItem("x-access-token", token);

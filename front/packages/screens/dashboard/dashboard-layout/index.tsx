@@ -70,8 +70,10 @@ const MainContent = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUserType = sessionStorage.getItem("userType");
-    setUserType(storedUserType);
+    if (typeof window !== 'undefined') {
+      const storedUserType = sessionStorage.getItem("userType");
+      setUserType(storedUserType);
+    }
     setLoading(false);
   }, []);
 

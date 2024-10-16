@@ -61,8 +61,10 @@ export const WebSidebar = () => {
   }, []);
 
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("userType");
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("userType");
+    }
     router.push("/auth/signin");
   };
 
