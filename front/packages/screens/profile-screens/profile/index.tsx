@@ -78,7 +78,6 @@ import { CameraSparklesIcon } from "./assets/icons/camera-sparkles";
 import { EditPhotoIcon } from "./assets/icons/edit-photo";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
 
-
 type MobileHeaderProps = {
   title: string;
 };
@@ -177,11 +176,11 @@ const Sidebar = () => {
     useState<number>(0);
   const handlePress = (index: number) => {
     setSelectedIndex(index);
-     router.push("/profile/profile");
+    router.push("/profile/profile");
   };
   const handlePressResources = (index: number) => {
     setSelectedIndexResources(index);
-     router.push("/profile/profile");
+    router.push("/profile/profile");
   };
   return (
     <ScrollView className=" h-full" contentContainerStyle={{ flexGrow: 1 }}>
@@ -427,7 +426,7 @@ interface AccountCardType {
   subText: string;
   endIcon: LucideIcon | typeof Icon;
 }
-const accountData: AccountCardType[] = [
+/* const accountData: AccountCardType[] = [
   {
     iconName: InboxIcon,
     subText: "Settings",
@@ -443,9 +442,9 @@ const accountData: AccountCardType[] = [
     subText: "Rewards",
     endIcon: ChevronRightIcon,
   },
-];
+]; */
 const MainContent = () => {
-  const [showModal, setShowModal] = useState(false);
+  /*   const [showModal, setShowModal] = useState(false);
 
   return (
     <VStack className="h-full w-full mb-16 md:mb-0">
@@ -626,6 +625,7 @@ const MainContent = () => {
       </ScrollView>
     </VStack>
   );
+}; */
 };
 const MobileScreen = () => {
   const {
@@ -702,7 +702,7 @@ const MobileScreen = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -742,7 +742,7 @@ const MobileScreen = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -843,7 +843,7 @@ const MobileScreen = () => {
                       keyboardType="number-pad"
                       onBlur={onBlur}
                       onSubmitEditing={handleKeyPress}
-                      returnKeyType="done"
+                      enterKeyHint="done"
                     />
                   </Input>
                 </HStack>
@@ -1029,7 +1029,7 @@ const MobileScreen = () => {
                     onChangeText={onChange}
                     onBlur={onBlur}
                     onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
+                    enterKeyHint="done"
                   />
                 </Input>
               )}
@@ -1107,7 +1107,7 @@ const ModalComponent = ({
           <Heading size="2xl" className="text-typography-800">
             Edit Profile
           </Heading>
-          <ModalCloseButton>
+          <ModalCloseButton onPress={() => setShowModal(false)}>
             <Icon
               as={CloseIcon}
               size="md"
@@ -1159,7 +1159,7 @@ const ModalComponent = ({
                         onChangeText={onChange}
                         onBlur={onBlur}
                         onSubmitEditing={handleKeyPress}
-                        returnKeyType="done"
+                        enterKeyHint="done"
                       />
                     </Input>
                   )}
@@ -1202,7 +1202,7 @@ const ModalComponent = ({
                         onChangeText={onChange}
                         onBlur={onBlur}
                         onSubmitEditing={handleKeyPress}
-                        returnKeyType="done"
+                        enterKeyHint="done"
                       />
                     </Input>
                   )}
@@ -1306,7 +1306,7 @@ const ModalComponent = ({
                           keyboardType="number-pad"
                           onBlur={onBlur}
                           onSubmitEditing={handleKeyPress}
-                          returnKeyType="done"
+                          enterKeyHint="done"
                         />
                       </Input>
                     </HStack>
@@ -1498,7 +1498,7 @@ const ModalComponent = ({
                         onChangeText={onChange}
                         onBlur={onBlur}
                         onSubmitEditing={handleKeyPress}
-                        returnKeyType="done"
+                        enterKeyHint="done"
                       />
                     </Input>
                   )}
@@ -1529,7 +1529,8 @@ export const Profile = () => {
   return (
     <SafeAreaView className="h-full w-full">
       <DashboardLayout title="Company Name" isSidebarVisible={true}>
-        <MainContent />
+        {/*         <MainContent />
+         */}{" "}
       </DashboardLayout>
       <MobileFooter footerIcons={bottomTabsList} />
     </SafeAreaView>

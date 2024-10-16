@@ -1,7 +1,6 @@
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
@@ -39,44 +38,45 @@ const ForgotPasswordScreen = () => {
     resolver: zodResolver(forgotPasswordSchema),
   });
   const toast = useToast();
+  const router = useRouter();
 
   const onSubmit = async (_data: forgotPasswordSchemaType) => {
-    const response = await resetPasswordRequest (_data.email);
+    const response = await resetPasswordRequest(_data.email);
 
-      if(response.success){
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => {
-            return (
-              <Toast nativeID={id} variant="accent" action="success">
-                <ToastTitle>Link enviado com sucesso ao seu email</ToastTitle>
-              </Toast>
-            );
-          },
-        });
-        reset();
-      }else{
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => {
-            return (
-              <Toast nativeID={id} variant="accent" action="error">
-                <ToastTitle>Email não cadastrado</ToastTitle>
-              </Toast>
-            );
-          },
-        });
-      }
-    };
-    
+    if (response.success) {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => {
+          return (
+            <Toast nativeID={id} variant="accent" action="success">
+              <ToastTitle>Link enviado com sucesso ao seu email</ToastTitle>
+            </Toast>
+          );
+        },
+      });
+      reset();
+      router.push("/auth/token");
+    } else {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => {
+          return (
+            <Toast nativeID={id} variant="accent" action="error">
+              <ToastTitle>Email não cadastrado</ToastTitle>
+            </Toast>
+          );
+        },
+      });
+    }
+  };
 
   const handleKeyPress = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();
   };
-  const router = useRouter();
+
   return (
-   <VStack className="max-w-[440px] w-full" space="md">
+    <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
         <Pressable
           onPress={() => {
@@ -150,4 +150,3 @@ export const ForgotPassword = () => {
     </AuthLayout>
   );
 };
-

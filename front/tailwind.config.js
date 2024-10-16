@@ -4,8 +4,8 @@ module.exports = {
   content: [
     "../../packages/components/**/*.{js,jsx,ts,tsx}",
     "../../packages/screens/**/*.{js,jsx,ts,tsx}",
-    "./app/**/*.{js,jsx,ts,tsx}",
-    "./app/*.{js,jsx,ts,tsx}",
+    "./apps/**/*.{js,jsx,ts,tsx}",
+    "./apps/*.{js,jsx,ts,tsx}",
   ],
   safelist: [
     "gap-x-2",

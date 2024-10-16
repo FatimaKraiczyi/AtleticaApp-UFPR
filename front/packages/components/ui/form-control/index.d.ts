@@ -1,5 +1,5 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 declare const formControlStyle: import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
     size: {
         sm: string;
@@ -63,7 +63,7 @@ declare const formControlStyle: import("@gluestack-ui/nativewind-utils/types").T
 }>, unknown, unknown, undefined>>;
 declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -72,7 +72,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 } | ({
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -81,7 +81,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 } & {
     size: {
-        '2xs': import("tailwind-merge").ClassNameValue | {
+        "2xs": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
         xs: import("tailwind-merge").ClassNameValue | {
@@ -102,7 +102,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 }), undefined, "", import("tailwind-variants/dist/config").TVConfig<{
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -111,7 +111,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 }, {
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -120,7 +120,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 }>, {
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -129,7 +129,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 }, undefined, import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -138,7 +138,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 }, undefined, "", import("tailwind-variants/dist/config").TVConfig<{
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -147,7 +147,7 @@ declare const formControlErrorIconStyle: import("@gluestack-ui/nativewind-utils/
     };
 }, {
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
@@ -170,17 +170,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -205,17 +205,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -248,7 +248,7 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         };
     };
     size: {
-        '2xs': import("tailwind-merge").ClassNameValue | {
+        "2xs": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
         xs: import("tailwind-merge").ClassNameValue | {
@@ -266,19 +266,19 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         xl: import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '2xl': import("tailwind-merge").ClassNameValue | {
+        "2xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '3xl': import("tailwind-merge").ClassNameValue | {
+        "3xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '4xl': import("tailwind-merge").ClassNameValue | {
+        "4xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '5xl': import("tailwind-merge").ClassNameValue | {
+        "5xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '6xl': import("tailwind-merge").ClassNameValue | {
+        "6xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
     };
@@ -311,17 +311,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -346,17 +346,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -381,17 +381,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -416,17 +416,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -451,17 +451,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -486,17 +486,17 @@ declare const formControlErrorTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -523,17 +523,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -558,17 +558,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -601,7 +601,7 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         };
     };
     size: {
-        '2xs': import("tailwind-merge").ClassNameValue | {
+        "2xs": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
         xs: import("tailwind-merge").ClassNameValue | {
@@ -619,19 +619,19 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         xl: import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '2xl': import("tailwind-merge").ClassNameValue | {
+        "2xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '3xl': import("tailwind-merge").ClassNameValue | {
+        "3xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '4xl': import("tailwind-merge").ClassNameValue | {
+        "4xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '5xl': import("tailwind-merge").ClassNameValue | {
+        "5xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '6xl': import("tailwind-merge").ClassNameValue | {
+        "6xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
     };
@@ -664,17 +664,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -699,17 +699,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -734,17 +734,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -769,17 +769,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -804,17 +804,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -839,17 +839,17 @@ declare const formControlHelperTextStyle: import("@gluestack-ui/nativewind-utils
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -876,17 +876,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -911,17 +911,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -954,7 +954,7 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         };
     };
     size: {
-        '2xs': import("tailwind-merge").ClassNameValue | {
+        "2xs": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
         xs: import("tailwind-merge").ClassNameValue | {
@@ -972,19 +972,19 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         xl: import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '2xl': import("tailwind-merge").ClassNameValue | {
+        "2xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '3xl': import("tailwind-merge").ClassNameValue | {
+        "3xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '4xl': import("tailwind-merge").ClassNameValue | {
+        "4xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '5xl': import("tailwind-merge").ClassNameValue | {
+        "5xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '6xl': import("tailwind-merge").ClassNameValue | {
+        "6xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
     };
@@ -1017,17 +1017,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -1052,17 +1052,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -1087,17 +1087,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -1122,17 +1122,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -1157,17 +1157,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -1192,17 +1192,17 @@ declare const formControlLabelTextStyle: import("@gluestack-ui/nativewind-utils/
         true: string;
     };
     size: {
-        '2xs': string;
+        "2xs": string;
         xs: string;
         sm: string;
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
-        '5xl': string;
-        '6xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+        "5xl": string;
+        "6xl": string;
     };
     sub: {
         true: string;
@@ -1315,17 +1315,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1350,17 +1350,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1393,7 +1393,7 @@ declare const FormControlErrorText: {
             };
         };
         size: {
-            '2xs': import("tailwind-merge").ClassNameValue | {
+            "2xs": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
             xs: import("tailwind-merge").ClassNameValue | {
@@ -1411,19 +1411,19 @@ declare const FormControlErrorText: {
             xl: import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '2xl': import("tailwind-merge").ClassNameValue | {
+            "2xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '3xl': import("tailwind-merge").ClassNameValue | {
+            "3xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '4xl': import("tailwind-merge").ClassNameValue | {
+            "4xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '5xl': import("tailwind-merge").ClassNameValue | {
+            "5xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '6xl': import("tailwind-merge").ClassNameValue | {
+            "6xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
         };
@@ -1456,17 +1456,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1491,17 +1491,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1526,17 +1526,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1561,17 +1561,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1596,17 +1596,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1631,17 +1631,17 @@ declare const FormControlErrorText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1664,7 +1664,7 @@ declare const FormControlErrorIcon: {
         color?: string | undefined;
     } & Omit<any, "ref"> & React.RefAttributes<unknown> & VariantProps<import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1673,7 +1673,7 @@ declare const FormControlErrorIcon: {
         };
     } | ({
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1682,7 +1682,7 @@ declare const FormControlErrorIcon: {
         };
     } & {
         size: {
-            '2xs': import("tailwind-merge").ClassNameValue | {
+            "2xs": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
             xs: import("tailwind-merge").ClassNameValue | {
@@ -1703,7 +1703,7 @@ declare const FormControlErrorIcon: {
         };
     }), undefined, "", import("tailwind-variants/dist/config").TVConfig<{
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1712,7 +1712,7 @@ declare const FormControlErrorIcon: {
         };
     }, {
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1721,7 +1721,7 @@ declare const FormControlErrorIcon: {
         };
     }>, {
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1730,7 +1730,7 @@ declare const FormControlErrorIcon: {
         };
     }, undefined, import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1739,7 +1739,7 @@ declare const FormControlErrorIcon: {
         };
     }, undefined, "", import("tailwind-variants/dist/config").TVConfig<{
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1748,7 +1748,7 @@ declare const FormControlErrorIcon: {
         };
     }, {
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
@@ -1783,17 +1783,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1818,17 +1818,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1861,7 +1861,7 @@ declare const FormControlLabelText: {
             };
         };
         size: {
-            '2xs': import("tailwind-merge").ClassNameValue | {
+            "2xs": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
             xs: import("tailwind-merge").ClassNameValue | {
@@ -1879,19 +1879,19 @@ declare const FormControlLabelText: {
             xl: import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '2xl': import("tailwind-merge").ClassNameValue | {
+            "2xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '3xl': import("tailwind-merge").ClassNameValue | {
+            "3xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '4xl': import("tailwind-merge").ClassNameValue | {
+            "4xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '5xl': import("tailwind-merge").ClassNameValue | {
+            "5xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '6xl': import("tailwind-merge").ClassNameValue | {
+            "6xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
         };
@@ -1924,17 +1924,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1959,17 +1959,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -1994,17 +1994,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2029,17 +2029,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2064,17 +2064,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2099,17 +2099,17 @@ declare const FormControlLabelText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2148,17 +2148,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2183,17 +2183,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2226,7 +2226,7 @@ declare const FormControlHelperText: {
             };
         };
         size: {
-            '2xs': import("tailwind-merge").ClassNameValue | {
+            "2xs": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
             xs: import("tailwind-merge").ClassNameValue | {
@@ -2244,19 +2244,19 @@ declare const FormControlHelperText: {
             xl: import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '2xl': import("tailwind-merge").ClassNameValue | {
+            "2xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '3xl': import("tailwind-merge").ClassNameValue | {
+            "3xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '4xl': import("tailwind-merge").ClassNameValue | {
+            "4xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '5xl': import("tailwind-merge").ClassNameValue | {
+            "5xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
-            '6xl': import("tailwind-merge").ClassNameValue | {
+            "6xl": import("tailwind-merge").ClassNameValue | {
                 base?: import("tailwind-merge").ClassNameValue;
             };
         };
@@ -2289,17 +2289,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2324,17 +2324,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2359,17 +2359,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2394,17 +2394,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2429,17 +2429,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;
@@ -2464,17 +2464,17 @@ declare const FormControlHelperText: {
             true: string;
         };
         size: {
-            '2xs': string;
+            "2xs": string;
             xs: string;
             sm: string;
             md: string;
             lg: string;
             xl: string;
-            '2xl': string;
-            '3xl': string;
-            '4xl': string;
-            '5xl': string;
-            '6xl': string;
+            "2xl": string;
+            "3xl": string;
+            "4xl": string;
+            "5xl": string;
+            "6xl": string;
         };
         sub: {
             true: string;

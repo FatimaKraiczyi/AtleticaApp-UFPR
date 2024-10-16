@@ -1,32 +1,34 @@
 "use client";
+import { LoadingState } from "@/screens/components/LoadingState";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getToken } from "../../../api/token";
 
 const Page = () => {
   const router = useRouter();
-  
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    const token = sessionStorage.getItem("x-access-token");
-    
-    if (token) {
-      router.replace("dashboard/dashboard-layout");
-    } else {
-      router.replace("auth/signin");
-    }
+    const checkToken = async () => {
+      const token = await getToken();
+
+      if (token) {
+        router.replace("dashboard/dashboard-layout");
+      } else {
+        router.replace("auth/signin");
+      }
+
+      setLoading(false);
+    };
+
+    checkToken();
   }, [router]);
+
+  if (loading) {
+    return <LoadingState />;
+  }
 
   return null;
 };
 
-// outras rotas do front
-
-/* 
-router.push("auth/signup");
-router.push("auth/forgot-password");
-router.push("auth/create-password");
-router.push("news-feed/news-and-feed");
-router.push("profile/profile");
-
-
- */
 export default Page;

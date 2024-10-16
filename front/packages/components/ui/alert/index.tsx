@@ -1,79 +1,79 @@
-'use client';
-import { createAlert } from '@gluestack-ui/alert';
-import { View, Text } from 'react-native';
-import { tva } from '@gluestack-ui/nativewind-utils/tva';
+"use client";
+import { createAlert } from "@gluestack-ui/alert";
+import { View, Text } from "react-native";
+import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import {
   withStyleContext,
   useStyleContext,
-} from '@gluestack-ui/nativewind-utils/withStyleContext';
-import React, { useMemo } from 'react';
-import { Svg } from 'react-native-svg';
-import { cssInterop } from 'nativewind';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+} from "@gluestack-ui/nativewind-utils/withStyleContext";
+import React, { useMemo } from "react";
+import { Svg } from "react-native-svg";
+import { cssInterop } from "nativewind";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 
-const SCOPE = 'ALERT';
+const SCOPE = "ALERT";
 
 const alertStyle = tva({
-  base: 'items-center p-3 rounded flex-row',
+  base: "items-center p-3 rounded flex-row",
 
   variants: {
     action: {
-      error: 'bg-background-error border-error-300 ',
-      warning: 'bg-background-warning border-warning-300',
-      success: 'bg-background-success border-success-300',
-      info: 'bg-background-info border-info-300',
-      muted: 'bg-background-muted border-muted-300',
+      error: "bg-background-error border-error-300 ",
+      warning: "bg-background-warning border-warning-300",
+      success: "bg-background-success border-success-300",
+      info: "bg-background-info border-info-300",
+      muted: "bg-background-muted border-muted-300",
     },
 
     variant: {
-      solid: '',
-      outline: 'border bg-transparent',
-      accent: 'border-l-4',
+      solid: "",
+      outline: "border bg-transparent",
+      accent: "border-l-4",
     },
   },
   defaultVariants: {
-    variant: 'solid',
-    action: 'info',
+    variant: "solid",
+    action: "info",
   },
 });
 
 const alertTextStyle = tva({
-  base: 'text-typography-700 flex-1 font-normal font-body',
+  base: "text-typography-700 flex-1 font-normal font-body",
 
   variants: {
     isTruncated: {
-      true: 'web:truncate',
+      true: "web:truncate",
     },
     bold: {
-      true: 'font-bold',
+      true: "font-bold",
     },
     underline: {
-      true: 'underline',
+      true: "underline",
     },
     strikeThrough: {
-      true: 'line-through',
+      true: "line-through",
     },
     size: {
-      '2xs': 'text-2xs',
-      'xs': 'text-xs',
-      'sm': 'text-sm',
-      'md': 'text-md',
-      'lg': 'text-lg',
-      'xl': 'text-xl',
-      '2xl': 'text-2xl',
-      '3xl': 'text-3xl',
-      '4xl': 'text-4xl',
-      '5xl': 'text-5xl',
-      '6xl': 'text-6xl',
+      "2xs": "text-2xs",
+      xs: "text-xs",
+      sm: "text-sm",
+      md: "text-md",
+      lg: "text-lg",
+      xl: "text-xl",
+      "2xl": "text-2xl",
+      "3xl": "text-3xl",
+      "4xl": "text-4xl",
+      "5xl": "text-5xl",
+      "6xl": "text-6xl",
     },
     sub: {
-      true: 'text-xs',
+      true: "text-xs",
     },
     italic: {
-      true: 'italic',
+      true: "italic",
     },
     highlight: {
-      true: 'bg-yellow-500',
+      true: "bg-yellow-500",
     },
   },
 });
@@ -81,20 +81,20 @@ const alertTextStyle = tva({
 const alertIconStyle = tva({
   variants: {
     size: {
-      '2xs': 'h-3 w-3',
-      'xs': 'h-3.5 w-3.5',
-      'sm': 'h-4 w-4',
-      'md': 'h-[18px] w-[18px]',
-      'lg': 'h-5 w-5',
-      'xl': 'h-6 w-6',
+      "2xs": "h-3 w-3",
+      xs: "h-3.5 w-3.5",
+      sm: "h-4 w-4",
+      md: "h-[18px] w-[18px]",
+      lg: "h-5 w-5",
+      xl: "h-6 w-6",
     },
   },
 });
 
 const PrimitiveIcon = React.forwardRef(
   (
-    { height, width, fill = 'none', color, size, as: AsComp, ...props }: any,
-    ref?: any
+    { height, width, fill = "none", color, size, as: AsComp, ...props }: any,
+    ref?: any,
   ) => {
     const sizeProps = useMemo(() => {
       return size ? { size } : { height, width };
@@ -115,7 +115,7 @@ const PrimitiveIcon = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
 export const UIAlert = createAlert({
@@ -124,33 +124,33 @@ export const UIAlert = createAlert({
   Icon: PrimitiveIcon,
 });
 
-cssInterop(UIAlert, { className: 'style' });
+cssInterop(UIAlert, { className: "style" });
 //@ts-ignore
-cssInterop(UIAlert.Text, { className: 'style' });
+cssInterop(UIAlert.Text, { className: "style" });
 cssInterop(UIAlert.Icon, {
   className: {
-    target: 'style',
+    target: "style",
     nativeStyleToProp: {
-      height: 'height',
-      width: 'width',
+      height: "height",
+      width: "width",
       //@ts-ignore
-      fill: 'fill',
-      color: 'color',
+      fill: "fill",
+      color: "color",
     },
   },
 });
 
-type IAlertProps = Omit<React.ComponentProps<typeof UIAlert>, 'context'> &
+type IAlertProps = Omit<React.ComponentProps<typeof UIAlert>, "context"> &
   VariantProps<typeof alertStyle>;
 const Alert = React.forwardRef(
   (
     {
       className,
-      variant = 'solid',
-      action = 'info',
+      variant = "solid",
+      action = "info",
       ...props
     }: { className?: string } & IAlertProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAlert
@@ -160,7 +160,7 @@ const Alert = React.forwardRef(
         {...props}
       />
     );
-  }
+  },
 );
 
 type IAlertTextProps = React.ComponentProps<typeof UIAlert.Text> &
@@ -173,13 +173,13 @@ const AlertText = React.forwardRef(
       bold,
       underline,
       strikeThrough,
-      size = 'md',
+      size = "md",
       sub,
       italic,
       highlight,
       ...props
     }: { className?: string } & IAlertTextProps,
-    ref?: any
+    ref?: any,
   ) => {
     return (
       <UIAlert.Text
@@ -199,7 +199,7 @@ const AlertText = React.forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );
 
 interface DefaultColors {
@@ -210,11 +210,11 @@ interface DefaultColors {
   muted: string;
 }
 const defaultColors: DefaultColors = {
-  info: '#0DA6F2',
-  success: '#38A169',
-  error: '#D32F2F',
-  warning: '#FFC107',
-  muted: '#999999',
+  info: "#0DA6F2",
+  success: "#38A169",
+  error: "#D32F2F",
+  warning: "#FFC107",
+  muted: "#999999",
 };
 type IAlertIconProps = React.ComponentProps<typeof UIAlert.Icon> &
   VariantProps<typeof alertIconStyle>;
@@ -222,19 +222,19 @@ const AlertIcon = React.forwardRef(
   (
     {
       className,
-      size = 'md',
+      size = "md",
       ...props
     }: {
       className?: string;
       color?: string;
     } & IAlertIconProps,
-    ref?: any
+    ref?: any,
   ) => {
     const { action: parentAction } = useStyleContext(SCOPE);
     const { color = defaultColors[parentAction as keyof DefaultColors] } =
       props;
 
-    if (typeof size === 'number') {
+    if (typeof size === "number") {
       return (
         <UIAlert.Icon
           ref={ref}
@@ -268,11 +268,11 @@ const AlertIcon = React.forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );
 
-Alert.displayName = 'Alert';
-AlertText.displayName = 'AlertText';
-AlertIcon.displayName = 'AlertIcon';
+Alert.displayName = "Alert";
+AlertText.displayName = "AlertText";
+AlertIcon.displayName = "AlertIcon";
 
 export { Alert, AlertText, AlertIcon };

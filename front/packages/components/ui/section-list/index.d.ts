@@ -1,1 +1,1 @@
-export { SectionList } from 'react-native';
+export { SectionList } from "react-native";

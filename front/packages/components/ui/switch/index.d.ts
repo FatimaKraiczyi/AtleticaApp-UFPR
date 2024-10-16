@@ -1,5 +1,5 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 declare const Switch: React.ForwardRefExoticComponent<Omit<{
     className?: string | undefined;
 } & import("react-native").SwitchProps & {

@@ -4,7 +4,7 @@ declare const Grid: React.ForwardRefExoticComponent<import("react-native").ViewP
     gap?: number | undefined;
     rowGap?: number | undefined;
     columnGap?: number | undefined;
-    flexDirection?: "row" | "column" | "row-reverse" | "column-reverse" | undefined;
+    flexDirection?: "column" | "column-reverse" | "row" | "row-reverse" | undefined;
     padding?: number | undefined;
     paddingLeft?: number | undefined;
     paddingRight?: number | undefined;

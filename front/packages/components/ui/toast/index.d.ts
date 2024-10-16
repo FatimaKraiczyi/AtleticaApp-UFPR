@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 export declare const useToast: () => {
     show: (props: import("@gluestack-ui/toast/lib/typescript/types").InterfaceToastProps) => any;
     close: (id: any) => void;

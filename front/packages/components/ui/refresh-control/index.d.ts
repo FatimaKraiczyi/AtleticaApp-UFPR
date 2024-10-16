@@ -1,1 +1,1 @@
-export { RefreshControl } from 'react-native';
+export { RefreshControl } from "react-native";

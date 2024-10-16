@@ -5,13 +5,12 @@ import { Text } from "@/components/ui/text";
 import useRouter from "@unitools/router";
 import { cn } from "@gluestack-ui/nativewind-utils/cn";
 import { Platform } from "react-native";
-import { LucideIcon } from "lucide-react-native";
+import type { LucideIcon } from "lucide-react-native";
 import { HomeIcon } from "../dashboard/assets/home";
 import { GlobeIcon } from "../dashboard/assets/globe";
-import { InboxIcon } from "../dashboard/assets/inbox";
-import { HeartIcon } from "../dashboard/assets/heart";
 import { ProfileIcon } from "../dashboard/assets/profile/index.web";
 import { useState } from "react";
+import { CartIcon } from "../dashboard/assets/cart";
 
 type BottomTabs = {
   iconName: LucideIcon | typeof Icon;
@@ -21,24 +20,19 @@ type BottomTabs = {
 const bottomTabsList: BottomTabs[] = [
   {
     iconName: HomeIcon,
-    iconText: "Home",
+    iconText: "Início",
   },
-
   {
     iconName: GlobeIcon,
-    iconText: "Community",
+    iconText: "Atléticas",
   },
   {
-    iconName: InboxIcon,
-    iconText: "Inbox",
-  },
-  {
-    iconName: HeartIcon,
-    iconText: "Favourite",
+    iconName: CartIcon,
+    iconText: "Carrinho",
   },
   {
     iconName: ProfileIcon,
-    iconText: "Profile",
+    iconText: "Meu Perfil",
   },
 ];
 
@@ -48,7 +42,15 @@ export const MobileFooter = () => {
 
   const handlePress = (index: number) => {
     setSelectedIndex(index);
-    // router.push("/dashboard/dashboard-layout");
+    if (index === 0) {
+      router.push("/dashboard/dashboard-layout");
+    } else if (index === 1) {
+      router.push("/dashboard/atleticas");
+    } else if (index === 2) {
+      router.push("/dashboard/carrinho");
+    } else if (index === 3) {
+      router.push("/dashboard/meu-perfil");
+    }
   };
 
   return (
@@ -61,23 +63,24 @@ export const MobileFooter = () => {
     >
       {bottomTabsList.map(
         (item: { iconText: string; iconName: any }, index) => (
-            <Pressable
-              className="px-0.5 flex-1 flex-col items-center"
-              key={item.iconName}
-              onPress={() => handlePress(index)}
-            >
-              <Icon
-                as={item.iconName}
-                size="md"
-                className={`h-[32px] w-[65px] stroke-background-800 ${
-                  index === selectedIndex ? "fill-background-800" : "fill-none"
-                }`}
-              />
-              <Text className="text-xs text-center text-typography-600">
-                {item.iconText}
-              </Text>
-            </Pressable>
-         ))}
+          <Pressable
+            className="px-0.5 flex-1 flex-col items-center"
+            key={item.iconName}
+            onPress={() => handlePress(index)}
+          >
+            <Icon
+              as={item.iconName}
+              size="md"
+              className={`h-[32px] w-[65px] stroke-background-800 ${
+                index === selectedIndex ? "fill-background-800" : "fill-none"
+              }`}
+            />
+            <Text className="text-xs text-center text-typography-600">
+              {item.iconText}
+            </Text>
+          </Pressable>
+        )
+      )}
     </HStack>
   );
 };

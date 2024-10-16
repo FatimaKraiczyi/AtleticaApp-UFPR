@@ -1,5 +1,5 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 declare const VStack: React.ForwardRefExoticComponent<import("react-native").ViewProps & VariantProps<import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
     space: {
         xs: string;
@@ -7,9 +7,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -21,9 +21,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -45,13 +45,13 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         xl: import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '2xl': import("tailwind-merge").ClassNameValue | {
+        "2xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '3xl': import("tailwind-merge").ClassNameValue | {
+        "3xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '4xl': import("tailwind-merge").ClassNameValue | {
+        "4xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
     };
@@ -67,9 +67,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -81,9 +81,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -95,9 +95,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -109,9 +109,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -123,9 +123,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -137,9 +137,9 @@ declare const VStack: React.ForwardRefExoticComponent<import("react-native").Vie
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;

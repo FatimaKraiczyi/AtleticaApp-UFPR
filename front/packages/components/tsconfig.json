@@ -10,7 +10,7 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": true,
     "esModuleInterop": true,
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "preserve",
     "jsxImportSource": "nativewind",
@@ -24,7 +24,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
     "outDir": "."

@@ -1,1 +1,1 @@
-export { KeyboardAvoidingView } from 'react-native';
+export { KeyboardAvoidingView } from "react-native";

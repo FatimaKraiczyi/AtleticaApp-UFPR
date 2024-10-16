@@ -5,9 +5,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -19,9 +19,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -43,13 +43,13 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         xl: import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '2xl': import("tailwind-merge").ClassNameValue | {
+        "2xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '3xl': import("tailwind-merge").ClassNameValue | {
+        "3xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
-        '4xl': import("tailwind-merge").ClassNameValue | {
+        "4xl": import("tailwind-merge").ClassNameValue | {
             base?: import("tailwind-merge").ClassNameValue;
         };
     };
@@ -65,9 +65,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -79,9 +79,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -93,9 +93,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -107,9 +107,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -121,9 +121,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;
@@ -135,9 +135,9 @@ export declare const vstackStyle: import("@gluestack-ui/nativewind-utils/types")
         md: string;
         lg: string;
         xl: string;
-        '2xl': string;
-        '3xl': string;
-        '4xl': string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
     };
     reversed: {
         true: string;

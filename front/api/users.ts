@@ -1,30 +1,48 @@
 import type { IResponse } from "../interfaces";
-import type { UserProps } from "../interfaces/users";
-import { API, objectCatch } from './api';
+import type { UserNovaSenha, UserProps } from "../interfaces/users";
+import { API, objectCatch } from "./api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from 'react-native';
-import { userAuthenticationEndpoint, sendEmail, validateToken, resetPassword, password, createUserEndpoint } from "./routes/routes";
-import { getToken } from "./token";
+import { Platform } from "react-native";
+import {
+  userAuthenticationEndpoint,
+  sendEmail,
+  validateToken,
+  resetPassword,
+  createUserEndpoint,
+  newPasswordResquest,
+} from "./routes/routes";
+import { getToken, setToken } from "./token";
 
 export const userAuthentication = async (
   email: string,
   senha: string
-): Promise<IResponse.Default<UserProps>> => {
+): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(userAuthenticationEndpoint, { email, senha });
+    const { data, status } = await API.post(userAuthenticationEndpoint, {
+      email,
+      senha,
+    });
 
-    if (status === 200 && data && data.token) {
-      if (Platform.OS === 'web') {
-        sessionStorage.setItem('x-access-token', data.token);
+    if (status === 200 && data?.token) {
+      const token = data.token;
+      const userType = data.userType;
+
+      await setToken(token);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem("userType", userType);
+      }
+
+      if (Platform.OS === "web" && typeof window !== 'undefined') {
+        sessionStorage.setItem("x-access-token", token);
       } else {
-        await AsyncStorage.setItem("x-access-token", data.token);
+        await AsyncStorage.setItem("x-access-token", token);
       }
     }
 
     return { data, success: status === 200 };
-
   } catch (error) {
-    return { ...objectCatch };
+    console.error("Erro na autenticação:", error);
+    return { ...objectCatch, error };
   }
 };
 
@@ -41,13 +59,15 @@ export const sendEmailRequest = async (
   }
 };
 
-export const validateUserToken = async (token: string): Promise<IResponse.Default<null>> => {
+export const validateUserToken = async (
+  token: string
+): Promise<IResponse.Default<UserNovaSenha>> => {
   try {
     const { data, status } = await API.post(validateToken, { token });
 
     if (status === 200) {
-      if (Platform.OS === 'web') {
-        sessionStorage.setItem('x-access-token', token);
+      if (Platform.OS === "web" && typeof window !== 'undefined') {
+        sessionStorage.setItem("x-access-token", token);
       } else {
         await AsyncStorage.setItem("x-access-token", token);
       }
@@ -60,7 +80,7 @@ export const validateUserToken = async (token: string): Promise<IResponse.Defaul
 };
 
 export const resetPasswordRequest = async (
-  email: string,
+  email: string
 ): Promise<IResponse.Default<null>> => {
   try {
     const { data, status } = await API.post(resetPassword, { email });
@@ -71,20 +91,24 @@ export const resetPasswordRequest = async (
   }
 };
 
-export const newPasswordRequest = async (
+export const newPassword = async (
   senha: string,
-  repSenha: string,
+  repSenha: string
 ): Promise<IResponse.Default<null>> => {
   try {
-    const { data, status } = await API.put(password, { senha, repSenha });
-
+    const { data, status } = await API.put(newPasswordResquest, {
+      senha,
+      repSenha,
+    });
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
   }
 };
 
-export const createUser = async (user: UserProps): Promise<IResponse.Default<UserProps>> => {
+export const createUser = async (
+  user: UserProps
+): Promise<IResponse.Default<UserProps>> => {
   try {
     const token = await getToken();
     if (!token) {
@@ -96,7 +120,7 @@ export const createUser = async (user: UserProps): Promise<IResponse.Default<Use
       { ...user },
       {
         headers: {
-          'x-access-token': token,
+          "x-access-token": token,
         },
       }
     );

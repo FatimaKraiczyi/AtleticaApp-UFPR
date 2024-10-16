@@ -1,5 +1,5 @@
-import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from "react";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 declare const Card: React.ForwardRefExoticComponent<import("react-native").ViewProps & VariantProps<import("@gluestack-ui/nativewind-utils/types").TVReturnType<{
     size: {
         sm: string;
