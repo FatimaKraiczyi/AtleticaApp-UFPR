@@ -11,15 +11,18 @@ import { LoadingState } from "../../../components/LoadingState";
 import Image from "@unitools/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
+
 interface TabsData {
   src: string;
   title: string;
   price: string;
   location: string;
 }
+
 interface Data {
   data: TabsData[];
 }
+
 const tabsData: Data[] = [
   {
     data: [
@@ -44,25 +47,31 @@ const tabsData: Data[] = [
     ],
   },
 ];
+
 const MainContent = () => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<TabsData[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       setItems(tabsData[0].data);
       setLoading(false);
     }, 2000);
   }, []);
+
   if (loading) {
     return <LoadingState />;
   }
+
   const handleAddProduto = () => {
     setIsModalVisible(true);
   };
+
   const renderNoItems = () => (
     <NoItemsFound message="Nenhum plano encontrado." />
   );
+
   const renderItems = () => (
     <Grid className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {items.map((item, index) => (
@@ -97,6 +106,7 @@ const MainContent = () => {
       ))}
     </Grid>
   );
+
   return (
     <Box className="flex-1">
       <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">

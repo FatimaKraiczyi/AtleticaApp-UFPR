@@ -43,7 +43,7 @@ const list: Icons[] = [
 
 export const WebSidebar = () => {
   const router = useRouter();
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
   useEffect(() => {
     if (typeof window !== "undefined") {

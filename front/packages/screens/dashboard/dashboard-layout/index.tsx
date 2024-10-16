@@ -53,6 +53,7 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
+    userType: "ADMIN",
     route: "/dashboard/admin",
   },
   {
@@ -70,7 +71,7 @@ const MainContent = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const storedUserType = sessionStorage.getItem("userType");
       setUserType(storedUserType);
     }
@@ -78,6 +79,9 @@ const MainContent = () => {
   }, []);
 
   const filteredCards = HeadingCards.filter((card) => {
+    if (userType === "master" && card.userType !== "master") {
+      return false;
+    }
     if (card.userType && card.userType !== userType) {
       return false;
     }
