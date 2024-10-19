@@ -14,7 +14,7 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { deletarMembro } from "../../../../api/membros";
+import { deletarMembro } from "../../../../../api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
 
 interface DeleteMembroProps {

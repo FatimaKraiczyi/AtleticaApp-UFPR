@@ -37,7 +37,7 @@ import { AlertTriangle } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-import { userAuthentication } from "../../../../api/users";
+import { userAuthentication } from "../../../../../api/users";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email é obrigatório").email("Email inválido"),

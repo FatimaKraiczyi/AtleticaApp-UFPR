@@ -32,7 +32,7 @@ import type { Assinatura } from "../../../../../interfaces/assinatura";
 import {
   createAssinatura,
   updateAssinatura,
-} from "../../../../../api/assinatura";
+} from "../../../../../../api/assinatura";
 
 const AssinaturaSchema = z.object({
   nome: z

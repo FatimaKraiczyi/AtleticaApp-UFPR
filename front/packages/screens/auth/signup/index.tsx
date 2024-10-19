@@ -49,11 +49,11 @@ import {
   SelectPortal,
   SelectTrigger,
 } from "@/components/ui/select";
-import { getCursos } from "../../../../api/cursos";
+import { getCursos } from "../../../../../api/cursos";
 import { type CursoProps } from "../../../../interfaces/cursos";
-import { createUser } from "../../../../api/users";
+import { createUser } from "../../../../../api/users";
 import { type UserProps } from "../../../../interfaces/users";
-import { createUserError } from "../../../../api/errors/usersErrors";
+import { createUserError } from "../../../../../api/errors/usersErrors";
 
 const signUpSchema = z.object({
   password: z

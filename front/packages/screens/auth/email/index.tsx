@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-import { sendEmailRequest } from "../../../../api/users";
+import { sendEmailRequest } from "../../../../../api/users";
 
 const EmailSchema = z.object({
   email: z

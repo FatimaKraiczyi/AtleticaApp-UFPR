@@ -12,7 +12,7 @@ import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { deleteAssinatura } from "../../../../../api/assinatura";
+import { deleteAssinatura } from "../../../../../../api/assinatura";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 

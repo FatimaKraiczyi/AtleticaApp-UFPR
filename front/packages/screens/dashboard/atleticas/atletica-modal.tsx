@@ -29,7 +29,7 @@ import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import type { CursoProps } from "../../../../interfaces/cursos";
-import { getCursos } from "../../../../api/cursos";
+import { getCursos } from "../../../../../api/cursos";
 import {
   Select,
   SelectBackdrop,
@@ -45,7 +45,7 @@ import {
 import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
 import { EditPhotoIcon } from "../../profile-screens/profile/assets/icons/edit-photo";
 import * as ImagePicker from "expo-image-picker";
-import { createAtletica, updateAtletica } from "../../../../api/atleticas";
+import { createAtletica, updateAtletica } from "../../../../../api/atleticas";
 import type { Atletica } from "../../../../interfaces/atleticas";
 
 const userSchema = z.object({

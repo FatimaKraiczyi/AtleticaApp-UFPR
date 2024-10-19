@@ -20,7 +20,7 @@ import { AlertTriangle } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
-import { validateUserToken } from "../../../../api/users";
+import { validateUserToken } from "../../../../../api/users";
 
 const ValidateTokenSchema = z.object({
   token: z.string().min(1, "Token é obrigatório"),
