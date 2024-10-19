@@ -20,7 +20,7 @@ import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
 import { Pressable } from "@/components/ui/pressable";
 import { AuthLayout } from "../layout";
-import { resetPasswordRequest } from "../../../../../api/users";
+import { resetPasswordRequest } from "../../../../api/users";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "Email is required").email(),

@@ -28,7 +28,7 @@ import { Keyboard, Switch } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { adicionarMembro, editarMembro, getMembros } from "../../../../../api/membros";
+import { adicionarMembro, editarMembro, getMembros } from "../../../../api/membros";
 import type { MembrosResponse } from "../../../../interfaces/membros";
 
 const userSchema = z.object({

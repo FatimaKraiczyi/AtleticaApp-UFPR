@@ -19,9 +19,9 @@ import type {
   Assinatura as AssinaturaType,
   AssinaturaResponse,
 } from "../../../../../interfaces/assinatura";
-import { getAssinatura } from "../../../../../../api/assinatura";
+import { getAssinatura } from "../../../../../api/assinatura";
 import { DeleteAssinatura } from "./delete-assinatura";
-import {getAssinantes} from "../../../../../../api/assinatura";
+import {getAssinantes} from "../../../../../api/assinatura";
 import { ModalAssinatura } from "./modal-assinatura";
 
 const MainContent = () => {
