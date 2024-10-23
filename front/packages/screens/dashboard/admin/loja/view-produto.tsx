@@ -21,16 +21,25 @@ import { useForm } from "react-hook-form";
 interface ViewProdutoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-	produtoData?: any;
+  produtoData?: any;
 }
 
 export const ViewProduto = ({
   showModal,
   setShowModal,
-	produtoData,
+  produtoData,
 }: ViewProdutoProps) => {
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const { register, handleSubmit } = useForm();
 
+  const handleSizeSelection = (size: string) => {
+    setSelectedSize(size);
+  };
 
+  const handlePurchase = () => {
+    // Lógica para realizar a compra
+    console.log("Produto comprado:", produtoData);
+  };
 
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
@@ -62,8 +71,22 @@ export const ViewProduto = ({
                 R$ {produtoData.valor.toFixed(2)}
               </Text>
               <Text className="line-clamp-1">
-                Quantidade: {produtoData.quantidade}
+                Quantidade disponível: {produtoData.quantidade}
               </Text>
+              <HStack space="md" className="mt-4">
+                {produtoData.tamanhos?.map((tamanho: string) => (
+                  <Button
+                    key={tamanho}
+                    variant={selectedSize === tamanho ? "solid" : "outline"}
+                    onPress={() => handleSizeSelection(tamanho)}
+                  >
+                    {tamanho}
+                  </Button>
+                ))}
+              </HStack>
+              <Button className="flex-1 p-2 mt-8" onPress={handlePurchase}>
+							<ButtonText>Comprar</ButtonText>
+              </Button>
             </VStack>
           )}
         </ModalBody>

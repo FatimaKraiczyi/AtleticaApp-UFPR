@@ -3,6 +3,7 @@ export interface Produto {
   nome: string;
   valor: number;
   quantidade: number;
+	tamanhos?: string[];
   atleticaId?: number;
   imagem: string | null;
 }
