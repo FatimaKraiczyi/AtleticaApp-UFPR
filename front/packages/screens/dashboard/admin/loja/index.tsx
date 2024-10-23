@@ -13,32 +13,35 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import type { Produto } from "../../../../../interfaces/produto";
 import { getProdutoById } from "../../../../../api/produtos";
+import { ModalProduto } from "./produto-modal";
 
 const MainContent = () => {
   const atleticaId = sessionStorage.getItem("atleticaId");
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [showModal, setShowModal] = useState(false); // Estado para o modal
+  const [selectedProduto, setSelectedProduto] = useState<Produto | undefined>(undefined); // Produto selecionado
 
   const fetchProdutos = async () => {
     setLoading(true);
     
-      if (atleticaId) {
-        const response = await getProdutoById(atleticaId);
-        if (response.success && response.data?.produto) {
-          setProdutos(response.data.produto); 
-        } 
-    } else {
-      setLoading(false);
-    }
+    if (atleticaId) {
+      const response = await getProdutoById(atleticaId);
+      if (response.success && response.data?.produto) {
+        setProdutos(response.data.produto); 
+      } 
+    } 
+    setLoading(false);
   }
 
   useEffect(() => {
-    if (atleticaId) {
-      fetchProdutos();
-    } else {
-      setLoading(false);
-    }
+    fetchProdutos();
   }, [atleticaId]);
+
+  const openModal = (produto?: Produto) => {
+    setSelectedProduto(produto);
+    setShowModal(true);
+  };
 
   if (loading) {
     return <LoadingState />;
@@ -57,7 +60,7 @@ const MainContent = () => {
             className: "flex-1 p-4 relativ",
           }}
         >
-          <Pressable className="w-full">
+          <Pressable className="w-full" onPress={() => openModal(produto)}> {/* Adicionando o onPress para editar */}
             <Box className="overflow-hidden rounded-md h-72">
               <Image
                 source={produto.imagem || require("@/shared/assets/dashboard/dashboard-layout/image2.png")}
@@ -71,7 +74,7 @@ const MainContent = () => {
                 {produto.nome}
               </Text>
               <Text size="sm" className="text-typography-500">
-                R$ {produto.valor.toFixed(2)}
+							R$ {produto.valor.toFixed(2)}
               </Text>
               <Text size="sm" className="text-typography-500">
                 Quantidade: {produto.quantidade}
@@ -87,7 +90,7 @@ const MainContent = () => {
     <Box className="flex-1">
       <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
         <VStack space="lg" className="items-center">
-          <Button className="gap-3 relative">
+          <Button className="gap-3 relative" onPress={() => openModal()}>
             <ButtonText>Adicionar Produto</ButtonText>
           </Button>
         </VStack>
@@ -103,6 +106,12 @@ const MainContent = () => {
           </ScrollView>
         )}
       </VStack>
+      <ModalProduto
+        showModal={showModal}
+        setShowModal={setShowModal}
+        refreshProdutos={fetchProdutos}
+        produtoData={selectedProduto}
+      /> 
     </Box>
   );
 };
