@@ -151,7 +151,11 @@ export const ModalProduto = ({
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
           <ModalCloseButton onPress={() => setShowModal(false)}>
-            <Icon as={CloseIcon} size="md" />
+            <Icon
+              as={CloseIcon}
+              size="md"
+              className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
+            />
           </ModalCloseButton>
         </ModalHeader>
         <Center className="w-full absolute top-10">
@@ -255,8 +259,11 @@ export const ModalProduto = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <Button onPress={handleSubmit(onSubmit)}>
-              <ButtonText>{produtoData ? "Salvar Alterações" : "Adicionar Produto"}</ButtonText>
+            <Button
+              onPress={handleSubmit(onSubmit)}
+              className="flex-1 p-2 mt-8"
+            >
+              <ButtonText>Salvar</ButtonText>
             </Button>
           </VStack>
         </ModalBody>

@@ -23,9 +23,13 @@ const MainContent = () => {
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedProduto, setSelectedProduto] = useState<Produto | undefined>(undefined);
+  const [selectedProduto, setSelectedProduto] = useState<Produto | undefined>(
+    undefined
+  );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [produtoToDeleteId, setProdutoToDeleteId] = useState<number | undefined>(undefined);
+  const [produtoToDeleteId, setProdutoToDeleteId] = useState<
+    number | undefined
+  >(undefined);
 
   const fetchProdutos = async () => {
     setLoading(true);
@@ -74,7 +78,7 @@ const MainContent = () => {
             className: "flex-1 p-4 relative",
           }}
         >
-          <Pressable className="w-full" onPress={() => openModal(produto)}>
+          <Pressable className="w-full">
             <Box className="overflow-hidden rounded-md h-72">
               <Image
                 source={
@@ -86,17 +90,19 @@ const MainContent = () => {
                 width={"100%"}
               />
             </Box>
-            <Box className="mt-2">
-              <Text className="font-semibold text-typography-900">
-                {produto.nome}
-              </Text>
-              <Text size="sm" className="text-typography-500">
-                R$ {produto.valor.toFixed(2)}
-              </Text>
-              <Text size="sm" className="text-typography-500">
-                Quantidade: {produto.quantidade}
-              </Text>
-              <HStack space="md">
+            <HStack className="w-full justify-between mt-2">
+              <VStack>
+                <Text className="font-semibold text-typography-900">
+                  {produto.nome}
+                </Text>
+                <Text className="line-clamp-1">
+                  R$ {produto.valor.toFixed(2)}
+                </Text>
+                <Text className="line-clamp-1">
+                  Quantidade: {produto.quantidade}
+                </Text>
+              </VStack>
+              <HStack space="md" className=" mt-2">
                 <Pressable onPress={() => handleEditProduto(produto)}>
                   <Icon as={EditIcon} className="text-typography-600" />
                 </Pressable>
@@ -109,7 +115,7 @@ const MainContent = () => {
                   <Icon as={TrashIcon} className="text-typography-600" />
                 </Pressable>
               </HStack>
-            </Box>
+            </HStack>
           </Pressable>
         </GridItem>
       ))}
@@ -145,8 +151,8 @@ const MainContent = () => {
       <DeleteProduto
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
-        id={produtoToDeleteId} 
-        refreshProdutos={fetchProdutos} 
+        id={produtoToDeleteId}
+        refreshProdutos={fetchProdutos}
       />
     </Box>
   );
