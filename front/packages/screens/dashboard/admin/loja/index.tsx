@@ -78,45 +78,47 @@ const MainContent = () => {
             className: "flex-1 p-4 relative",
           }}
         >
-          <Pressable className="w-full">
-            <Box className="overflow-hidden rounded-md h-72">
-              <Image
-                source={
-                  produto.imagem ||
-                  require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+          <Box className="w-full overflow-hidden rounded-md h-72">
+            <Image
+              source={
+                produto.imagem ||
+                require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+              }
+              alt={produto.nome}
+              height={"100%"}
+              width={"100%"}
+            />
+          </Box>
+          <HStack className="w-full justify-between mt-2">
+            <VStack>
+              <Text className="font-semibold text-typography-900">
+                {produto.nome}
+              </Text>
+              <Text className="line-clamp-1">
+                R$ {produto.valor.toFixed(2)}
+              </Text>
+              <Text className="line-clamp-1">
+                Quantidade: {produto.quantidade}
+              </Text>
+            </VStack>
+            <HStack space="md" className=" mt-2">
+              <Pressable onPress={() => handleEditProduto(produto)}>
+                <Icon as={EditIcon} className="text-typography-600" />
+              </Pressable>
+              <Pressable
+                onPress={() =>
+                  produto.id !== undefined && handleOpenDeleteModal(produto.id)
                 }
-                alt={produto.nome}
-                height={"100%"}
-                width={"100%"}
-              />
-            </Box>
-            <HStack className="w-full justify-between mt-2">
-              <VStack>
-                <Text className="font-semibold text-typography-900">
-                  {produto.nome}
-                </Text>
-                <Text className="line-clamp-1">
-                  R$ {produto.valor.toFixed(2)}
-                </Text>
-                <Text className="line-clamp-1">
-                  Quantidade: {produto.quantidade}
-                </Text>
-              </VStack>
-              <HStack space="md" className=" mt-2">
-                <Pressable onPress={() => handleEditProduto(produto)}>
-                  <Icon as={EditIcon} className="text-typography-600" />
-                </Pressable>
-                <Pressable
-                  onPress={() =>
-                    produto.id !== undefined &&
-                    handleOpenDeleteModal(produto.id)
-                  }
-                >
-                  <Icon as={TrashIcon} className="text-typography-600" />
-                </Pressable>
-              </HStack>
+              >
+                <Icon as={TrashIcon} className="text-typography-600" />
+              </Pressable>
             </HStack>
-          </Pressable>
+          </HStack>
+          <HStack className="w-full items-center mt-2">
+            <Button variant="outline" className="w-full gap-3 center">
+              <ButtonText>Visualizar</ButtonText>
+            </Button>
+          </HStack>
         </GridItem>
       ))}
     </Grid>
