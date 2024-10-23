@@ -35,9 +35,16 @@ import { EditPhotoIcon } from "../../../profile-screens/profile/assets/icons/edi
 
 const userSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
-  valor: z.number().min(1, "Valor é obrigatório"),
-  quantidade: z.number().min(1, "Quantidade é obrigatória"),
-  imagem: z.string().optional(),
+	valor: z.union([z.string(), z.number()]).refine((val) => {
+    const num =
+      typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
+    return !isNaN(num) && num > 0 && num.toFixed(2) === num.toString();
+  }, "Valor deve ser um número válido maior que 0"),
+	quantidade: z.union([z.string(), z.number()])
+	.refine((val) => {
+		const num = typeof val === "string" ? parseInt(val, 10) : val;
+		return Number.isInteger(num) && num > 0;
+	}, "Quantidade deve ser um número inteiro válido maior que 0"),  imagem: z.string().optional(),
 });
 type userSchemaDetails = z.infer<typeof userSchema>;
 
@@ -63,8 +70,8 @@ export const ModalProduto = ({
     resolver: zodResolver(userSchema),
     defaultValues: {
       nome: "",
-      valor: 0,
-      quantidade: 0,
+      valor: "",
+      quantidade: "",
       imagem: "",
     },
   });
@@ -187,7 +194,6 @@ export const ModalProduto = ({
                 <FormControlLabelText>Nome</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="nome"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -221,7 +227,10 @@ export const ModalProduto = ({
                     <InputField
                       placeholder="Valor do produto"
                       value={String(value)}
-                      onChangeText={(value) => onChange(Number(value) || 0)}
+                      onChangeText={(text) => {
+                        const numericValue = text.replace(",", ".");
+                        onChange(numericValue);
+                      }}
                       onBlur={onBlur}
                     />
                   </Input>
