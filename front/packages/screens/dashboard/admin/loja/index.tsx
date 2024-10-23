@@ -17,6 +17,7 @@ import { getProdutoById } from "../../../../../api/produtos";
 import { ModalProduto } from "./produto-modal";
 import { HStack } from "@/components/ui/hstack";
 import { DeleteProduto } from "./delete-produto";
+import { ViewProduto } from "./view-produto";
 
 const MainContent = () => {
   const atleticaId = sessionStorage.getItem("atleticaId");
@@ -30,6 +31,7 @@ const MainContent = () => {
   const [produtoToDeleteId, setProdutoToDeleteId] = useState<
     number | undefined
   >(undefined);
+  const [showViewModal, setShowViewModal] = useState(false);
 
   const fetchProdutos = async () => {
     setLoading(true);
@@ -50,6 +52,11 @@ const MainContent = () => {
   const openModal = (produto?: Produto) => {
     setSelectedProduto(produto);
     setShowModal(true);
+  };
+
+  const openViewModal = (produto?: Produto) => {
+    setSelectedProduto(produto);
+    setShowViewModal(true);
   };
 
   if (loading) {
@@ -115,7 +122,11 @@ const MainContent = () => {
             </HStack>
           </HStack>
           <HStack className="w-full items-center mt-2">
-            <Button variant="outline" className="w-full gap-3 center">
+            <Button
+              variant="outline"
+              className="w-full gap-3 center"
+              onPress={() => openViewModal(produto!)}
+            >
               <ButtonText>Visualizar</ButtonText>
             </Button>
           </HStack>
@@ -155,6 +166,11 @@ const MainContent = () => {
         setShowModal={setShowDeleteModal}
         id={produtoToDeleteId}
         refreshProdutos={fetchProdutos}
+      />
+      <ViewProduto
+        showModal={showViewModal}
+        setShowModal={setShowViewModal}
+        produtoData={selectedProduto}
       />
     </Box>
   );
