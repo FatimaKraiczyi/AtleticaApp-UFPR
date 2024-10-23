@@ -74,13 +74,12 @@ export const ModalProduto = ({
   useEffect(() => {
     if (showModal) {
       resetForm();
-    }
-
-    if (produtoData) {
-      setValue("nome", produtoData.nome);
-      setValue("valor", produtoData.valor);
-      setValue("quantidade", produtoData.quantidade);
-      setProdutoImage(produtoData.imagem || null);
+      if (produtoData) {
+        setValue("nome", produtoData.nome);
+        setValue("valor", produtoData.valor);
+        setValue("quantidade", produtoData.quantidade);
+        setProdutoImage(produtoData.imagem || null);
+      }
     }
   }, [showModal, produtoData, setValue]);
 
@@ -89,7 +88,7 @@ export const ModalProduto = ({
     setProdutoImage(null);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: userSchemaDetails) => {
     const produtoPayload = {
       nome: data.nome,
       valor: Number(data.valor),
@@ -109,7 +108,6 @@ export const ModalProduto = ({
           refreshProdutos();
         }
       }
-
       setShowModal(false);
       resetForm();
     } catch (error) {
@@ -232,7 +230,6 @@ export const ModalProduto = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
             <FormControl isInvalid={!!errors.quantidade}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Quantidade</FormControlLabelText>
@@ -258,11 +255,8 @@ export const ModalProduto = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
             <Button onPress={handleSubmit(onSubmit)}>
-              <ButtonText>
-                {produtoData ? "Salvar Alterações" : "Cadastrar Produto"}
-              </ButtonText>
+              <ButtonText>{produtoData ? "Salvar Alterações" : "Adicionar Produto"}</ButtonText>
             </Button>
           </VStack>
         </ModalBody>
