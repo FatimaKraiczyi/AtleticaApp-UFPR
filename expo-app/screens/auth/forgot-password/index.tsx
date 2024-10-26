@@ -44,7 +44,7 @@ const ForgotPasswordScreen = () => {
       placement: "bottom right",
       render: ({ id }) => {
         return (
-          <Toast nativeID={id} variant="accent" action="success">
+          <Toast nativeID={id} variant="solid" action="success">
             <ToastTitle>Link Sent Successfully</ToastTitle>
           </Toast>
         );
@@ -61,17 +61,6 @@ const ForgotPasswordScreen = () => {
   return (
    <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
-        <Pressable
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Icon
-            as={ArrowLeftIcon}
-            className="md:hidden stroke-background-800"
-            size="xl"
-          />
-        </Pressable>
         <VStack>
           <Heading className="md:text-center" size="3xl">
             Forgot Password?

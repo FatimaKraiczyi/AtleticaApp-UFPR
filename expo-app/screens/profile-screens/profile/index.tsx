@@ -371,13 +371,6 @@ function MobileHeader(props: MobileHeaderProps) {
       space="md"
     >
       <HStack className="items-center" space="sm">
-        <Pressable
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Icon as={ChevronLeftIcon} />
-        </Pressable>
         <Text className="text-xl">{props.title}</Text>
       </HStack>
       <Icon as={HeartIcon} className="h-8 w-20" />
@@ -424,23 +417,19 @@ const userSchema = z.object({
 interface AccountCardType {
   iconName: LucideIcon | typeof Icon;
   subText: string;
-  endIcon: LucideIcon | typeof Icon;
 }
 const accountData: AccountCardType[] = [
   {
     iconName: InboxIcon,
     subText: "Settings",
-    endIcon: ChevronRightIcon,
   },
   {
     iconName: GlobeIcon,
     subText: "Notifications",
-    endIcon: ChevronRightIcon,
   },
   {
     iconName: PhoneIcon,
     subText: "Rewards",
-    endIcon: ChevronRightIcon,
   },
 ];
 const MainContent = () => {
@@ -477,8 +466,8 @@ const MainContent = () => {
               <Avatar size="2xl" className="bg-primary-600">
                 <AvatarImage
                   alt="Profile Image"
-                  height={"100%"}
-                  width={"100%"}
+                  height={100}
+                  width={100}
                   source={require("@/assets/profile-screens/profile/image.png")}
                 />
                 <AvatarBadge />
@@ -589,7 +578,6 @@ const MainContent = () => {
                         <Icon as={item.iconName} className="stroke-[#747474]" />
                         <Text size="lg">{item.subText}</Text>
                       </HStack>
-                      <Icon as={item.endIcon} />
                     </HStack>
                     {accountData.length - 1 !== index && (
                       <Divider className="my-1" />
@@ -614,7 +602,6 @@ const MainContent = () => {
                         <Icon as={item.iconName} className="stroke-[#747474]" />
                         <Text size="lg">{item.subText}</Text>
                       </HStack>
-                      <Icon as={item.endIcon} />
                     </HStack>
                     {accountData.length - 1 !== index && (
                       <Divider className="my-1" />

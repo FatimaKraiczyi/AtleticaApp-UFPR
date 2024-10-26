@@ -7,7 +7,6 @@ import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
 import type { LucideIcon } from "lucide-react-native";
 import { InboxIcon } from "./assets/icons/inbox";
-import { GlobeIcon } from "./assets/icons/globe";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Heading } from "@/components/ui/heading";
@@ -20,13 +19,15 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
-import { HomeIcon } from "./assets/icons/home";
-import { HeartIcon } from "./assets/icons/heart";
-import { ProfileIcon } from "./assets/icons/profile";
-import { CalendarIcon } from "./assets/icons/calendar";
+
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { cn } from "@gluestack-ui/nativewind-utils/cn";
 import { Platform } from "react-native";
+import { HomeIcon } from "./assets/icons/home";
+import { GlobeIcon } from "./assets/icons/globe";
+import { HeartIcon } from "./assets/icons/heart";
+import { ProfileIcon } from "./assets/icons/profile";
+import { CalendarIcon } from "./assets/icons/calendar";
 type MobileHeaderProps = {
   title: string;
 };
@@ -105,27 +106,27 @@ interface ColleaguesCardData {
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
+    bannerUri: require("./assets/image.png"),
     title: "Update your profile",
     description: "Add your details",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image2.png"),
+    bannerUri: require("./assets/image2.png"),
     title: "Your skills",
     description: "Add your skills here",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("./assets/image3.png"),
     title: "Your goals",
     description: "Set a target to accomplish",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("./assets/image3.png"),
     title: "Your goals",
     description: "Set a target to accomplish",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("./assets/image3.png"),
     title: "Your goals",
     description: "Set a target to accomplish",
   },
@@ -180,22 +181,22 @@ const LeavesCards: LeavesCardData[] = [
 ];
 const ColleaguesCards: ColleaguesCardData[] = [
   {
-    image: require("@/assets/dashboard/dashboard-layout/image7.png"),
+    image: require("./assets/image7.png"),
     title: "Emily Zho",
     position: "UI/UX Designer",
   },
   {
-    image: require("@/assets/dashboard/dashboard-layout/image4.png"),
+    image: require("./assets/image4.png"),
     title: "Marilyn Monroe",
     position: "SDE II",
   },
   {
-    image: require("@/assets/dashboard/dashboard-layout/image5.png"),
+    image: require("./assets/image5.png"),
     title: "James Kant",
     position: "SDE III",
   },
   {
-    image: require("@/assets/dashboard/dashboard-layout/image6.png"),
+    image: require("./assets/image6.png"),
     title: "Richard Faynmen",
     position: "CEO Marketing",
   },
@@ -281,7 +282,7 @@ function MobileFooter({ footerIcons }: { footerIcons: any }) {
             <Pressable
               className="px-0.5 flex-1 flex-col items-center"
               key={index}
-              onPress={() => router.push("/dashboard/dashboard-layout")}
+              onPress={() => router.push("/dashboard")}
             >
               <Icon
                 as={item.iconName}
@@ -327,13 +328,6 @@ function MobileHeader(props: MobileHeaderProps) {
       className="py-6 px-4 border-b border-border-50 bg-background-0 items-center"
       space="md"
     >
-      <Pressable
-        onPress={() => {
-          router.back();
-        }}
-      >
-        <Icon as={ChevronLeftIcon} />
-      </Pressable>
       <Text className="text-xl">{props.title}</Text>
     </HStack>
   );
@@ -355,9 +349,12 @@ const MainContent = () => {
             Welcome Alexander
           </Heading>
 
-          <Grid className="gap-5" _extra={{
-						className: ""
-					}}>
+          <Grid
+            className="gap-5"
+            _extra={{
+              className: "",
+            }}
+          >
             {HeadingCards.map((item, index) => {
               return (
                 <GridItem
@@ -401,9 +398,12 @@ const MainContent = () => {
               you’re good to go.
             </Text>
           </Box>
-          <Grid className="gap-5" _extra={{
-						className: ""
-					}}>
+          <Grid
+            className="gap-5"
+            _extra={{
+              className: "",
+            }}
+          >
             <GridItem
               _extra={{
                 className: "col-span-12 sm:col-span-6 lg:col-span-4",

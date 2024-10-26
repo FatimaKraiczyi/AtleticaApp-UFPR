@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { router } from "expo-router";
+import React from "react";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import SignIn from "./auth/signin";
 

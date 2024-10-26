@@ -286,13 +286,6 @@ function MobileHeader(props: MobileHeaderProps) {
       className="py-6 px-4 border-b border-border-300 bg-background-0 items-center"
       space="md"
     >
-      <Pressable
-        onPress={() => {
-          router.back();
-        }}
-      >
-        <Icon as={ChevronLeftIcon} />
-      </Pressable>
       <Text className="text-xl">{props.title}</Text>
     </HStack>
   );

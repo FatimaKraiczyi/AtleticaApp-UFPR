@@ -22,7 +22,6 @@ import {
   CheckboxLabel,
 } from "@/components/ui/checkbox";
 import {
-  ArrowLeftIcon,
   CheckIcon,
   EyeIcon,
   EyeOffIcon,
@@ -35,7 +34,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
 import { GoogleIcon } from "./assets/icons/google";
-import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { AuthLayout } from "../layout";
 
@@ -88,7 +86,7 @@ const LoginWithLeftBackground = () => {
           placement: "bottom right",
           render: ({ id }) => {
             return (
-              <Toast nativeID={id} variant="accent" action="success">
+              <Toast nativeID={id} variant="solid" action="success">
                 <ToastTitle>Logged in successfully!</ToastTitle>
               </Toast>
             );
@@ -115,18 +113,7 @@ const LoginWithLeftBackground = () => {
   return (
     <VStack className="max-w-[440px] w-full" space="md">
       <VStack className="md:items-center" space="md">
-        <Pressable
-          onPress={() => {
-            router.back();
-          }}
-        >
-          <Icon
-            as={ArrowLeftIcon}
-            className="md:hidden text-background-800"
-            size="xl"
-          />
-        </Pressable>
-        <VStack>
+         <VStack>
           <Heading className="md:text-center" size="3xl">
             Log in
           </Heading>
