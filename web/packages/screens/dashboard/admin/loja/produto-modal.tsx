@@ -7,7 +7,7 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
 } from "@/components/ui/form-control";
-import { CloseIcon, Icon } from "@/components/ui/icon";
+import { CloseIcon, Icon, EditIcon } from "@/components/ui/icon";
 import { AlertTriangle } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
@@ -31,7 +31,6 @@ import { Box } from "@/components/ui/box";
 import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
 import * as ImagePicker from "expo-image-picker";
 import { updateProduto, createProduto } from "../../../../../api/produtos";
-import { EditPhotoIcon } from "../../../profile-screens/profile/assets/icons/edit-photo";
 
 const userSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
@@ -183,7 +182,7 @@ export const ModalProduto = ({
                   alt={"Imagem do produto"}
                 />
                 <AvatarBadge className="justify-center items-center bg-background-500">
-                  <Icon as={EditPhotoIcon} />
+                  <Icon as={EditIcon} />
                 </AvatarBadge>
               </Avatar>
             </TouchableOpacity>

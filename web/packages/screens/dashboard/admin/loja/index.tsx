@@ -18,8 +18,13 @@ import { ModalProduto } from "./produto-modal";
 import { HStack } from "@/components/ui/hstack";
 import { DeleteProduto } from "./delete-produto";
 import { ViewProduto } from "./view-produto";
+import { CartIcon } from "../../assets/cart/index.web";
 
-const MainContent = () => {
+interface AdminLojaProps  {
+  isAdmin: boolean;
+}
+
+const MainContent = ({ isAdmin }: AdminLojaProps ) => {
   const atleticaId = sessionStorage.getItem("atleticaId");
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -77,13 +82,14 @@ const MainContent = () => {
   };
 
   const renderItems = () => (
-    <Grid className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <Grid
+      className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      _extra={{ className: "" }}
+    >
       {produtos.map((produto) => (
         <GridItem
           key={produto.id}
-          _extra={{
-            className: "flex-1 p-4 relative",
-          }}
+          _extra={{ className: "flex-1 p-4 relative" }}
         >
           <Box className="w-full overflow-hidden rounded-md h-72">
             <Image
@@ -108,24 +114,31 @@ const MainContent = () => {
                 Quantidade: {produto.quantidade}
               </Text>
             </VStack>
-            <HStack space="md" className=" mt-2">
-              <Pressable onPress={() => handleEditProduto(produto)}>
-                <Icon as={EditIcon} className="text-typography-600" />
+            {isAdmin ? (
+              <HStack space="md" className="mt-2">
+                <Pressable onPress={() => handleEditProduto(produto)}>
+                  <Icon as={EditIcon} className="text-typography-600" />
+                </Pressable>
+                <Pressable
+                  onPress={() =>
+                    produto.id !== undefined &&
+                    handleOpenDeleteModal(produto.id)
+                  }
+                >
+                  <Icon as={TrashIcon} className="text-typography-600" />
+                </Pressable>
+              </HStack>
+            ) : (
+              <Pressable onPress={() => openViewModal(produto)}>
+                <Icon as={CartIcon} className="text-typography-600" />
               </Pressable>
-              <Pressable
-                onPress={() =>
-                  produto.id !== undefined && handleOpenDeleteModal(produto.id)
-                }
-              >
-                <Icon as={TrashIcon} className="text-typography-600" />
-              </Pressable>
-            </HStack>
+            )}
           </HStack>
           <HStack className="w-full items-center mt-2">
             <Button
               variant="outline"
               className="w-full gap-3 center"
-              onPress={() => openViewModal(produto!)}
+              onPress={() => openViewModal(produto)}
             >
               <ButtonText>Visualizar</ButtonText>
             </Button>
@@ -138,11 +151,13 @@ const MainContent = () => {
   return (
     <Box className="flex-1">
       <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
-        <VStack space="lg" className="items-center">
-          <Button className="gap-3 relative" onPress={() => openModal()}>
-            <ButtonText>Adicionar Produto</ButtonText>
-          </Button>
-        </VStack>
+        {isAdmin && (
+          <VStack space="lg" className="items-center">
+            <Button className="gap-3 relative" onPress={() => openModal()}>
+              <ButtonText>Adicionar Produto</ButtonText>
+            </Button>
+          </VStack>
+        )}
         {produtos.length === 0 ? (
           renderNoItems()
         ) : (
@@ -176,12 +191,16 @@ const MainContent = () => {
   );
 };
 
-export const AdminLoja = () => {
+export const AdminLoja = ({ isAdmin }: AdminLojaProps) => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Loja" isSidebarVisible={true}>
-        <MainContent />
-      </LayoutComponents>
+      {isAdmin ? (
+        <LayoutComponents title="Loja" isSidebarVisible={true}>
+          <MainContent isAdmin={isAdmin} />
+        </LayoutComponents>
+      ) : (
+        <MainContent isAdmin={isAdmin} />
+      )}
       <MobileFooter />
     </SafeAreaView>
   );

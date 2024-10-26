@@ -3,7 +3,6 @@ import { Produto } from "../interfaces/produto";
 import { API, objectCatch } from "./api";
 import { addProduto, deleteProduto, editProduto, getAllProdutos, getProdutoByAtletica } from "./routes/produtos";
 
-
 export const getProdutos = async (): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(getAllProdutos);
