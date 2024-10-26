@@ -34,16 +34,16 @@ import { updateProduto, createProduto } from "../../../../../api/produtos";
 
 const userSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
-	valor: z.union([z.string(), z.number()]).refine((val) => {
+  valor: z.union([z.string(), z.number()]).refine((val) => {
     const num =
       typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
-    return !isNaN(num) && num > 0 && num.toFixed(2) === num.toString();
+    return !isNaN(num) && num > 0;
   }, "Valor deve ser um número válido maior que 0"),
-	quantidade: z.union([z.string(), z.number()])
-	.refine((val) => {
-		const num = typeof val === "string" ? parseInt(val, 10) : val;
-		return Number.isInteger(num) && num > 0;
-	}, "Quantidade deve ser um número inteiro válido maior que 0"),  imagem: z.string().optional(),
+  quantidade: z.union([z.string(), z.number()]).refine((val) => {
+    const num = typeof val === "string" ? parseInt(val, 10) : val;
+    return Number.isInteger(num) && num >= 0;
+  }, "Quantidade deve ser um número inteiro válido maior ou igual a 0"),
+  imagem: z.string().optional(),
 });
 type userSchemaDetails = z.infer<typeof userSchema>;
 
