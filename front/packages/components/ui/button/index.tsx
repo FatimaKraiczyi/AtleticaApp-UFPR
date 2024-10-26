@@ -311,12 +311,14 @@ interface DefaultColors {
   secondary: string;
   positive: string;
   negative: string;
+	white: string;
 }
 const defaultColors: DefaultColors = {
   primary: "#292929",
   secondary: "#515252",
   positive: "#2A7948",
   negative: "#DC2626",
+	white: "#fff",
 };
 type IButtonIcon = React.ComponentProps<typeof UIButton.Icon> &
   VariantProps<typeof buttonIconStyle>;
