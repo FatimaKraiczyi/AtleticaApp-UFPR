@@ -80,7 +80,7 @@ const LoginWithLeftBackground = () => {
 					</Toast>
 				),
 			});
-			router.push("/dashboard/dashboard-layout");
+			router.push("/dashboard");
 			reset();
 		} else {
 			setValidated({ emailValid: false, passwordValid: false });

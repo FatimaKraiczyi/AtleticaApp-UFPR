@@ -178,7 +178,7 @@ export const ModalProduto = ({
                   source={
                     produtoImage
                       ? { uri: produtoImage }
-                      : require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+                      : require("@/shared/assets/dashboard/image2.png")
                   }
                   alt={"Imagem do produto"}
                 />

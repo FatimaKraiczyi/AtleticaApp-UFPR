@@ -13,7 +13,7 @@ const Page = () => {
       const token = await getToken();
 
       if (token) {
-        router.replace("dashboard/dashboard-layout");
+        router.replace("dashboard");
       } else {
         router.replace("auth/signin");
       }

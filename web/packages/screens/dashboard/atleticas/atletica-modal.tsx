@@ -244,7 +244,7 @@ export const ModalAtletica = ({
                   source={
                     profileImage
                       ? { uri: profileImage }
-                      : require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+                      : require("@/shared/assets/dashboard/image2.png")
                   }
                   alt={"Imagem de perfil"}
                 />

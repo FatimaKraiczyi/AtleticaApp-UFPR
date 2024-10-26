@@ -12,9 +12,9 @@ import { Grid, GridItem } from "@/components/ui/grid";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { MobileFooter } from "../../components/MobileFooter";
-import { LayoutComponents } from "../../components/LayoutComponents";
-import { LoadingState } from "../../components/LoadingState";
+import { MobileFooter } from "../components/MobileFooter";
+import { LayoutComponents } from "../components/LayoutComponents";
+import { LoadingState } from "../components/LoadingState";
 
 interface CardData {
   bannerUri: string;
@@ -26,38 +26,38 @@ interface CardData {
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/shared/assets/dashboard/image3.png"),
     title: "Jogos",
     description: "Add your details",
     route: "/dashboard/jogos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
+    bannerUri: require("@/assets/dashboard/image.png"),
     title: "Eventos",
     description: "Add your skills here",
     route: "/dashboard/eventos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image4.png"),
+    bannerUri: require("@/assets/dashboard/image4.png"),
     title: "Produtos",
     description: "Set a target to accomplish",
     route: "/dashboard/produtos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image5.png"),
+    bannerUri: require("@/assets/dashboard/image5.png"),
     title: "Planos de assinatura",
     description: "Set a target to accomplish",
     route: "/dashboard/admin/assinatura",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
+    bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
 		userType: "ADMIN",
     route: "/dashboard/admin",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
+    bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Gerenciar Atléticas",
     description: "Set a target to accomplish",
     userType: "master",

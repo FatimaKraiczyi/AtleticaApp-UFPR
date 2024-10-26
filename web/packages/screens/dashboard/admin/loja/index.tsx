@@ -89,7 +89,7 @@ const MainContent = () => {
             <Image
               source={
                 produto.imagem ||
-                require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+                require("@/shared/assets/dashboard/image2.png")
               }
               alt={produto.nome}
               height={"100%"}

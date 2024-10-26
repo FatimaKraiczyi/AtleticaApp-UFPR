@@ -87,7 +87,7 @@ export const ViewProduto = ({
               <Image
                 source={
                   produtoData.imagem ||
-                  require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+                  require("@/shared/assets/dashboard/image2.png")
                 }
                 alt={produtoData.nome}
                 height={"100%"}

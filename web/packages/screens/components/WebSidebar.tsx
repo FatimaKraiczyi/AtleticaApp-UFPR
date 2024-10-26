@@ -75,7 +75,7 @@ export const WebSidebar = () => {
     } else {
       setSelectedIndex(index);
       if (index === 0) {
-        router.push("/dashboard/dashboard-layout");
+        router.push("/dashboard");
       } else if (index === 1) {
         router.push("/dashboard/atleticas");
       } else if (index === 2) {

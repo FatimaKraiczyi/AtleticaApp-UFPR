@@ -207,7 +207,7 @@ const Sidebar = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const handlePress = (index: number) => {
     setSelectedIndex(index);
-    // router.push("/dashboard/dashboard-layout");
+    // router.push("/dashboard");
   };
 
   return (

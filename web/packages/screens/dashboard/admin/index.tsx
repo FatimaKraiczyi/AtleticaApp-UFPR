@@ -26,31 +26,31 @@ interface CardData {
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/shared/assets/dashboard/dashboard-layout/image3.png"),
+    bannerUri: require("@/shared/assets/dashboard/image3.png"),
     title: "Gerenciar Jogos",
     description: "Add your details",
     route: "/dashboard/admin/jogos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image.png"),
+    bannerUri: require("@/assets/dashboard/image.png"),
     title: "Gerenciar Eventos",
     description: "Add your skills here",
     route: "/dashboard/admin/eventos",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image4.png"),
+    bannerUri: require("@/assets/dashboard/image4.png"),
     title: "Gerenciar Loja",
     description: "Set a target to accomplish",
     route: "/dashboard/admin/loja",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image5.png"),
+    bannerUri: require("@/assets/dashboard/image5.png"),
     title: "Gerenciar Planos de assinatura",
     description: "Set a target to accomplish",
     route: "/dashboard/admin/assinatura",
   },
   {
-    bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
+    bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Gerenciar Membros",
     description: "Set a target to accomplish",
     route: "/dashboard/admin/membros",

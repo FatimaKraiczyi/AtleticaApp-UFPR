@@ -30,19 +30,19 @@ const tabsData: Data[] = [
     data: [
       {
         title: "Tropical Bungalow",
-        src: require("@/shared/assets/dashboard/dashboard-layout/image.png"),
+        src: require("@/shared/assets/dashboard/image.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
       {
         title: "Mountain View",
-        src: require("@/shared/assets/dashboard/dashboard-layout/image2.png"),
+        src: require("@/shared/assets/dashboard/image2.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
       {
         title: "ImageView Inn",
-        src: require("@/shared/assets/dashboard/dashboard-layout/image3.png"),
+        src: require("@/shared/assets/dashboard/image3.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },

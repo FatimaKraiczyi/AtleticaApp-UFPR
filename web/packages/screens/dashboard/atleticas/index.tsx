@@ -120,7 +120,7 @@ const MainContent = () => {
                   <AvatarImage
                     source={
                       item.atletica.imagem ||
-                      require("@/shared/assets/dashboard/dashboard-layout/image2.png")
+                      require("@/shared/assets/dashboard/image2.png")
                     }
                   />
                 </Avatar>
