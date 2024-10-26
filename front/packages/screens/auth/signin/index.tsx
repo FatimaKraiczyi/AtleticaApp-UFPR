@@ -70,7 +70,8 @@ const LoginWithLeftBackground = () => {
 		if (response.success) {
 			sessionStorage.setItem("token", response.data.token);
 			sessionStorage.setItem("userType", response.data.tipo);
-			
+			sessionStorage.setItem("atleticaId", response.data.atletica.toString());
+
 			toast.show({
 				placement: "bottom right",
 				render: ({ id }) => (

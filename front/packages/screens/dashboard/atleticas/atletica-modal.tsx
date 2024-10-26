@@ -155,7 +155,6 @@ export const ModalAtletica = ({
   };
 
   const onSubmit = async (data: any) => {
-    console.log("Dados enviados:", data);
     const atleticaPayload = {
       nome: data.nome,
       descricao: data.descricao,

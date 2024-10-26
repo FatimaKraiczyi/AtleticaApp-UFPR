@@ -64,6 +64,7 @@ export const WebSidebar = () => {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("userType");
+			sessionStorage.removeItem("atleticaId");
     }
     router.push("/auth/signin");
   };

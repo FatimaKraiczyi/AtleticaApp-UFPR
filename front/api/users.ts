@@ -10,7 +10,7 @@ import {
   resetPassword,
   createUserEndpoint,
   newPasswordResquest,
-} from "./routes/routes";
+} from "./routes/auth";
 import { getToken, setToken } from "./token";
 
 export const userAuthentication = async (
@@ -26,10 +26,12 @@ export const userAuthentication = async (
     if (status === 200 && data?.token) {
       const token = data.token;
       const userType = data.userType;
+			const atletica = data.atletica;
 
       await setToken(token);
       if (typeof window !== 'undefined') {
         sessionStorage.setItem("userType", userType);
+				sessionStorage.setItem("atletica", atletica.toString());
       }
 
       if (Platform.OS === "web" && typeof window !== 'undefined') {

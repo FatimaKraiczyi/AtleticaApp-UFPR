@@ -53,7 +53,7 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/assets/dashboard/dashboard-layout/image6.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
-    userType: "ADMIN",
+		userType: "ADMIN",
     route: "/dashboard/admin",
   },
   {
