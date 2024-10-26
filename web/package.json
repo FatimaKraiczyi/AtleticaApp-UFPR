@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "cd apps/next && yarn dev",
+    "build": "turbo run build",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
+    "postinstall": "patch-package"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.1",
+    "turbo": "^2.1.2"
+  },
+  "packageManager": "yarn@1.22.19",
+  "engines": {
+    "node": ">=18"
+  },
+  "name": "web",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "expo-network": "^6.0.1",
+    "jwt-decode": "^4.0.0"
+  }
+}
