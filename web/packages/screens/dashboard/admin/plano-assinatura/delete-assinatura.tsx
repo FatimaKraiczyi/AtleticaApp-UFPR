@@ -37,7 +37,7 @@ export const DeleteAssinatura = ({
         setShowModal(false);
       }
     } catch (error) {
-      console.error("Erro ao deletar assinatura:", error);
+      console.error("Erro ao deletar plano:", error);
     }
   };
 

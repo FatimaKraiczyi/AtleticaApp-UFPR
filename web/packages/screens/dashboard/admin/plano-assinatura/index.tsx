@@ -156,7 +156,7 @@ const MainContent = () => {
 export const AdminPlanos = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Assinaturas" isSidebarVisible={true}>
+      <LayoutComponents title="Plano de Assinatura" isSidebarVisible={true}>
         <MainContent />
       </LayoutComponents>
       <MobileFooter />

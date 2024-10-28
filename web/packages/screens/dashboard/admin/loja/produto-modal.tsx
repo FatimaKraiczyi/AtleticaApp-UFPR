@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Keyboard, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";

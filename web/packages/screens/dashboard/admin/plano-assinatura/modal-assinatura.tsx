@@ -155,7 +155,7 @@ export const ModalAssinatura = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            {assinaturaData ? "Editar Plano" : "Cadastrar Plano"}
+            {assinaturaData ? "Editar Plano de Assinatura" : "Cadastrar Plano de Assinatura"}
           </Heading>
         </Center>
         <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
