@@ -28,40 +28,40 @@ import { useForm, Controller } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
-import type { Assinatura } from "../../../../../interfaces/assinatura";
+import type { PlanoAssinatura } from "../../../../../interfaces/planos";
 import {
-  createAssinatura,
-  updateAssinatura,
-} from "../../../../../api/assinatura";
+  createPlanoAssinatura,
+  updatePlanoAssinatura,
+} from "../../../../../api/planos";
 
 const AssinaturaSchema = z.object({
   nome: z
     .string()
     .min(1, "Nome é obrigatório")
     .max(50, "O nome deve ter menos de 50 caracteres"),
-  valor: z
-    .string()
-    .regex(
-      /^\d+(\.\d{1,2})?$/,
-      "Preço deve ser um número válido com até duas casas decimais"
-    ),
+  valor: z.union([z.string(), z.number()]).refine((val) => {
+    const num =
+      typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
+    return !isNaN(num) && num > 0;
+  }, "Valor deve ser um número válido maior que 0"),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  duracao: z.string().min(1, "Duração é obrigatória"),
+  duracao: z.union([z.string(), z.number()]).refine((val) => {
+    const num = typeof val === "string" ? parseInt(val, 10) : val;
+    return Number.isInteger(num) && num > 0;
+  }, "Duração deve ser um número inteiro válido maior que 0"),
 });
 type AssianaturaSchemaDetails = z.infer<typeof AssinaturaSchema>;
 
-export const ModalAssinatura = ({
+export const ModalPlano = ({
   showModal,
   setShowModal,
-  addAssinatura,
-  editAssinatura,
-  assinaturaData,
+  refreshPlanos,
+  planoData,
 }: {
   showModal: boolean;
   setShowModal: any;
-  addAssinatura: (newAssinatura: Assinatura) => void;
-  editAssinatura?: (assinatura: Assinatura) => void;
-  assinaturaData?: Assinatura;
+  refreshPlanos: () => void;
+	planoData?: any;
 }) => {
   const ref = useRef(null);
   const {
@@ -72,6 +72,12 @@ export const ModalAssinatura = ({
     setValue,
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
+		defaultValues: {
+      nome: "",
+      valor: "",
+      duracao: "",
+      descricao: "",
+    },
   });
 
   useEffect(() => {
@@ -79,44 +85,38 @@ export const ModalAssinatura = ({
       resetForm();
     }
 
-    if (assinaturaData) {
-      setValue("nome", assinaturaData.nome);
-      setValue("descricao", assinaturaData.descricao);
-      setValue("valor", assinaturaData.valor);
-      setValue("duracao", assinaturaData.duracao);
+    if (planoData) {
+      setValue("nome", planoData.nome);
+      setValue("descricao", planoData.descricao);
+      setValue("valor", planoData.valor);
+      setValue("duracao", planoData.duracao);
     }
-  }, [showModal, assinaturaData, setValue]);
+  }, [showModal, planoData, setValue]);
 
   const resetForm = () => {
     reset();
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: AssianaturaSchemaDetails) => {
     const assinaturaPayload = {
       nome: data.nome,
       descricao: data.descricao,
-      valor: data.valor,
-      duracao: data.duracao,
+      valor: Number(data.valor),
+      duracao: Number(data.duracao),
     };
 
     try {
-      if (assinaturaData) {
-        if (assinaturaData.id !== undefined) {
-          const response = await updateAssinatura(
-            assinaturaData.id,
-            assinaturaPayload
-          );
+      if (planoData) {
+          const response = await updatePlanoAssinatura(planoData.id, assinaturaPayload);
           if (response.success) {
-            editAssinatura && editAssinatura(assinaturaPayload);
+           refreshPlanos();
           }
-        }
       } else {
-        const response = await createAssinatura(assinaturaPayload);
+        const response = await createPlanoAssinatura(assinaturaPayload);
         if (response.success) {
-          addAssinatura(assinaturaPayload);
+          refreshPlanos();
         }
       }
-
       setShowModal(false);
       resetForm();
     } catch (error) {
@@ -155,7 +155,9 @@ export const ModalAssinatura = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            {assinaturaData ? "Editar Plano de Assinatura" : "Cadastrar Plano de Assinatura"}
+            {planoData
+              ? "Editar Plano de Assinatura"
+              : "Cadastrar Plano de Assinatura"}
           </Heading>
         </Center>
         <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
@@ -165,7 +167,6 @@ export const ModalAssinatura = ({
                 <FormControlLabelText>Nome do Plano</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="nome"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -176,8 +177,6 @@ export const ModalAssinatura = ({
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      onSubmitEditing={Keyboard.dismiss}
-                      returnKeyType="done"
                     />
                   </Input>
                 )}
@@ -195,21 +194,18 @@ export const ModalAssinatura = ({
                 <FormControlLabelText>Preço do Plano</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="valor"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Valor"
-                      value={value}
+                      placeholder="Valor do plano"
+                      value={String(value)}
                       onChangeText={(text) => {
-                        const numericValue = text.replace(/[^0-9.]/g, "");
+                        const numericValue = text.replace(",", ".");
                         onChange(numericValue);
                       }}
                       onBlur={onBlur}
-                      onSubmitEditing={Keyboard.dismiss}
-                      returnKeyType="done"
                     />
                   </Input>
                 )}
@@ -227,7 +223,6 @@ export const ModalAssinatura = ({
                 <FormControlLabelText>Descrição</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="descricao"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -238,8 +233,6 @@ export const ModalAssinatura = ({
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      onSubmitEditing={Keyboard.dismiss}
-                      returnKeyType="done"
                     />
                   </Input>
                 )}
@@ -257,7 +250,6 @@ export const ModalAssinatura = ({
                 <FormControlLabelText>Duração do Plano</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="duracao"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -265,11 +257,9 @@ export const ModalAssinatura = ({
                     <InputField
                       type="text"
                       placeholder="Duração do Plano"
-                      value={value}
-                      onChangeText={onChange}
+                      value={String(value)}
+                      onChangeText={(value) => onChange(Number(value))}
                       onBlur={onBlur}
-                      onSubmitEditing={Keyboard.dismiss}
-                      returnKeyType="done"
                     />
                   </Input>
                 )}

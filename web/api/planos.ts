@@ -1,69 +1,66 @@
 import type { IResponse } from "../interfaces";
-import { Assinatura, AssinaturaResponse } from "../interfaces/assinatura";
+import { PlanoAssinatura } from "../interfaces/planos";
 
 import { API, objectCatch } from "./api";
 import {
-    createPlanoassinatura,
-    getPlanoassinatura,
-    updatePlanoassinatura,
-    deletePlanoassinatura,
-    getPlanoassinaturaById,
-    getAssinantesPlano,
-} from "./routes/assinatura";
+  createPlano,
+  getAllPlanos,
+  getPlanoById,
+  getAssinantesPlano,
+  deletePlano,
+  updatePlano,
+} from "./routes/planos";
 
-export const getAssinatura = async (): Promise<IResponse.Default<AssinaturaResponse>> => {
+export const getAllPlanosAssinatura = async (): Promise<
+  IResponse.Default<any>
+> => {
   try {
-    const { data, status } = await API.get(getPlanoassinatura);
+    const { data, status } = await API.get(getAllPlanos);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
   }
 };
 
-export const createAssinatura = async (
-  assinatura: Assinatura
+export const createPlanoAssinatura = async (
+  plano: PlanoAssinatura
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(createPlanoassinatura, assinatura);
+    const { data, status } = await API.post(createPlano, plano);
     return { data, success: status === 201 };
   } catch (error) {
     return { ...objectCatch };
   }
 };
 
-export const updateAssinatura = async (
+export const updatePlanoAssinatura = async (
   id: number,
-  assinatura: Assinatura
+  plano: PlanoAssinatura
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.put(
-      `${updatePlanoassinatura}/${id}`,
-     assinatura
-    );
+    const { data, status } = await API.put(`${updatePlano}/${id}`, plano);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
   }
 };
 
-export const deleteAssinatura = async (
+export const deletePlanoAssinatura = async (
   id: number
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.delete(
-      `${deletePlanoassinatura}/${id}`
-    );
+    const { data, status } = await API.delete(`${deletePlano}/${id}`);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
   }
 };
 
-export const getAssinaturaId = async (
+export const getPlanoAssinaturaId = async (
   id: number
-): Promise<IResponse.Default<AssinaturaResponse>> => {
+): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.get(`${getPlanoassinaturaById}/${id}`);
+    const { data, status } = await API.get(`${getPlanoById}/${id}`);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };

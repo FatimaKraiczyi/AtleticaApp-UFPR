@@ -15,68 +15,70 @@ import { NoItemsFound } from "../../../components/NoItemsFound";
 import { LoadingState } from "../../../components/LoadingState";
 import Image from "@unitools/image";
 import { getProdutoById, getProdutos } from "../../../../../api/produtos";
-import type { Produto } from "../../../../../interfaces/produto";
-import { ModalAssinatura } from "./modal-assinatura";
-import { DeleteAssinatura } from "./delete-assinatura";
+import type { PlanoAssinatura } from "../../../../../interfaces/planos";
+import { ModalPlano } from "./modal-plano";
+import { DeletePlano } from "./delete-plano";
+import { ViewAssinatura } from "./view-plano";
+import { getAllPlanosAssinatura } from "../../../../../api/planos";
 
 export const PlanosList = ({ showActions = false }) => {
   const atleticaId = sessionStorage.getItem("atleticaId");
   const [loading, setLoading] = useState(true);
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [planoAssinatura, setPlanoAssinatura] = useState<PlanoAssinatura[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedProduto, setSelectedProduto] = useState<Produto | undefined>(
-    undefined
-  );
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [produtoToDeleteId, setProdutoToDeleteId] = useState<
-    number | undefined
+  const [selectedPlanoAssinatura, setSelectedPlanoAssinatura] = useState<
+    PlanoAssinatura | undefined
   >(undefined);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [assinaturaIdToDelete, setAssinaturaIdToDelete] = useState<
+    number | null
+  >(null);
   const [showViewModal, setShowViewModal] = useState(false);
 
-  const fetchProdutos = async () => {
+  const fetchPlanos = async () => {
     setLoading(true);
 
     try {
       let response;
 
       if (showActions && atleticaId) {
-        response = await getProdutoById(atleticaId);
-        if (response.success && response.data?.produto) {
-          setProdutos(response.data.produto);
+        response = await getAllPlanosAssinatura();
+        if (response.success && response.data?.planoAssinatura) {
+          setPlanoAssinatura(response.data.planoAssinatura.atleticaId);
         }
       } else {
-        response = await getProdutos();
+        response = await getAllPlanosAssinatura();
         if (response.success && response.data) {
-          setProdutos(response.data);
+          setPlanoAssinatura(response.data);
         }
       }
     } catch (error) {
-      console.error("Erro ao buscar produtos:", error);
+      console.error("Erro ao buscar planos:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProdutos();
+    fetchPlanos();
   }, []);
 
-  const openModal = (produto?: Produto) => {
-    setSelectedProduto(produto);
+  const openModal = (id?: PlanoAssinatura) => {
+    setSelectedPlanoAssinatura(id);
     setShowModal(true);
   };
 
-  const openViewModal = (produto?: Produto) => {
-    setSelectedProduto(produto);
+  const openViewModal = (id?: PlanoAssinatura) => {
+    setSelectedPlanoAssinatura(id);
     setShowViewModal(true);
   };
 
-  const handleEditProduto = (produto: Produto) => {
-    openModal(produto);
+  const handleEditProduto = (id: PlanoAssinatura) => {
+    openModal(id);
   };
 
-  const handleOpenDeleteModal = (id: number) => {
-    setProdutoToDeleteId(id);
+	const handleOpenDeleteModal = (id: number) => {
+    setAssinaturaIdToDelete(id);
     setShowDeleteModal(true);
   };
 
@@ -84,8 +86,8 @@ export const PlanosList = ({ showActions = false }) => {
     return <LoadingState />;
   }
 
-  const renderNoItems = () => (
-    <NoItemsFound message="Nenhum produto encontrado." />
+  const renderNoAssinatura = () => (
+    <NoItemsFound message="Nenhum plano de assinatura encontrado." />
   );
 
   return (
@@ -94,101 +96,93 @@ export const PlanosList = ({ showActions = false }) => {
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
-              <ButtonText>Adicionar Produto</ButtonText>
+              <ButtonText>Adicionar Plano de Assinatura</ButtonText>
             </Button>
           </VStack>
         )}
-        {produtos.length === 0 ? (
-          renderNoItems()
+        {planoAssinatura.length === 0 ? (
+          renderNoAssinatura()
         ) : (
-					<ScrollView
-					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ flexGrow: 1 }}
-					className="p-4"
-				>
-          <Grid
-            className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-            _extra={{
-              className: "",
-            }}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            className="p-4"
           >
-            {produtos.map((produto) => (
-						
-              <GridItem
-                key={produto.id}
-                _extra={{ className: "flex-1 p-4 relative" }}
-              >
-                <Box className="w-full overflow-hidden rounded-md h-72">
-                  <Image
-                    source={
-                      produto.imagem ||
-                      require("@/shared/assets/dashboard/image2.png")
-                    }
-                    alt={produto.nome}
-                    height="100%"
-                    width="100%"
-                  />
-                </Box>
-                <HStack className="w-full justify-between mt-2">
-                  <VStack>
-                    <Text className="font-semibold text-typography-900">
-                      {produto.nome}
-                    </Text>
-                    <Text className="line-clamp-1">
-                      R$ {produto.valor.toFixed(2)}
-                    </Text>
-                    <Text className="line-clamp-1">
-                      Quantidade: {produto.quantidade}
-                    </Text>
-                  </VStack>
-                  {showActions && (
-                    <HStack space="md" className="mt-2">
-                      <Pressable onPress={() => handleEditProduto(produto)}>
-                        <Icon as={EditIcon} className="text-typography-600" />
-                      </Pressable>
-                      <Pressable
-                        onPress={() =>
-                          produto.id !== undefined &&
-                          handleOpenDeleteModal(produto.id)
-                        }
-                      >
-                        <Icon as={TrashIcon} className="text-typography-600" />
-                      </Pressable>
-                    </HStack>
-                  )}
-                </HStack>
-                <HStack className="w-full items-center mt-2">
-                  <Button
-                    variant="outline"
-                    className="w-full gap-3 center"
-                    onPress={() => openViewModal(produto)}
-                  >
-                    <ButtonText>Visualizar</ButtonText>
-                  </Button>
-                </HStack>
-              </GridItem>
-            ))}
-          </Grid>
-					</ScrollView>
+            <Grid
+              className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              _extra={{
+                className: "",
+              }}
+            >
+              {planoAssinatura.map((plano) => (
+                <GridItem
+                  key={plano.id}
+                  _extra={{ className: "flex-1 p-4 relative" }}
+                >
+                  <HStack className="w-full justify-between mt-2">
+                    <VStack>
+                      <Text className="font-semibold text-typography-900">
+                        {plano.nome}
+                      </Text>
+                      <Text className="line-clamp-1">
+                        R$ {plano.valor.toFixed(2)}
+                      </Text>
+                      <Text className="line-clamp-1">
+                        Quantidade: {plano.duracao}
+                      </Text>
+                    </VStack>
+                    {showActions && (
+                      <HStack space="md" className="mt-2">
+                        <Pressable onPress={() => handleEditProduto(plano)}>
+                          <Icon as={EditIcon} className="text-typography-600" />
+                        </Pressable>
+                        <Pressable
+                          onPress={() =>
+                            plano.id !== undefined &&
+                            handleOpenDeleteModal(plano.id)
+                          }
+                        >
+                          <Icon
+                            as={TrashIcon}
+                            className="text-typography-600"
+                          />
+                        </Pressable>
+                      </HStack>
+                    )}
+                  </HStack>
+                  <HStack className="w-full items-center mt-2">
+                    <Button
+                      variant="outline"
+                      className="w-full gap-3 center"
+                      onPress={() => openViewModal(plano)}
+                    >
+                      <ButtonText>Visualizar</ButtonText>
+                    </Button>
+                  </HStack>
+                </GridItem>
+              ))}
+            </Grid>
+          </ScrollView>
         )}
       </VStack>
-     {/*  <ModalAssinatura
+      <ModalPlano
         showModal={showModal}
         setShowModal={setShowModal}
-        refreshProdutos={fetchProdutos}
-        produtoData={selectedProduto}
+        refreshPlanos={fetchPlanos}
+        planoData={selectedPlanoAssinatura}
       />
-      <DeleteAssinatura
+
+      <DeletePlano
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
-        id={produtoToDeleteId}
-        refreshProdutos={fetchProdutos}
+        assinaturaId={assinaturaIdToDelete!}
+        refreshPlanos={fetchPlanos}
       />
       <ViewAssinatura
         showModal={showViewModal}
         setShowModal={setShowViewModal}
-        produtoData={selectedProduto}
-      /> */}
+        planosData={selectedPlanoAssinatura}
+      />
     </Box>
   );
 };

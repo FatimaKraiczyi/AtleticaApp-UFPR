@@ -12,29 +12,30 @@ import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { deleteAssinatura } from "../../../../../api/assinatura";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
+import { deletePlanoAssinatura } from "../../../../../api/planos";
 
 interface deleteAssinaturaProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   assinaturaId: number;
-  updateAssinaturaList: () => void;
+  refreshPlanos: () => void;
 }
 
-export const DeleteAssinatura = ({
+export const DeletePlano = ({
   showModal,
   setShowModal,
   assinaturaId,
-  updateAssinaturaList,
+  refreshPlanos,
 }: deleteAssinaturaProps) => {
+
   const handleDelete = async () => {
     try {
-      const response = await deleteAssinatura(assinaturaId);
+      const response = await deletePlanoAssinatura(assinaturaId);
       if (response.success) {
-        updateAssinaturaList();
         setShowModal(false);
+				refreshPlanos();
       }
     } catch (error) {
       console.error("Erro ao deletar plano:", error);
