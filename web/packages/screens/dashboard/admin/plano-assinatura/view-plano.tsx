@@ -13,7 +13,6 @@ import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
@@ -33,8 +32,7 @@ export const ViewAssinatura = ({
   const { handleSubmit } = useForm();
 
   const handlePurchase = () => {
-    // Lógica para realizar a compra
-    console.log("Produto comprado:", planosData);
+    // Lógica para realizar a assinatura
   };
 
   return (

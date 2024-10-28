@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { Box } from "@/components/ui/box";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
-import { LayoutComponents } from "../../../components/LayoutComponents";
-import { MobileFooter } from "../../../components/MobileFooter";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
