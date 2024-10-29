@@ -9,6 +9,7 @@ import {
   getAssinantesPlano,
   deletePlano,
   updatePlano,
+	getPlanoByAtletica,
 } from "./routes/planos";
 
 export const getAllPlanosAssinatura = async (): Promise<
@@ -61,6 +62,17 @@ export const getPlanoAssinaturaId = async (
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(`${getPlanoById}/${id}`);
+    return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+export const getPlanoByAtleticaId = async (
+  atleticaId: string
+): Promise<IResponse.Default<any>> => {
+  try {
+    const { data, status } = await API.get(`${getPlanoByAtletica}/${atleticaId}`);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };

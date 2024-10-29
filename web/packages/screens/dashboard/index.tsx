@@ -47,7 +47,7 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/assets/dashboard/image5.png"),
     title: "Planos de assinatura",
     description: "Set a target to accomplish",
-    route: "/dashboard/planos-assinatura",
+    route: "/dashboard/planos",
   },
   {
     bannerUri: require("@/assets/dashboard/image6.png"),

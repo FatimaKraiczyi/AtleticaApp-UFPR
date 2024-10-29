@@ -64,21 +64,13 @@ export const ViewAssinatura = ({
             </Heading>
           </Center>
           <ModalBody className="px-10 py-6 max-h-[80vh] overflow-y-auto">
+            <Text className="mt-4 font-semibold text-2xl text-typography-900">
+              {planosData.descricao}
+            </Text>
             <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
-              R$ {planosData.descricao}
-            </Text>
-            <Text className="text-sm text-green-900 line-clamp-1">
-              5% desconto para assinantes
-            </Text>
-
-            <Text className="mt-4 font-semibold  text-md text-typography-900">
               R$ {planosData.valor.toFixed(2)}
             </Text>
-
-            <Text className="text-sm">
-              Quantidade disponível: {planosData.duracao}
-            </Text>
-
+            <Text className="text-sm">Duração: {planosData.duracao} dias</Text>
             <VStack space="2xl">
               <HStack className="items-center justify-between mt-4">
                 <Button onPress={handlePurchase} className="flex-1 ml-2">

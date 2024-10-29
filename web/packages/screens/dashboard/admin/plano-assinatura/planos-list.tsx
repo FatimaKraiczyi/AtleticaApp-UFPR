@@ -14,7 +14,7 @@ import type { PlanoAssinatura } from "../../../../../interfaces/planos";
 import { ModalPlano } from "./modal-plano";
 import { DeletePlano } from "./delete-plano";
 import { ViewAssinatura } from "./view-plano";
-import { getAllPlanosAssinatura } from "../../../../../api/planos";
+import { getAllPlanosAssinatura, getPlanoByAtleticaId } from "../../../../../api/planos";
 
 export const PlanosList = ({ showActions = false }) => {
   const atleticaId = sessionStorage.getItem("atleticaId");
@@ -37,14 +37,14 @@ export const PlanosList = ({ showActions = false }) => {
       let response;
 
       if (showActions && atleticaId) {
-        response = await getAllPlanosAssinatura();
-        if (response.success && response.data?.planoAssinatura) {
-          setPlanoAssinatura(response.data.planoAssinatura.atleticaId);
+        response = await getPlanoByAtleticaId(atleticaId);
+        if (response.success && Array.isArray(response.data)) {
+          setPlanoAssinatura(response.data);
         }
       } else {
         response = await getAllPlanosAssinatura();
-        if (response.success && response.data) {
-          setPlanoAssinatura(response.data);
+        if (response.success && Array.isArray(response.data.planos)) {
+          setPlanoAssinatura(response.data.planos);
         }
       }
     } catch (error) {
@@ -72,7 +72,7 @@ export const PlanosList = ({ showActions = false }) => {
     openModal(id);
   };
 
-	const handleOpenDeleteModal = (id: number) => {
+  const handleOpenDeleteModal = (id: number) => {
     setAssinaturaIdToDelete(id);
     setShowDeleteModal(true);
   };
@@ -109,32 +109,32 @@ export const PlanosList = ({ showActions = false }) => {
                 className: "",
               }}
             >
-              {planoAssinatura.map((plano) => (
+              {planoAssinatura.map((planos) => (
                 <GridItem
-                  key={plano.id}
+                  key={planos.id}
                   _extra={{ className: "flex-1 p-4 relative" }}
                 >
                   <HStack className="w-full justify-between mt-2">
                     <VStack>
                       <Text className="font-semibold text-typography-900">
-                        {plano.nome}
+                        {planos.nome}
                       </Text>
                       <Text className="line-clamp-1">
-                        R$ {plano.valor.toFixed(2)}
+                        R$ {planos.valor.toFixed(2)}
                       </Text>
                       <Text className="line-clamp-1">
-                        Quantidade: {plano.duracao}
+                        Quantidade: {planos.duracao}
                       </Text>
                     </VStack>
                     {showActions && (
                       <HStack space="md" className="mt-2">
-                        <Pressable onPress={() => handleEditProduto(plano)}>
+                        <Pressable onPress={() => handleEditProduto(planos)}>
                           <Icon as={EditIcon} className="text-typography-600" />
                         </Pressable>
                         <Pressable
                           onPress={() =>
-                            plano.id !== undefined &&
-                            handleOpenDeleteModal(plano.id)
+                            planos.id !== undefined &&
+                            handleOpenDeleteModal(planos.id)
                           }
                         >
                           <Icon
@@ -149,7 +149,7 @@ export const PlanosList = ({ showActions = false }) => {
                     <Button
                       variant="outline"
                       className="w-full gap-3 center"
-                      onPress={() => openViewModal(plano)}
+                      onPress={() => openViewModal(planos)}
                     >
                       <ButtonText>Visualizar</ButtonText>
                     </Button>
