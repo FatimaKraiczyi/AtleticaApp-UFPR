@@ -12,9 +12,9 @@ import { Grid, GridItem } from "@/components/ui/grid";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { MobileFooter } from "../../components/MobileFooter";
-import { LayoutComponents } from "../../components/LayoutComponents";
-import { LoadingState } from "../../components/LoadingState";
+import { MobileFooter } from "../../sections/MobileFooter";
+import { LayoutComponents } from "../../sections/LayoutComponents";
+import { LoadingState } from "../../sections/LoadingState";
 
 interface CardData {
   bannerUri: string;

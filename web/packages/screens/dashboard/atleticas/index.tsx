@@ -12,16 +12,16 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
-import { MobileFooter } from "../../components/MobileFooter";
+import { MobileFooter } from "../../sections/MobileFooter";
 import { ModalAtletica } from "./atletica-modal";
 import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica } from "../../../../api/atleticas";
 import type { Atletica, AtleticaResponse } from "../../../../interfaces/atleticas";
 import { getMembros } from "../../../../api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
-import { LayoutComponents } from "../../components/LayoutComponents";
-import { LoadingState } from "../../components/LoadingState";
-import { NoItemsFound } from "../../components/NoItemsFound";
+import { LayoutComponents } from "../../sections/LayoutComponents";
+import { LoadingState } from "../../sections/LoadingState";
+import { NoItemsFound } from "../../sections/NoItemsFound";
 
 const MainContent = () => {
   const router = useRouter();

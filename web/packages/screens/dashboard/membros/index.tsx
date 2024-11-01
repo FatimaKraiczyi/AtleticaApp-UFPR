@@ -10,12 +10,12 @@ import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
-import { MobileFooter } from "../../components/MobileFooter";
+import { MobileFooter } from "../../sections/MobileFooter";
 import { ModalMembros } from "./membro-modal";
 import { useMembros } from "../../../hooks/MembrosContext";
-import { LayoutComponents } from "../../components/LayoutComponents";
+import { LayoutComponents } from "../../sections/LayoutComponents";
 import { DeleteMembro } from "./delete-membro";
-import { NoItemsFound } from "../../components/NoItemsFound";
+import { NoItemsFound } from "../../sections/NoItemsFound";
 import type { MembrosResponse } from "../../../../interfaces/membros";
 
 const MainContent = () => {

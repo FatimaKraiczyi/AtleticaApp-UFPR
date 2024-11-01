@@ -1,7 +1,7 @@
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { LayoutComponents } from "../../../components/LayoutComponents";
+import { LayoutComponents } from "../../../sections/LayoutComponents";
 import { ProdutosList } from "./produt-list";
-import { MobileFooter } from "../../../components/MobileFooter";
+import { MobileFooter } from "../../../sections/MobileFooter";
 
 export const AdminLoja = () => {
   return (

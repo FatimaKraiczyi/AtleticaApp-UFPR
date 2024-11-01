@@ -10,10 +10,10 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { HStack } from "@/components/ui/hstack";
 import Image from "@unitools/image";
 import type { Produto } from "../../../../interfaces/produto";
-import { LayoutComponents } from "../../components/LayoutComponents";
-import { LoadingState } from "../../components/LoadingState";
-import { MobileFooter } from "../../components/MobileFooter";
-import { NoItemsFound } from "../../components/NoItemsFound";
+import { LayoutComponents } from "../../sections/LayoutComponents";
+import { LoadingState } from "../../sections/LoadingState";
+import { MobileFooter } from "../../sections/MobileFooter";
+import { NoItemsFound } from "../../sections/NoItemsFound";
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);

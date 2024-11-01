@@ -1,5 +1,5 @@
 "use client";
-import { LoadingState } from "@/screens/components/LoadingState";
+import { LoadingState } from "@/screens/sections/LoadingState";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getToken } from "../../../api/token";

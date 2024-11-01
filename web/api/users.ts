@@ -1,8 +1,6 @@
-import type { IResponse } from "../interfaces";
+import { IResponse } from "../interfaces/index";
 import type { UserNovaSenha, UserProps } from "../interfaces/users";
 import { API, objectCatch } from "./api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Platform } from "react-native";
 import {
   userAuthenticationEndpoint,
   sendEmail,
@@ -26,18 +24,13 @@ export const userAuthentication = async (
     if (status === 200 && data?.token) {
       const token = data.token;
       const userType = data.userType;
-			const atletica = data.atletica;
+      const atletica = data.atletica;
 
       await setToken(token);
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         sessionStorage.setItem("userType", userType);
-				sessionStorage.setItem("atletica", atletica.toString());
-      }
-
-      if (Platform.OS === "web" && typeof window !== 'undefined') {
+        sessionStorage.setItem("atletica", atletica.toString());
         sessionStorage.setItem("x-access-token", token);
-      } else {
-        await AsyncStorage.setItem("x-access-token", token);
       }
     }
 
@@ -67,12 +60,8 @@ export const validateUserToken = async (
   try {
     const { data, status } = await API.post(validateToken, { token });
 
-    if (status === 200) {
-      if (Platform.OS === "web" && typeof window !== 'undefined') {
-        sessionStorage.setItem("x-access-token", token);
-      } else {
-        await AsyncStorage.setItem("x-access-token", token);
-      }
+    if (status === 200 && typeof window !== "undefined") {
+      sessionStorage.setItem("x-access-token", token);
     }
 
     return { data, success: status === 200 };
