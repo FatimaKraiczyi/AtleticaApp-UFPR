@@ -9,15 +9,15 @@ import { Pressable } from "@/components/ui/pressable";
 import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { MobileFooter } from "../sections/MobileFooter";
-import { LayoutComponents } from "../sections/LayoutComponents";
-import { LoadingState } from "../sections/LoadingState";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { MobileFooter } from "@/components/sections/MobileFooter";
+import { Image } from "@/components/ui/image";
 
 interface CardData {
-  bannerUri: string;
+  bannerUri: any;
   title: string;
   description: string;
   userType?: string;
@@ -26,7 +26,7 @@ interface CardData {
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/shared/assets/dashboard/image3.png"),
+    bannerUri: require("@/assets/dashboard/image2.png"),
     title: "Jogos",
     description: "Add your details",
     route: "/dashboard/jogos",
@@ -53,7 +53,7 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Admin Atlética",
     description: "Set a target to accomplish",
-		userType: "ADMIN",
+    userType: "ADMIN",
     route: "/dashboard/admin",
   },
   {
@@ -129,12 +129,13 @@ const MainContent = () => {
                     className="border border-border-300 rounded-lg p-4 items-center justify-between"
                   >
                     <HStack space="xl" className="items-center">
-                      <Avatar>
-                        <AvatarImage
-                          //@ts-ignore
+                      <Box className="rounded-md">
+                        <Image
+                          size="sm"
                           source={item.bannerUri}
+                          className="rounded-full"
                         />
-                      </Avatar>
+                      </Box>
                       <VStack>
                         <Text className="font-semibold text-typography-900 line-clamp-1">
                           {item.title}

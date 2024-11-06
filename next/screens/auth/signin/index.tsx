@@ -79,22 +79,14 @@ const SignInForm = () => {
       toast.show({
         placement: "bottom right",
         render: ({ id }) => (
-          <Toast nativeID={id} variant="accent" action="success">
+          <Toast nativeID={id} variant="solid" action="success">
             <ToastTitle>Logado com sucesso!</ToastTitle>
           </Toast>
         ),
       });
       router.push("/dashboard");
       reset();
-    } else {
-      setValidated({ emailValid: false, passwordValid: false });
     }
-  };
-
-  const handleState = () => {
-    setShowPassword((showState) => {
-      return !showState;
-    });
   };
 
   const handleKeyPress = () => {
@@ -102,13 +94,14 @@ const SignInForm = () => {
     handleSubmit(onSubmit)();
   };
 
+  const handleState = () => {
+    setShowPassword((showState) => !showState);
+  };
+
   return (
     <>
       <VStack className="justify-between">
-        <FormControl
-          isInvalid={!!errors?.email || !validated.emailValid}
-          isRequired={true}
-        >
+        <FormControl isInvalid={!!errors?.email} isRequired={true}>
           <Controller
             name="email"
             defaultValue=""
@@ -154,18 +147,6 @@ const SignInForm = () => {
             name="password"
             defaultValue=""
             control={control}
-            rules={{
-              validate: async (value) => {
-                try {
-                  await signInSchema.parseAsync({
-                    password: value,
-                  });
-                  return true;
-                } catch (error: any) {
-                  return error.message;
-                }
-              },
-            }}
             render={({ field: { onChange, onBlur, value } }) => (
               <Input>
                 <InputField
@@ -187,8 +168,7 @@ const SignInForm = () => {
           <FormControlError>
             <FormControlErrorIcon size="sm" as={AlertTriangle} />
             <FormControlErrorText>
-              {errors?.password?.message ||
-                (!validated.passwordValid && "Senha inválida")}
+              {errors?.password?.message}
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
@@ -202,6 +182,7 @@ const SignInForm = () => {
         control={control}
         render={({ field: { onChange, value } }) => (
           <Checkbox
+            size="sm"
             value="Remember me"
             isChecked={value}
             onChange={onChange}
@@ -230,14 +211,14 @@ const SignInForm = () => {
 function SideContainerWeb() {
   return (
     <Center
-      className="bg-background-950
+      className="bg-violet-600
             dark:bg-background-0 flex-1"
     >
       <Image
         alt="gluestack-ui Pro"
+        resizeMode="contain"
+        className="w-80 h-80"
         source={require("../../../assets/auth/logo.png")}
-        height={"80"}
-        width={"80"}
       />
     </Center>
   );
@@ -247,7 +228,7 @@ function MobileHeader() {
   return (
     <VStack
       space="md"
-      className="px-3 mt-4 bg-background-950
+      className="px-3 mt-4 bg-violet-600
             dark:bg-background-0"
     >
       <HStack space="md" className="items-center">
@@ -280,8 +261,8 @@ const Main = () => {
         <MobileHeader />
       </Box>
       <Box
-        className="px-4 md:px-8  bg-background-0
-            dark:bg-background-50 py-8 flex-1 justify-between"
+        className="px-2 md:px-8  bg-background-0
+            dark:bg-background-50 py-4 flex-1 justify-between"
       >
         <Heading className="mb-8 md:flex md:text-2xl hidden">
           Sign in to continue
@@ -296,7 +277,7 @@ const Main = () => {
         </HStack>
         <HStack space="xs" className="mt-auto items-center justify-center">
           <Text className="color-typography-500 text-sm dark:color-typography-400">
-            Dont have an account?
+            Don't have an account?
           </Text>
           <Link href="/auth/email">
             <LinkText className="text-sm">Sign up</LinkText>

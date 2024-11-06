@@ -5,14 +5,15 @@ import { Box } from "@/components/ui/box";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
-import { LayoutComponents } from "../../../sections/LayoutComponents";
-import { MobileFooter } from "../../../sections/MobileFooter";
-import { NoItemsFound } from "../../../sections/NoItemsFound";
-import { LoadingState } from "../../../sections/LoadingState";
+
 import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { MobileFooter } from "@/components/sections/MobileFooter";
+import { NoItemsFound } from "@/components/sections/NoItemsFound";
 
 interface TabsData {
   src: string;
@@ -30,19 +31,19 @@ const tabsData: Data[] = [
     data: [
       {
         title: "Tropical Bungalow",
-        src: require("@/shared/assets/dashboard/image.png"),
+        src: require("@/assets/dashboard/image.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
       {
         title: "Mountain View",
-        src: require("@/shared/assets/dashboard/image2.png"),
+        src: require("@/assets/dashboard/image2.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
       {
         title: "ImageView Inn",
-        src: require("@/shared/assets/dashboard/image3.png"),
+        src: require("@/assets/dashboard/image3.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
@@ -75,9 +76,12 @@ const MainContent = () => {
   );
 
   const renderItems = () => (
-    <Grid className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3" _extra={{
-			className: ""
-		}}>
+    <Grid
+      className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      _extra={{
+        className: "",
+      }}
+    >
       {items.map((item, index) => (
         <GridItem
           key={index}
@@ -87,17 +91,11 @@ const MainContent = () => {
         >
           <VStack className="border border-border-300 rounded-lg p-4">
             <Box className="overflow-hidden rounded-md h-72">
-              <Image
-                source={item.src}
-                alt={item.title}
-                height={"100%"}
-                width={"100%"}
-								
-              />
+              <Image source={item.src} alt={item.title} size="full" />
             </Box>
 
-						<VStack className="justify-between h-full" space="md">
-						<Text className="font-semibold text-typography-900">
+            <VStack className="justify-between h-full" space="md">
+              <Text className="font-semibold text-typography-900">
                 {item.title}
               </Text>
               <Text size="sm" className="text-typography-500">

@@ -8,7 +8,12 @@ import {
   FormControlErrorText,
 } from "@/components/ui/form-control";
 import { ChevronDownIcon, CloseIcon, Icon } from "@/components/ui/icon";
-import { AlertTriangle, PlusIcon, XIcon } from "lucide-react-native";
+import {
+  AlertTriangle,
+  FilePenLine,
+  PlusIcon,
+  XIcon,
+} from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -18,7 +23,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
@@ -28,7 +33,6 @@ import { Keyboard, TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import type { CursoProps } from "../../../../interfaces/cursos";
 import { getCursos } from "@/api/cursos";
 import {
   Select,
@@ -43,10 +47,9 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
-import { EditPhotoIcon } from "../../profile-screens/profile/assets/icons/edit-photo";
-import * as ImagePicker from "expo-image-picker";
 import { createAtletica, updateAtletica } from "@/api/atleticas";
-import type { Atletica } from "../../../../interfaces/atleticas";
+import { Atletica } from "@/interfaces/atleticas";
+import { CursoProps } from "@/interfaces/cursos";
 
 const userSchema = z.object({
   nome: z
@@ -189,7 +192,7 @@ export const ModalAtletica = ({
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    /*  let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -199,7 +202,7 @@ export const ModalAtletica = ({
     if (!result.canceled) {
       const { uri } = result.assets[0];
       setProfileImage(uri);
-    }
+    } */
   };
 
   return (
@@ -217,8 +220,7 @@ export const ModalAtletica = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            height={"100%"}
-            width={"100%"}
+            size="full"
             alt="Banner Image"
           />
         </Box>
@@ -244,12 +246,12 @@ export const ModalAtletica = ({
                   source={
                     profileImage
                       ? { uri: profileImage }
-                      : require("@/shared/assets/dashboard/image2.png")
+                      : require("@/assets/dashboard/image2.png")
                   }
                   alt={"Imagem de perfil"}
                 />
                 <AvatarBadge className="justify-center items-center bg-background-500">
-                  <Icon as={EditPhotoIcon} />
+                  <Icon as={FilePenLine} />
                 </AvatarBadge>
               </Avatar>
             </TouchableOpacity>

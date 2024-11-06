@@ -6,7 +6,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Heading } from "@/components/ui/heading";
@@ -14,7 +14,7 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { deletePlanoAssinatura } from "../@/api/planos";
+import { deletePlanoAssinatura } from "@/api/planos";
 
 interface deleteAssinaturaProps {
   showModal: boolean;
@@ -29,13 +29,12 @@ export const DeletePlano = ({
   assinaturaId,
   refreshPlanos,
 }: deleteAssinaturaProps) => {
-
   const handleDelete = async () => {
     try {
       const response = await deletePlanoAssinatura(assinaturaId);
       if (response.success) {
         setShowModal(false);
-				refreshPlanos();
+        refreshPlanos();
       }
     } catch (error) {
       console.error("Erro ao deletar plano:", error);
@@ -49,8 +48,7 @@ export const DeletePlano = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            height={"100%"}
-            width={"100%"}
+            size="full"
             alt="Banner Image"
           />
         </Box>

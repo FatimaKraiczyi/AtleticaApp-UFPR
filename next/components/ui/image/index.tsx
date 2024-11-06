@@ -6,7 +6,7 @@ import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { cssInterop } from "@gluestack-ui/nativewind-utils/cssInterop";
 
 const imageStyle = tva({
-  base: "max-w-full",
+	base: 'max-w-full',
   variants: {
     size: {
       "2xs": "h-6 w-6",
@@ -14,7 +14,7 @@ const imageStyle = tva({
       sm: "h-16 w-16",
       md: "h-20 w-20",
       lg: "h-24 w-24",
-      xl: "h-32 w-32",
+      xl: "h-32 w-32 rounded-full",
       "2xl": "h-64 w-64",
       full: "h-full w-full",
     },

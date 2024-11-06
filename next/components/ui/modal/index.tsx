@@ -63,7 +63,7 @@ const modalBackdropStyle = tva({
 });
 
 const modalContentStyle = tva({
-  base: 'bg-background-0 rounded-md overflow-hidden border border-outline-100 shadow-hard-2 p-6',
+  base: 'bg-background-0 rounded-xl overflow-hidden border border-outline-100 shadow-hard-2',
   parentVariants: {
     size: {
       xs: 'w-[60%] max-w-[360px]',
@@ -84,7 +84,7 @@ const modalCloseButtonStyle = tva({
 });
 
 const modalHeaderStyle = tva({
-  base: 'justify-between items-center flex-row',
+  base: 'justify-between items-center flex-row p-6',
 });
 
 const modalFooterStyle = tva({

@@ -8,17 +8,17 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { HStack } from "@/components/ui/hstack";
-import Image from "@unitools/image";
-import type { Produto } from "../../../../interfaces/produto";
-import { LayoutComponents } from "../../sections/LayoutComponents";
-import { LoadingState } from "../../sections/LoadingState";
-import { MobileFooter } from "../../sections/MobileFooter";
-import { NoItemsFound } from "../../sections/NoItemsFound";
+import { Image } from "@/components/ui/image";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { MobileFooter } from "@/components/sections/MobileFooter";
+import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { Produto } from "@/interfaces/produto";
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
-  
+
   if (loading) {
     return <LoadingState />;
   }
@@ -53,11 +53,10 @@ export const MainContent = () => {
                     <Image
                       source={
                         produto.imagem ||
-                        require("@/shared/assets/dashboard/image2.png")
+                        require("@/assets/dashboard/image2.png")
                       }
                       alt={produto.nome}
-                      height="100%"
-                      width="100%"
+                      size="full"
                     />
                   </Box>
                   <HStack className="w-full justify-between mt-2">

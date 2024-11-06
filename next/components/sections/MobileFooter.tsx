@@ -6,32 +6,29 @@ import useRouter from "@unitools/router";
 import { cn } from "@gluestack-ui/nativewind-utils/cn";
 import { Platform } from "react-native";
 import type { LucideIcon } from "lucide-react-native";
-import { HomeIcon } from "../dashboard/assets/home";
-import { GlobeIcon } from "../dashboard/assets/globe";
-import { ProfileIcon } from "../dashboard/assets/profile";
+import { House, UserRound, ShoppingCart, Search } from "lucide-react-native";
 import { useState } from "react";
-import { CartIcon } from "../dashboard/assets/cart";
 
 type BottomTabs = {
-  iconName: LucideIcon | typeof Icon;
+  iconName: LucideIcon;
   iconText: string;
 };
 
 const bottomTabsList: BottomTabs[] = [
   {
-    iconName: HomeIcon,
+    iconName: House,
     iconText: "Início",
   },
   {
-    iconName: GlobeIcon,
+    iconName: Search,
     iconText: "Atléticas",
   },
   {
-    iconName: CartIcon,
+    iconName: ShoppingCart,
     iconText: "Carrinho",
   },
   {
-    iconName: ProfileIcon,
+    iconName: UserRound,
     iconText: "Meu Perfil",
   },
 ];

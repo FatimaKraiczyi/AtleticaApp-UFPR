@@ -5,14 +5,15 @@ import { Box } from "@/components/ui/box";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
 import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
-import { LayoutComponents } from "../../../sections/LayoutComponents";
-import { MobileFooter } from "../../../sections/MobileFooter";
-import { NoItemsFound } from "../../../sections/NoItemsFound";
-import { LoadingState } from "../../../sections/LoadingState";
-import Image from "@unitools/image";
+
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { MobileFooter } from "@/components/sections/MobileFooter";
+import { NoItemsFound } from "@/components/sections/NoItemsFound";
 
 interface TabsData {
   src: string;
@@ -30,19 +31,19 @@ const tabsData: Data[] = [
     data: [
       {
         title: "Tropical Bungalow",
-        src: require("@/shared/assets/dashboard/image.png"),
+        src: require("@/assets/dashboard/image.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
       {
         title: "Mountain View",
-        src: require("@/shared/assets/dashboard/image2.png"),
+        src: require("@/assets/dashboard/image2.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
       {
         title: "ImageView Inn",
-        src: require("@/shared/assets/dashboard/image3.png"),
+        src: require("@/assets/dashboard/image3.png"),
         location: "401 Platte River Rd, Gothenburg, United States",
         price: "$1,481",
       },
@@ -90,8 +91,7 @@ const MainContent = () => {
               <Image
                 source={item.src}
                 alt={item.title}
-                height={"100%"}
-                width={"100%"}
+                size="full"
               />
             </Box>
 

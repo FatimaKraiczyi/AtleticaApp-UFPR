@@ -2,15 +2,17 @@ import { Pressable } from "@/components/ui/pressable";
 import { Icon } from "@/components/ui/icon";
 import useRouter from "@unitools/router";
 import { useState, useEffect } from "react";
-import { HomeIcon } from "../dashboard/assets/home";
-import { GlobeIcon } from "../dashboard/assets/globe";
-import { CartIcon } from "../dashboard/assets/cart";
-import { ProfileIcon } from "../dashboard/assets/profile";
+import {
+  House,
+  UserRound,
+  ShoppingCart,
+  Search,
+  LogOut,
+} from "lucide-react-native";
 import { Text } from "@/components/ui/text";
 import type { LucideIcon } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { LogoutIcon } from "../dashboard/assets/logout";
 import { Box } from "@/components/ui/box";
 
 type Icons = {
@@ -20,23 +22,23 @@ type Icons = {
 
 const list: Icons[] = [
   {
-    iconName: HomeIcon,
+    iconName: House,
     label: "Início",
   },
   {
-    iconName: GlobeIcon,
+    iconName: Search,
     label: "Atléticas",
   },
   {
-    iconName: CartIcon,
+    iconName: ShoppingCart,
     label: "Carrinho",
   },
   {
-    iconName: ProfileIcon,
+    iconName: UserRound,
     label: "Meu Perfil",
   },
   {
-    iconName: LogoutIcon,
+    iconName: LogOut,
     label: "Sair",
   },
 ];
@@ -61,10 +63,10 @@ export const WebSidebar = () => {
   }, []);
 
   const handleLogout = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("userType");
-			sessionStorage.removeItem("atleticaId");
+      sessionStorage.removeItem("atleticaId");
     }
     router.push("/auth/signin");
   };
@@ -122,7 +124,7 @@ export const WebSidebar = () => {
           style={{ justifyContent: "flex-start" }}
         >
           <Icon
-            as={LogoutIcon}
+            as={LogOut}
             className="w-6 h-6 stroke-background-800 fill-background-800"
           />
           <Text className="ml-4 text-background-800 font-medium">Sair</Text>

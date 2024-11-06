@@ -6,7 +6,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Heading } from "@/components/ui/heading";
@@ -62,8 +62,7 @@ export const ViewProduto = ({
           <Box className={"w-full h-[110px] "}>
             <Image
               source={require("@/assets/profile-screens/profile/image2.png")}
-              height={"100%"}
-              width={"100%"}
+              size="full"
               alt="Banner Image"
             />
           </Box>
@@ -86,12 +85,10 @@ export const ViewProduto = ({
             <Box className="w-full overflow-hidden rounded-md h-72">
               <Image
                 source={
-                  produtoData.imagem ||
-                  require("@/shared/assets/dashboard/image2.png")
+                  produtoData.imagem || require("@/assets/dashboard/image2.png")
                 }
                 alt={produtoData.nome}
-                height={"100%"}
-                width={"100%"}
+                size="full"
               />
             </Box>
             <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
@@ -149,9 +146,7 @@ export const ViewProduto = ({
                   className="flex-1 mr-2 hover:bg-primary-500 "
                   variant="outline"
                 >
-                  <ButtonText
-									className="text-secondary-600 group-hover/button:text-white"
-									>
+                  <ButtonText className="text-secondary-600 group-hover/button:text-white">
                     Adicionar no carrinho
                   </ButtonText>
                 </Button>

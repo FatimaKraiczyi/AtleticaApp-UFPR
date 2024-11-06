@@ -6,7 +6,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Heading } from "@/components/ui/heading";
@@ -16,7 +16,7 @@ import { Text } from "@/components/ui/text";
 import { useForm } from "react-hook-form";
 import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
-import type { PlanoAssinatura } from "../../../../../interfaces/planos";
+import { PlanoAssinatura } from "@/interfaces/planos";
 
 interface ViewAssinaturaProps {
   showModal: boolean;
@@ -43,8 +43,7 @@ export const ViewAssinatura = ({
           <Box className={"w-full h-[110px] "}>
             <Image
               source={require("@/assets/profile-screens/profile/image2.png")}
-              height={"100%"}
-              width={"100%"}
+              size="full"
               alt="Banner Image"
             />
           </Box>

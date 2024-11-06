@@ -9,12 +9,12 @@ import { Pressable } from "@/components/ui/pressable";
 import { Heading } from "@/components/ui/heading";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
+import { Image } from "@/components/ui/image";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { MobileFooter } from "../../sections/MobileFooter";
-import { LayoutComponents } from "../../sections/LayoutComponents";
-import { LoadingState } from "../../sections/LoadingState";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { MobileFooter } from "@/components/sections/MobileFooter";
 
 interface CardData {
   bannerUri: string;
@@ -26,7 +26,7 @@ interface CardData {
 
 const HeadingCards: CardData[] = [
   {
-    bannerUri: require("@/shared/assets/dashboard/image3.png"),
+    bannerUri: require("@/assets/dashboard/image3.png"),
     title: "Gerenciar Jogos",
     description: "Add your details",
     route: "/dashboard/admin/jogos",
@@ -54,7 +54,7 @@ const HeadingCards: CardData[] = [
     title: "Gerenciar Membros",
     description: "Set a target to accomplish",
     route: "/dashboard/admin/membros",
-  }
+  },
 ];
 
 const MainContent = () => {
@@ -63,7 +63,7 @@ const MainContent = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const storedUserType = sessionStorage.getItem("userType");
       setUserType(storedUserType);
     }
@@ -114,11 +114,13 @@ const MainContent = () => {
                     className="border border-border-300 rounded-lg p-4 items-center justify-between"
                   >
                     <HStack space="xl" className="items-center">
-                      <Avatar>
-                        <AvatarImage
-                          source={{ uri: item.bannerUri }}
+                      <Box className="rounded-full">
+                        <Image
+                          size="sm"
+                          source={item.bannerUri}
+                          className="rounded-full"
                         />
-                      </Avatar>
+                      </Box>
                       <VStack>
                         <Text className="font-semibold text-typography-900 line-clamp-1">
                           {item.title}

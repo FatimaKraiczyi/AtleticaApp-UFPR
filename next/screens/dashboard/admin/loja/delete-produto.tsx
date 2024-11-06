@@ -6,7 +6,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Heading } from "@/components/ui/heading";
@@ -14,12 +14,12 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { deletarProduto } from "../@/api/produtos";
+import { deletarProduto } from "@/api/produtos";
 
 interface DeleteProdutoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-  id?: number; 
+  id?: number;
   refreshProdutos: () => void;
 }
 
@@ -27,16 +27,15 @@ export const DeleteProduto = ({
   showModal,
   setShowModal,
   id,
-  refreshProdutos, 
+  refreshProdutos,
 }: DeleteProdutoProps) => {
-
   const handleDelete = async () => {
     try {
       if (id !== undefined) {
         const response = await deletarProduto(id);
         if (response.success) {
           setShowModal(false);
-          refreshProdutos(); 
+          refreshProdutos();
         }
       }
     } catch (error) {
@@ -51,9 +50,8 @@ export const DeleteProduto = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            height={"100%"}
-            width={"100%"}
-            alt="Banner Image"
+            alt="Imagem de fundo"
+            size="full"
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">

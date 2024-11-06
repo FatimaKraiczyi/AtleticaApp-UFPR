@@ -18,7 +18,7 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
@@ -29,7 +29,7 @@ import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { adicionarMembro, editarMembro, getMembros } from "@/api/membros";
-import type { MembrosResponse } from "../../../../interfaces/membros";
+import { MembrosResponse } from "@/interfaces/membros";
 
 const userSchema = z.object({
   email: z
@@ -47,7 +47,7 @@ export const ModalMembros = ({
   setShowModal,
   editMembro,
   membros,
-  setMembros
+  setMembros,
 }: {
   showModal: boolean;
   setShowModal: any;
@@ -73,12 +73,12 @@ export const ModalMembros = ({
     if (showModal) {
       if (editMembro) {
         reset({
-          email: editMembro.Usuario?.email || '',
+          email: editMembro.Usuario?.email || "",
           administrador: editMembro.administrador,
         });
       } else {
         reset({
-          email: '',
+          email: "",
           administrador: false,
         });
       }
@@ -127,11 +127,10 @@ export const ModalMembros = ({
     <Modal isOpen={showModal} finalFocusRef={ref} size="lg">
       <ModalBackdrop />
       <ModalContent>
-        <Box className={"w-full h-[110px] "}>
+        <Box className={"w-full h-[110px]"}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            height={"100%"}
-            width={"100%"}
+            size="full"
             alt="Banner Image"
           />
         </Box>

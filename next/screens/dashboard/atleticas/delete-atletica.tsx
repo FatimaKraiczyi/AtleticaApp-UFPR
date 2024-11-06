@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/modal";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
@@ -48,8 +48,7 @@ export const DeleteAtletica = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            height={"100%"}
-            width={"100%"}
+            size="full"
             alt="Banner Image"
           />
         </Box>

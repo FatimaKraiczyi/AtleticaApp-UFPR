@@ -10,7 +10,6 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-		"axios": "^1.7.7",
     "@expo/html-elements": "0.4.2",
     "@gluestack-ui/accordion": "^1.0.4",
     "@gluestack-ui/actionsheet": "^0.2.44",
@@ -52,8 +51,10 @@
     "@unitools/router": "^0.0.4",
     "@unitools/router-next": "^0.0.1",
     "autoprefixer": "latest",
+    "axios": "^1.7.7",
     "expo-image": "^1.12.9",
-    "lucide-react-native": "^0.378.0",
+    "lucide-react": "^0.454.0",
+    "lucide-react-native": "^0.454.0",
     "nativewind": "4.0.36",
     "next": "^14.0.4",
     "postcss": "latest",
@@ -63,7 +64,7 @@
     "react-native-reanimated": "latest",
     "react-native-svg": "^15.2.0",
     "react-native-web": "latest",
-		"react-native-web-next-link": "^0.1.2",
+    "react-native-web-next-link": "^0.1.2",
     "tailwindcss": "3.4.3",
     "zod": "^3.23.8"
   },

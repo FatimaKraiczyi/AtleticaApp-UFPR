@@ -12,16 +12,16 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import useRouter from "@unitools/router";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
-import { MobileFooter } from "../../sections/MobileFooter";
 import { ModalAtletica } from "./atletica-modal";
 import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica } from "@/api/atleticas";
-import type { Atletica, AtleticaResponse } from "../../../../interfaces/atleticas";
 import { getMembros } from "@/api/membros";
 import { useMembros } from "../../../hooks/MembrosContext";
-import { LayoutComponents } from "../../sections/LayoutComponents";
-import { LoadingState } from "../../sections/LoadingState";
-import { NoItemsFound } from "../../sections/NoItemsFound";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { MobileFooter } from "@/components/sections/MobileFooter";
+import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { Atletica, AtleticaResponse } from "@/interfaces/atleticas";
 
 const MainContent = () => {
   const router = useRouter();
@@ -120,7 +120,7 @@ const MainContent = () => {
                   <AvatarImage
                     source={
                       item.atletica.imagem ||
-                      require("@/shared/assets/dashboard/image2.png")
+                      require("@/assets/dashboard/image2.png")
                     }
                   />
                 </Avatar>

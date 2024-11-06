@@ -8,13 +8,13 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { HStack } from "@/components/ui/hstack";
-import { NoItemsFound } from "../../../sections/NoItemsFound";
-import { LoadingState } from "../../../sections/LoadingState";
-import type { PlanoAssinatura } from "../../../../../interfaces/planos";
 import { ModalPlano } from "./modal-plano";
 import { DeletePlano } from "./delete-plano";
 import { ViewAssinatura } from "./view-plano";
-import { getAllPlanosAssinatura, getPlanoByAtleticaId } from "../@/api/planos";
+import { getPlanoByAtleticaId, getAllPlanosAssinatura } from "@/api/planos";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { PlanoAssinatura } from "@/interfaces/planos";
 
 export const PlanosList = ({ showActions = false }) => {
   const atleticaId = sessionStorage.getItem("atleticaId");

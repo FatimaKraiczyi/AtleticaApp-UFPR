@@ -18,7 +18,6 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import Image from "@unitools/image";
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
@@ -28,9 +27,8 @@ import { TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
-import * as ImagePicker from "expo-image-picker";
-import { updateProduto, createProduto } from "../@/api/produtos";
+import { createProduto, updateProduto } from "@/api/produtos";
+import { Image } from "@/components/ui/image";
 
 const userSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
@@ -122,7 +120,7 @@ export const ModalProduto = ({
   };
 
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    /*  let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -132,7 +130,7 @@ export const ModalProduto = ({
     if (!result.canceled) {
       const { uri } = result.assets[0];
       setProdutoImage(uri);
-    }
+    } */
   };
 
   return (
@@ -150,9 +148,8 @@ export const ModalProduto = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            height={"100%"}
-            width={"100%"}
-            alt="Banner Image"
+            alt="Imagem de fundo"
+            size="full"
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
@@ -172,19 +169,18 @@ export const ModalProduto = ({
         <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
-              <Avatar size="2xl">
-                <AvatarImage
+              <Box>
+                <Image
+                  size="xl"
+                  class="rounded-full"
                   source={
                     produtoImage
                       ? { uri: produtoImage }
-                      : require("@/shared/assets/dashboard/image2.png")
+                      : require("@/assets/dashboard/image2.png")
                   }
                   alt={"Imagem do produto"}
                 />
-                <AvatarBadge className="justify-center items-center bg-background-500">
-                  <Icon as={EditIcon} />
-                </AvatarBadge>
-              </Avatar>
+              </Box>
             </TouchableOpacity>
           </Center>
           <VStack space="xl">

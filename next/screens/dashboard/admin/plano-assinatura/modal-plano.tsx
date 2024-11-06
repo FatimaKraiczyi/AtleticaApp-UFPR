@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form-control";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Box } from "@/components/ui/box";
-import Image from "@unitools/image";
+import { Image } from "@/components/ui/image";
 import { AlertTriangle } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
@@ -27,10 +27,7 @@ import { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
-import {
-  createPlanoAssinatura,
-  updatePlanoAssinatura,
-} from "../@/api/planos";
+import { updatePlanoAssinatura, createPlanoAssinatura } from "@/api/planos";
 
 const AssinaturaSchema = z.object({
   nome: z
@@ -59,7 +56,7 @@ export const ModalPlano = ({
   showModal: boolean;
   setShowModal: any;
   refreshPlanos: () => void;
-	planoData?: any;
+  planoData?: any;
 }) => {
   const ref = useRef(null);
   const {
@@ -70,7 +67,7 @@ export const ModalPlano = ({
     setValue,
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
-		defaultValues: {
+    defaultValues: {
       nome: "",
       valor: "",
       duracao: "",
@@ -105,10 +102,13 @@ export const ModalPlano = ({
 
     try {
       if (planoData) {
-          const response = await updatePlanoAssinatura(planoData.id, assinaturaPayload);
-          if (response.success) {
-           refreshPlanos();
-          }
+        const response = await updatePlanoAssinatura(
+          planoData.id,
+          assinaturaPayload
+        );
+        if (response.success) {
+          refreshPlanos();
+        }
       } else {
         const response = await createPlanoAssinatura(assinaturaPayload);
         if (response.success) {
@@ -137,8 +137,7 @@ export const ModalPlano = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            height={"100%"}
-            width={"100%"}
+            size="full"
             alt="Banner Image"
           />
         </Box>

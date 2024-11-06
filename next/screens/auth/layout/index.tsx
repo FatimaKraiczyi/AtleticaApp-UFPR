@@ -9,7 +9,7 @@ type AuthLayoutProps = {
 
 export default function AuthLayout(props: AuthLayoutProps) {
   return (
-    <Box className="h-full web:h-[100vh] overflow-hidden">
+    <Box className="h-full web:h-[100vh] overflow-hidden w-full">
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -21,11 +21,11 @@ export default function AuthLayout(props: AuthLayoutProps) {
           flexGrow: 1,
           justifyContent: "center",
         }}
-        className="flex-1 bg-background-950
-            dark:bg-background-0 md:bg-background-800 md:dark:bg-background-100"
+        className="flex-1 bg-violet-600
+            dark:bg-background-0 md:bg-violet-900 md:dark:bg-background-100"
         bounces={false}
       >
-        <VStack className="w-full flex-1 overflow-hidden md:max-w-[740px] md:flex-row md:rounded-xl md:flex-none">
+        <VStack className="w-full flex-1 overflow-hidden md:max-w-[840px] md:flex-row md:rounded-xl md:flex-none">
           {props.children}
         </VStack>
       </ScrollView>

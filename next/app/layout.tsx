@@ -1,12 +1,11 @@
 "use client";
 
 import { Inter } from "next/font/google";
-import "../styles/global.css";
-import { MembrosProvider } from "@/hooks/MembrosContext";
+import "./globals.css";
 import { Providers } from "./providers";
+import { MembrosProvider } from "@/hooks/MembrosContext";
 
 const inter = Inter({ subsets: ["latin"] });
-
 
 export default function RootLayout({
   children,
