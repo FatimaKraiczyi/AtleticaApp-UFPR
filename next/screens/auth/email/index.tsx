@@ -1,30 +1,30 @@
+import { Box } from "@/components/ui/box";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { LinkText } from "@/components/ui/link";
+import Link from "@unitools/link";
+import { Image } from "@/components/ui/image";
+import { Center } from "@/components/ui/center";
 import {
   FormControl,
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Input, InputField } from "@/components/ui/input";
-import {
-  Checkbox,
-  CheckboxIndicator,
-  CheckboxIcon,
-  CheckboxLabel,
-} from "@/components/ui/checkbox";
+import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
 import { Button, ButtonText } from "@/components/ui/button";
+import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
-import AuthLayout from "../layout";
 import { sendEmailRequest } from "@/api/users";
+import AuthLayout from "../layout";
 
 const EmailSchema = z.object({
   email: z
@@ -33,15 +33,15 @@ const EmailSchema = z.object({
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
   name: z.string().min(1, "Nome é obrigatório"),
-  });
+});
 type EmailSchemaType = z.infer<typeof EmailSchema>;
 
-const EmailWithLeftBackground = () => {
+const EmailForm = () => {
   const {
     control,
+    formState: { errors },
     handleSubmit,
     reset,
-    formState: { errors },
   } = useForm<EmailSchemaType>({
     resolver: zodResolver(EmailSchema),
   });
@@ -49,115 +49,206 @@ const EmailWithLeftBackground = () => {
   const router = useRouter();
 
   const onSubmit = async (data: EmailSchemaType) => {
-    const response = await sendEmailRequest(data.email, data.name);
+		const response = await sendEmailRequest(data.email, data.name);
+	
+		if (response.success) {
+			toast.show({
+				placement: "bottom right",
+				render: ({ id }) => (
+					<Toast nativeID={id} variant="solid" action="success">
+						<ToastTitle>Sucesso</ToastTitle>
+					</Toast>
+				),
+			});
+			reset();
+			router.push("/auth/token");
+		} else {
+			toast.show({
+				placement: "bottom right",
+				render: ({ id }) => (
+					<Toast nativeID={id} variant="solid" action="error">
+						<ToastTitle>Erro ao enviar token de autenticação</ToastTitle>
+					</Toast>
+				),
+			});
+		}
+	};
 
-    if (response.success) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="accent" action="success">
-            <ToastTitle>Sucesso</ToastTitle>
-          </Toast>
-        ),
-      });
-      reset();
-      router.push("/auth/token");
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="error" action="failed">
-            <ToastTitle>Erro ao enviar e-mail</ToastTitle>
-          </Toast>
-        ),
-      });
-    }
+  const handleKeyPress = () => {
+    Keyboard.dismiss();
+    handleSubmit(onSubmit)();
   };
 
   return (
-    <VStack className="max-w-[440px] w-full" space="md">
-      <VStack className="md:items-center" space="md">
-        <VStack>
-          <Heading className="md:text-center" size="3xl">
-            Cadastro
-          </Heading>
-          <Text>Cadastre-se e comece a usar o AtléticaApp</Text>
-        </VStack>
-      </VStack>
-      <VStack className="w-full">
-        <VStack space="xl" className="w-full">
-          <FormControl isInvalid={!!errors.name}>
-            <FormControlLabel>
-              <FormControlLabelText>Nome completo</FormControlLabelText>
-            </FormControlLabel>
-            <Controller
-              defaultValue=""
-              name="name"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input>
-                  <InputField
-                    className="text-sm"
-                    placeholder="Nome completo"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    enterKeyHint="done"
-                  />
-                </Input>
-              )}
-            />
-            <FormControlError>
-              <FormControlErrorIcon size="sm" as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.name?.message}
-              </FormControlErrorText>
-            </FormControlError>
-          </FormControl>
-          <FormControl isInvalid={!!errors.email}>
-            <FormControlLabel>
-              <FormControlLabelText>Email</FormControlLabelText>
-            </FormControlLabel>
-            <Controller
-              name="email"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input>
-                  <InputField
-                    className="text-sm"
-                    placeholder="Email"
-                    onBlur={onBlur}
-                    type="text"
-                    value={value}
-                    onChangeText={onChange}
-                    enterKeyHint="done"
-                  />
-                </Input>
-              )}
-            />
-            <FormControlError>
-              <FormControlErrorIcon size="md" as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.email?.message}
-              </FormControlErrorText>
-            </FormControlError>
-          </FormControl>
-        </VStack>
+    <>
+      <VStack className="justify-between">
+        <FormControl
+          className="my-4"
+          isInvalid={!!errors.name}
+          isRequired={true}
+        >
+          <Controller
+            name="name"
+            defaultValue=""
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Nome completo"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  onSubmitEditing={handleKeyPress}
+                  returnKeyType="done"
+                  className="text-sm"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="sm" as={AlertTriangle} />
+            <FormControlErrorText>{errors?.name?.message}</FormControlErrorText>
+          </FormControlError>
+        </FormControl>
 
-        <VStack className="w-full my-7" space="lg">
-          <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-            <ButtonText className="font-medium">Enviar</ButtonText>
-          </Button>
-        </VStack>
+        <FormControl isInvalid={!!errors?.email} isRequired={true}>
+          <Controller
+            name="email"
+            defaultValue=""
+            control={control}
+            rules={{
+              validate: async (value) => {
+                try {
+                  await EmailSchema.parseAsync({ email: value });
+                  return true;
+                } catch (error: any) {
+                  return error.message;
+                }
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Email @ufpr.br"
+                  type="text"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  onSubmitEditing={handleKeyPress}
+                  returnKeyType="done"
+                  className="text-sm"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="sm" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.email?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+      </VStack>
+
+      <Button
+        variant="solid"
+        size="lg"
+        action="primary"
+        onPress={handleSubmit(onSubmit)}
+        className="mt-5"
+      >
+        <ButtonText>CONTINUAR</ButtonText>
+      </Button>
+    </>
+  );
+};
+
+function SideContainerWeb() {
+  return (
+    <Center
+      className="bg-violet-600
+            dark:bg-background-0 flex-1"
+    >
+      <Image
+        alt="logo"
+        resizeMode="contain"
+        className="w-[200px] h-80"
+        source={require("../../../assets/auth/logo.png")}
+      />
+    </Center>
+  );
+}
+
+function MobileHeader() {
+  return (
+    <VStack
+      space="md"
+      className="px-3 mt-4 bg-violet-600
+            dark:bg-background-0"
+    >
+      <HStack space="md" className="items-center">
+        <Link href="..">
+          <Icon
+            size="md"
+            as={ArrowLeftIcon}
+            className="color-typography-50 dark:color-typography-950"
+          />
+        </Link>
+        <Text className="text-lg color-typography-50 dark:color-typography-950">
+          Nova conta
+        </Text>
+      </HStack>
+      <VStack space="xs" className="ml-1 my-4">
+        <Heading className="color-typography-50 dark:color-typography-950">
+          Ola, seja bem-vindo!
+        </Heading>
+        <Text className="text-md font-normal color-primary-300 dark:color-typography-400">
+          Preencha os seus dados para continuar
+        </Text>
       </VStack>
     </VStack>
+  );
+}
+
+const Main = () => {
+  return (
+    <>
+      <Box className="md:hidden">
+        <MobileHeader />
+      </Box>
+      <Box
+        className="max-w-[508px] flex-1 px-4 py-8 bg-background-0
+            dark:bg-background-50 md:pt-8 md:px-8"
+      >
+        <Heading className="mb-8 md:flex md:text-2xl hidden">
+				Preencha os seus dados para continuar
+        </Heading>
+        <EmailForm />
+        <HStack
+          space="xs"
+          className="md:mt-40 mt-auto items-center justify-center"
+        >
+           <Text className="color-typography-500 text-sm dark:color-typography-400">
+            Já tem uma conta?
+          </Text>
+          <Link href="/auth/signin">
+            <LinkText className="text-sm">Entrar</LinkText>
+          </Link>
+        </HStack>
+      </Box>
+    </>
   );
 };
 
 export const Email = () => {
   return (
     <AuthLayout>
-      <EmailWithLeftBackground />
+      <Box className="flex-1 hidden md:flex ">
+        <SideContainerWeb />
+      </Box>
+      <Box className="flex-1 ">
+        <Main />
+      </Box>
     </AuthLayout>
   );
 };

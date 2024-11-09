@@ -124,26 +124,12 @@ const TokenVerification = () => {
     }
   };
 
-	function maskEmail(email: string): string {
-		const [localPart, domain] = email.split("@");
-		const maskedLocalPart = localPart.slice(0, 5) + "*".repeat(localPart.length - 5);
-		return `${maskedLocalPart}@${domain}`;
-	}
-
   function MainText() {
     return (
-      <VStack space="md" className="items-start">
+      <VStack space="md" className="items-start md:mt-4">
         <Heading className="text-xl text-center md:text-left md:text-2xl">
-          Insira o token de acesso
+          Insira o token de autenticação:
         </Heading>
-        <HStack space="xs" className="items-center">
-          <Text className="text-sm color-typography-800 md:pb-8 dark:color-typography-400">
-            Enviado para:{" "}
-            <Text className="font-bold color-typography-800 dark:color-typography-400 text-sm">
-               {maskEmail(email)}
-            </Text>
-          </Text>
-        </HStack>
       </VStack>
     );
   }
@@ -174,7 +160,7 @@ const TokenVerification = () => {
     };
 
     return (
-      <HStack space="xs" className="md:mt-8 mt-auto">
+      <HStack space="xs" className=" mt-auto">
         <Text className="color-typography-800 dark:color-typography-400 text-sm">
           Não recebeu o token?
         </Text>
@@ -212,7 +198,7 @@ const TokenVerification = () => {
         <MainText />
         <VStack className="justify-between">
           <FormControl
-            className="my-8 md:my-0"
+            className="my-8"
             isInvalid={!!errors?.token}
             isRequired={true}
           >
@@ -260,7 +246,7 @@ const TokenVerification = () => {
             isFocusVisible={false}
             onPress={handleSubmit(onSubmit)}
           >
-            <ButtonText className="text-sm">Enviar</ButtonText>
+            <ButtonText className="text-sm"> Validar Token</ButtonText>
           </Button>
         </VStack>
         <AccountLink />
