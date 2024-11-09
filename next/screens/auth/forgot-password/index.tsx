@@ -1,72 +1,137 @@
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { Icon } from "@/components/ui/icon";
+import { Text } from "@/components/ui/text";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Image } from "@/components/ui/image";
+import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
+import { Input, InputField } from "@/components/ui/input";
+import { Toast, useToast, ToastTitle } from "@/components/ui/toast";
 import {
   FormControl,
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
 } from "@/components/ui/form-control";
-import { Input, InputField } from "@/components/ui/input";
-import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
-import { Button, ButtonText } from "@/components/ui/button";
-import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle } from "lucide-react-native";
+import { z } from "zod";
+import { AlertTriangle, ArrowLeftIcon } from "lucide-react-native";
+import { Link as RNLink } from "react-native-web-next-link";
 import useRouter from "@unitools/router";
-import { Pressable } from "@/components/ui/pressable";
 import AuthLayout from "../layout";
-
 import { resetPasswordRequest } from "@/api/users";
+import Link from "@unitools/link";
+import { Divider } from "@/components/ui/divider";
+import { LinkText } from "@/components/ui/link";
+import { Keyboard } from "react-native";
+import { useAuthContext } from "@/hooks/AuthProvider";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, "Email is required").email(),
+  email: z.string().min(1, "Email é obrigatório").email(),
 });
 
-type forgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
+export type forgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
 
-const ForgotPasswordScreen = () => {
+function MobileHeader() {
+  return (
+    <HStack
+      space="md"
+      className="px-3 py-4 items-center bg-violet-600
+            dark:bg-background-0"
+    >
+      <RNLink href="..">
+        <Icon
+          size="md"
+          as={ArrowLeftIcon}
+          className="color-typography-50 dark:color-typography-950"
+        />
+      </RNLink>
+      <Text className="color-typography-50 text-lg dark:color-typography-50">
+        Esqueceu a senha?
+      </Text>
+    </HStack>
+  );
+}
+
+function MobileScreenImage() {
+  return (
+    <Center
+      className="px-4 py-4 -mb-0.5 bg-background-0
+            dark:bg-background-0 md:py-48 md:px-12 md:bg-primary-500 md:dark:bg-primary-700"
+    >
+      <Image
+        className="flex dark:hidden md:hidden md:dark:hidden h-40 w-48"
+        source={require("@/assets/auth/forgotPassword_mobile_light.png")}
+        resizeMode="contain"
+        alignSelf="center"
+      />
+      <Image
+        className="h-40 w-48 hidden dark:flex md:hidden"
+        source={require("@/assets/auth/forgotPassword_mobile_dark.png")}
+        resizeMode="contain"
+        alignSelf="center"
+      />
+    </Center>
+  );
+}
+
+function SideContainerWeb() {
+  return (
+    <Center
+      className="bg-violet-600
+            dark:bg-background-0 flex-1"
+    >
+      <Image
+        alt="Esqueceu a senha"
+        resizeMode="contain"
+        className="w-[200px] h-80"
+        source={require("@/assets/auth/forgotPassword_web_dark.png")}
+      />
+    </Center>
+  );
+}
+const ForgotPasswordForm = () => {
+  const { setEmail } = useAuthContext();
   const {
     control,
+    formState: { errors },
     handleSubmit,
     reset,
-    formState: { errors },
   } = useForm<forgotPasswordSchemaType>({
     resolver: zodResolver(forgotPasswordSchema),
   });
+
   const toast = useToast();
   const router = useRouter();
 
-  const onSubmit = async (_data: forgotPasswordSchemaType) => {
-    const response = await resetPasswordRequest(_data.email);
+  const onSubmit = async (data: forgotPasswordSchemaType) => {
+    setEmail(data.email);
 
+    const response = await resetPasswordRequest(data.email);
     if (response.success) {
       toast.show({
         placement: "bottom right",
-        render: ({ id }) => {
-          return (
-            <Toast nativeID={id} variant="accent" action="success">
-              <ToastTitle>Link enviado com sucesso ao seu email</ToastTitle>
-            </Toast>
-          );
-        },
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="solid" action="success">
+            <ToastTitle>
+              Token de autenticação enviado com sucesso ao seu email
+            </ToastTitle>
+          </Toast>
+        ),
       });
       reset();
       router.push("/auth/token");
     } else {
       toast.show({
         placement: "bottom right",
-        render: ({ id }) => {
-          return (
-            <Toast nativeID={id} variant="accent" action="error">
-              <ToastTitle>Email não cadastrado</ToastTitle>
-            </Toast>
-          );
-        },
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="solid" action="error">
+            <ToastTitle>Email não cadastrado</ToastTitle>
+          </Toast>
+        ),
       });
     }
   };
@@ -77,77 +142,103 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <VStack className="max-w-[440px] w-full" space="md">
-      <VStack className="md:items-center" space="md">
-        <Pressable
-          onPress={() => {
-            router.back();
+    <>
+      <VStack space="md" className="items-center md:items-start">
+        <Heading className="text-xl text-center md:text-left md:text-2xl">
+          Esqueceu a senha?
+        </Heading>
+        <Text className="text-sm font-normal text-center md:text-left">
+          Não se preocupe! Insira o endereço de e-mail associado à sua conta e
+          enviaremos um token de autenticação para redefinir sua senha.
+        </Text>
+      </VStack>
+      <FormControl
+        className="my-8"
+        isInvalid={!!errors.email}
+        isRequired={true}
+      >
+        <Controller
+          defaultValue=""
+          name="email"
+          control={control}
+          rules={{
+            validate: async (value) => {
+              try {
+                await forgotPasswordSchema.parseAsync({
+                  email: value,
+                });
+                return true;
+              } catch (error: any) {
+                return error.message;
+              }
+            },
           }}
-        >
-          <Icon
-            as={ArrowLeftIcon}
-            className="md:hidden stroke-background-800"
-            size="xl"
-          />
-        </Pressable>
-        <VStack>
-          <Heading className="md:text-center" size="3xl">
-            Solicitação de Recuperação de Senha
-          </Heading>
-        </VStack>
-      </VStack>
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input>
+              <InputField
+                placeholder="Email"
+                type="text"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                onSubmitEditing={handleKeyPress}
+                returnKeyType="done"
+                className="text-sm"
+              />
+            </Input>
+          )}
+        />
+        <FormControlError>
+          <FormControlErrorIcon as={AlertTriangle} size="sm" />
+          <FormControlErrorText>{errors?.email?.message}</FormControlErrorText>
+        </FormControlError>
+      </FormControl>
+      <Button variant="solid" size="lg" onPress={handleSubmit(onSubmit)}>
+        <ButtonText className="text-sm">Enviar token</ButtonText>
+      </Button>
+    </>
+  );
+};
 
-      <VStack space="xl" className="w-full ">
-        <FormControl isInvalid={!!errors?.email} className="w-full">
-          <FormControlLabel>
-            <FormControlLabelText>Email</FormControlLabelText>
-          </FormControlLabel>
-          <Controller
-            defaultValue=""
-            name="email"
-            control={control}
-            rules={{
-              validate: async (value) => {
-                try {
-                  await forgotPasswordSchema.parseAsync({ email: value });
-                  return true;
-                } catch (error: any) {
-                  return error.message;
-                }
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input>
-                <InputField
-                  placeholder="Informe o email"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  onSubmitEditing={handleKeyPress}
-                  returnKeyType="done"
-                />
-              </Input>
-            )}
-          />
-          <FormControlError>
-            <FormControlErrorIcon as={AlertTriangle} />
-            <FormControlErrorText>
-              {errors?.email?.message}
-            </FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-        <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-          <ButtonText className="font-medium">Enviar</ButtonText>
-        </Button>
-      </VStack>
-    </VStack>
+const Main = () => {
+  return (
+    <>
+      <Box className="md:hidden">
+        <MobileHeader />
+        <MobileScreenImage />
+      </Box>
+      <Box
+        className="max-w-[508px] pt-0 pb-8 px-4 bg-background-0
+            dark:bg-background-50 flex-1 md:pt-8 md:px-8"
+      >
+        <ForgotPasswordForm />
+        <HStack
+          space="xs"
+          className="md:mt-40 mt-auto items-center justify-center"
+        >
+          <Text className="color-typography-500 text-sm dark:color-typography-400">
+            Lembrou a senha?
+          </Text>
+          <Link href="/auth/signin">
+            <LinkText className="text-sm">Entrar</LinkText>
+          </Link>
+        </HStack>
+      </Box>
+    </>
   );
 };
 
 export const ForgotPassword = () => {
   return (
     <AuthLayout>
-      <ForgotPasswordScreen />
+      <VStack className="bg-primary-500 md:flex-row dark:bg-background-900 flex-1">
+        <Box className="flex-1 hidden md:flex">
+          <SideContainerWeb />
+        </Box>
+        <Box className="flex-1">
+          <Main />
+        </Box>
+      </VStack>
     </AuthLayout>
   );
 };

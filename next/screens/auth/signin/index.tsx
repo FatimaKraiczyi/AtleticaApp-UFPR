@@ -9,14 +9,11 @@ import { LinkText } from "@/components/ui/link";
 import Link from "@unitools/link";
 import { Image } from "@/components/ui/image";
 import { Center } from "@/components/ui/center";
-import { Divider } from "@/components/ui/divider";
 import {
   FormControl,
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import {
@@ -38,7 +35,6 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
-import { Pressable } from "@/components/ui/pressable";
 import useRouter from "@unitools/router";
 import { userAuthentication } from "@/api/users";
 import AuthLayout from "../layout";
@@ -62,10 +58,6 @@ const SignInForm = () => {
   });
   const toast = useToast();
   const router = useRouter();
-  const [validated, setValidated] = useState({
-    emailValid: true,
-    passwordValid: true,
-  });
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: SignInSchemaType) => {
@@ -86,6 +78,15 @@ const SignInForm = () => {
       });
       router.push("/dashboard");
       reset();
+    } else {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="solid" action="error">
+            <ToastTitle>Email ou senha incorretos!</ToastTitle>
+          </Toast>
+        ),
+      });
     }
   };
 
@@ -139,7 +140,7 @@ const SignInForm = () => {
           </FormControlError>
         </FormControl>
         <FormControl
-          className="my-6"
+          className="my-4"
           isInvalid={!!errors.password}
           isRequired={true}
         >
@@ -174,7 +175,7 @@ const SignInForm = () => {
         </FormControl>
       </VStack>
       <Link href="/auth/forgot-password">
-        <LinkText className="text-xs">Forgot password?</LinkText>
+        <LinkText className="text-xs">Esqueceu a senha?</LinkText>
       </Link>
       <Controller
         name="rememberme"
@@ -191,7 +192,7 @@ const SignInForm = () => {
             <CheckboxIndicator>
               <CheckboxIcon as={CheckIcon} />
             </CheckboxIndicator>
-            <CheckboxLabel>Lembrar-m</CheckboxLabel>
+            <CheckboxLabel>Lembrar-me</CheckboxLabel>
           </Checkbox>
         )}
       />
@@ -202,7 +203,7 @@ const SignInForm = () => {
         onPress={handleSubmit(onSubmit)}
         className="mt-5"
       >
-        <ButtonText>SIGN IN</ButtonText>
+        <ButtonText>ENTRAR</ButtonText>
       </Button>
     </>
   );
@@ -215,9 +216,9 @@ function SideContainerWeb() {
             dark:bg-background-0 flex-1"
     >
       <Image
-        alt="gluestack-ui Pro"
+        alt="logo"
         resizeMode="contain"
-        className="w-80 h-80"
+        className="w-[200px] h-80"
         source={require("../../../assets/auth/logo.png")}
       />
     </Center>
@@ -234,20 +235,21 @@ function MobileHeader() {
       <HStack space="md" className="items-center">
         <Link href="..">
           <Icon
+            size="md"
             as={ArrowLeftIcon}
             className="color-typography-50 dark:color-typography-950"
           />
         </Link>
         <Text className="text-lg color-typography-50 dark:color-typography-950">
-          Sign In
+          Entrar
         </Text>
       </HStack>
       <VStack space="xs" className="ml-1 my-4">
         <Heading className="color-typography-50 dark:color-typography-950">
-          Welcome back
+          Bem-vindo de volta
         </Heading>
         <Text className="text-md font-normal color-primary-300 dark:color-typography-400">
-          Sign in to continue
+          Faça login para continuar
         </Text>
       </VStack>
     </VStack>
@@ -261,26 +263,22 @@ const Main = () => {
         <MobileHeader />
       </Box>
       <Box
-        className="px-2 md:px-8  bg-background-0
-            dark:bg-background-50 py-4 flex-1 justify-between"
+        className="max-w-[508px] flex-1 px-4 py-8 bg-background-0
+            dark:bg-background-50 md:pt-8 md:px-8"
       >
         <Heading className="mb-8 md:flex md:text-2xl hidden">
-          Sign in to continue
+          Faça login para continuar
         </Heading>
         <SignInForm />
-        <HStack space="md" className="my-4 items-center justify-center">
-          <Divider className="w-2/6 bg-background-200 dark:bg-background-700" />
-          <Text className="font-medium color-typography-400 dark:color-typography-300">
-            or
-          </Text>
-          <Divider className="w-2/6 bg-background-200 dark:bg-background-700" />
-        </HStack>
-        <HStack space="xs" className="mt-auto items-center justify-center">
+        <HStack
+          space="xs"
+          className="md:mt-40 mt-auto items-center justify-center"
+        >
           <Text className="color-typography-500 text-sm dark:color-typography-400">
-            Don't have an account?
+            Não tem uma conta?
           </Text>
           <Link href="/auth/email">
-            <LinkText className="text-sm">Sign up</LinkText>
+            <LinkText className="text-sm">Cadastre-se</LinkText>
           </Link>
         </HStack>
       </Box>
