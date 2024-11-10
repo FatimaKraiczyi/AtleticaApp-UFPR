@@ -7,7 +7,7 @@ export const AdminLoja = () => {
   return (
     <SafeAreaView className="h-full w-full">
       <LayoutComponents title="Loja" isSidebarVisible={true}>
-        <ProdutosList showActions={true} />
+        <ProdutosList />
       </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>

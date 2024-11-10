@@ -1,7 +1,8 @@
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { LayoutComponents } from "../../sections/LayoutComponents";
-import { MobileFooter } from "../../sections/MobileFooter";
-import { PlanosList } from "../admin/plano-assinatura/planos-list";
+
+import { PlanosList } from "../admin/planos/planos-list";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { MobileFooter } from "@/components/sections/MobileFooter";
 
 export const Planos = () => {
   return (

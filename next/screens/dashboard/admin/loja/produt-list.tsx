@@ -17,7 +17,7 @@ import { Produto } from "@/interfaces/produto";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 
-export const ProdutosList = ({ showActions = false }) => {
+const AllProdutos = ({ showActions = false }) => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
@@ -191,4 +191,8 @@ export const ProdutosList = ({ showActions = false }) => {
       />
     </Box>
   );
+};
+
+export const ProdutosList = () => {
+  return <AllProdutos showActions={true} />;
 };

@@ -16,8 +16,9 @@ import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { PlanoAssinatura } from "@/interfaces/planos";
 
-export const PlanosList = ({ showActions = false }) => {
-  const atleticaId = sessionStorage.getItem("atleticaId");
+const AllPlanos = ({ showActions = false }) => {
+  const atleticaId =
+    typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
   const [planoAssinatura, setPlanoAssinatura] = useState<PlanoAssinatura[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -166,7 +167,6 @@ export const PlanosList = ({ showActions = false }) => {
         refreshPlanos={fetchPlanos}
         planoData={selectedPlanoAssinatura}
       />
-
       <DeletePlano
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
@@ -180,4 +180,8 @@ export const PlanosList = ({ showActions = false }) => {
       />
     </Box>
   );
+};
+
+export const PlanosList = () => {
+  return <AllPlanos showActions={true} />;
 };

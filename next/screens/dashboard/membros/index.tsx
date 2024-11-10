@@ -5,18 +5,18 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
-import { useState, type SetStateAction } from "react";
+import { useState } from "react";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
-import { MobileFooter } from "../../sections/MobileFooter";
 import { ModalMembros } from "./membro-modal";
 import { useMembros } from "../../../hooks/MembrosContext";
-import { LayoutComponents } from "../../sections/LayoutComponents";
 import { DeleteMembro } from "./delete-membro";
-import { NoItemsFound } from "../../sections/NoItemsFound";
-import type { MembrosResponse } from "../../../../interfaces/membros";
+import { MembrosResponse } from "@/interfaces/membros";
+import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { LayoutComponents } from "@/components/sections/LayoutComponents";
+import { MobileFooter } from "@/components/sections/MobileFooter";
 
 const MainContent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
