@@ -44,7 +44,7 @@ export const userAuthentication = async (
 export const sendEmailRequest = async (
   email: string,
   nome: string
-): Promise<IResponse.Default<null>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(sendEmail, { email, nome });
 
@@ -72,7 +72,7 @@ export const validateUserToken = async (
 
 export const resetPasswordRequest = async (
   email: string
-): Promise<IResponse.Default<null>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(resetPassword, { email });
 
@@ -85,7 +85,7 @@ export const resetPasswordRequest = async (
 export const newPassword = async (
   senha: string,
   repSenha: string
-): Promise<IResponse.Default<null>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.put(newPasswordResquest, {
       senha,

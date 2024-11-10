@@ -1,6 +1,6 @@
 import type { IResponse } from "../interfaces";
 import { Membro, MembrosResponse } from "../interfaces/membros";
-import { API, objectCatch } from "./api";
+import { API, arrayCatch, objectCatch } from "./api";
 import {
   createMembroAtleticaEndpoint,
   deleteMembroAtleticaEndpoint,
@@ -20,7 +20,7 @@ export const getMembros = async (
       success: status === 200,
     };
   } catch (error) {
-    return { ...objectCatch };
+    return { ...arrayCatch };
   }
 };
 
@@ -34,7 +34,7 @@ export const adicionarMembro = async (
     );
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch };
+    return { ...objectCatch as IResponse.Default<MembrosResponse> };
   }
 };
 
@@ -49,7 +49,7 @@ export const editarMembro = async (
     );
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch };
+    return { ...objectCatch as IResponse.Default<MembrosResponse> };
   }
 };
 

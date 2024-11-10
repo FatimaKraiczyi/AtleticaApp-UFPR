@@ -30,7 +30,7 @@ export const createProduto = async (
     const { data, status } = await API.post(addProduto, produto);
     return { data, success: status === 201 };
   } catch (error) {
-    return { ...objectCatch };
+    return { ...objectCatch as IResponse.Default<Produto> };
   }
 };
 
@@ -45,7 +45,7 @@ export const updateProduto = async (
     );
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch };
+    return { ...objectCatch as IResponse.Default<Produto> };
   }
 };
 

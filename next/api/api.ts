@@ -24,8 +24,8 @@ API.interceptors.request.use(
   }
 );
 
-const objectCatch: IResponse.Default<undefined> = {
-  data: undefined,
+const objectCatch: IResponse.Default<{}> = {
+  data: {},
   success: false,
   message: "Falha na requisição, tente novamente.",
 };
