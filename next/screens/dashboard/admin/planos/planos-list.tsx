@@ -11,12 +11,13 @@ import { HStack } from "@/components/ui/hstack";
 import { ModalPlano } from "./modal-plano";
 import { DeletePlano } from "./delete-plano";
 import { ViewAssinatura } from "./view-plano";
-import { getPlanoByAtleticaId, getAllPlanosAssinatura } from "@/api/planos";
+import { getPlanoByAtleticaId, getAllPlanosAssinatura, pagamentoAssinatura } from "@/api/planos";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { PlanoAssinatura } from "@/interfaces/planos";
+import { ChevronDown, ChevronUp } from "lucide-react-native";
 
-const AllPlanos = ({ showActions = false }) => {
+const AllPlanos = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
@@ -30,6 +31,12 @@ const AllPlanos = ({ showActions = false }) => {
     number | null
   >(null);
   const [showViewModal, setShowViewModal] = useState(false);
+
+  const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
+
+  const showActions =
+    typeof window !== "undefined" &&
+    window.location.pathname === "/dashboard/admin/planos";
 
   const fetchPlanos = async () => {
     setLoading(true);
@@ -64,11 +71,6 @@ const AllPlanos = ({ showActions = false }) => {
     setShowModal(true);
   };
 
-  const openViewModal = (id?: PlanoAssinatura) => {
-    setSelectedPlanoAssinatura(id);
-    setShowViewModal(true);
-  };
-
   const handleEditProduto = (id: PlanoAssinatura) => {
     openModal(id);
   };
@@ -78,10 +80,39 @@ const AllPlanos = ({ showActions = false }) => {
     setShowDeleteModal(true);
   };
 
+  const toggleExpand = (planoId: number) => {
+    setExpandedPlanos((prevExpanded) => {
+      const newExpanded = new Set(prevExpanded);
+      if (newExpanded.has(planoId)) {
+        newExpanded.delete(planoId);
+      } else {
+        newExpanded.add(planoId);
+      }
+      return newExpanded;
+    });
+  };
+
   if (loading) {
     return <LoadingState />;
   }
 
+	const handleCheckout = async (id: number) => {
+		try {
+			const response = await pagamentoAssinatura(
+				id,
+			);
+	
+			if (response.data && response.data.url) {
+				window.location.href = response.data.url;
+			} else {
+				alert("Erro ao iniciar o pagamento. Tente novamente mais tarde.");
+			}
+		} catch (error) {
+			console.error("Erro ao redirecionar ao checkout:", error);
+			alert("Erro ao iniciar o pagamento. Tente novamente mais tarde.");
+		}
+	};
+	
   const renderNoAssinatura = () => (
     <NoItemsFound message="Nenhum plano de assinatura encontrado." />
   );
@@ -110,51 +141,75 @@ const AllPlanos = ({ showActions = false }) => {
                 className: "",
               }}
             >
-              {planoAssinatura.map((planos) => (
+              {planoAssinatura.map((plano) => (
                 <GridItem
-                  key={planos.id}
-                  _extra={{ className: "flex-1 p-4 relative" }}
+                  key={plano.id}
+                  className="flex-1 p-6 rounded-md shadow-lg bg-white"
+                  _extra={{
+                    className: "",
+                  }}
                 >
-                  <HStack className="w-full justify-between mt-2">
-                    <VStack>
-                      <Text className="font-semibold text-typography-900">
-                        {planos.nome}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        R$ {planos.valor.toFixed(2)}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        Quantidade: {planos.duracao}
-                      </Text>
-                    </VStack>
+                  <VStack className="items-center">
+                    <Text className="text-gray-500 font-semibold text-sm uppercase">
+                      {plano.nome.toUpperCase()}
+                    </Text>
+                    <Text className="font-bold text-3xl mt-2">
+                      R$ {plano.valor.toFixed(2)}
+                    </Text>
+                    <Text className="text-gray-500 text-sm mb-4">
+                      /{" "}
+                      {plano.duracao === 30 ? "mês" : `${plano.duracao} meses`}
+                    </Text>
+
+                    <Button
+                      variant="link"
+                      className="text-gray-500 text-sm "
+                      onPress={() => toggleExpand(plano.id)}
+                    >
+                      <span>Veja os benefícios</span>
+                      {expandedPlanos.has(plano.id) ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
+
+                    {expandedPlanos.has(plano.id) && (
+                      <VStack space="lg" className="items-center">
+                        {plano.beneficios &&
+                          plano.beneficios.map((beneficio, index) => (
+                            <Text key={index} className="text-gray-700 text-sm">
+                              ✔️ {beneficio}
+                            </Text>
+                          ))}
+                      </VStack>
+                    )}
+                  </VStack>
+                  <VStack className="items-center">
+                    <Button
+                      variant="solid"
+                      className="w-full mb-4"
+											onPress={() => handleCheckout(plano.id)}
+                    >
+                      <ButtonText>Seja sócio</ButtonText>
+                    </Button>
+
                     {showActions && (
-                      <HStack space="md" className="mt-2">
-                        <Pressable onPress={() => handleEditProduto(planos)}>
-                          <Icon as={EditIcon} className="text-typography-600" />
+                      <HStack space="md">
+                        <Pressable onPress={() => handleEditProduto(plano)}>
+                          <Icon as={EditIcon} className="text-gray-600" />
                         </Pressable>
                         <Pressable
                           onPress={() =>
-                            planos.id !== undefined &&
-                            handleOpenDeleteModal(planos.id)
+                            plano.id !== undefined &&
+                            handleOpenDeleteModal(plano.id)
                           }
                         >
-                          <Icon
-                            as={TrashIcon}
-                            className="text-typography-600"
-                          />
+                          <Icon as={TrashIcon} className="text-gray-600" />
                         </Pressable>
                       </HStack>
                     )}
-                  </HStack>
-                  <HStack className="w-full items-center mt-2">
-                    <Button
-                      variant="outline"
-                      className="w-full gap-3 center"
-                      onPress={() => openViewModal(planos)}
-                    >
-                      <ButtonText>Visualizar</ButtonText>
-                    </Button>
-                  </HStack>
+                  </VStack>
                 </GridItem>
               ))}
             </Grid>
@@ -173,15 +228,10 @@ const AllPlanos = ({ showActions = false }) => {
         assinaturaId={assinaturaIdToDelete!}
         refreshPlanos={fetchPlanos}
       />
-      <ViewAssinatura
-        showModal={showViewModal}
-        setShowModal={setShowViewModal}
-        planosData={selectedPlanoAssinatura}
-      />
     </Box>
   );
 };
 
 export const PlanosList = () => {
-  return <AllPlanos showActions={true} />;
+  return <AllPlanos />;
 };

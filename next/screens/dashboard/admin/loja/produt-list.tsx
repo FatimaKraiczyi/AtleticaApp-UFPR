@@ -6,7 +6,7 @@ import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
+import { Edit, Trash, ShoppingCart, Eye } from "lucide-react";
 import { HStack } from "@/components/ui/hstack";
 import { ModalProduto } from "./produto-modal";
 import { DeleteProduto } from "./delete-produto";
@@ -17,7 +17,7 @@ import { Produto } from "@/interfaces/produto";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 
-const AllProdutos = ({ showActions = false }) => {
+const AllProdutos = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
@@ -31,6 +31,10 @@ const AllProdutos = ({ showActions = false }) => {
     number | undefined
   >(undefined);
   const [showViewModal, setShowViewModal] = useState(false);
+
+  const showActions =
+    typeof window !== "undefined" &&
+    window.location.pathname === "/dashboard/admin/loja";
 
   const fetchProdutos = async () => {
     setLoading(true);
@@ -88,7 +92,7 @@ const AllProdutos = ({ showActions = false }) => {
   );
 
   return (
-    <Box className="flex-1 ">
+    <Box className="flex-1">
       <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
         {showActions && (
           <VStack space="lg" className="items-center">
@@ -114,57 +118,63 @@ const AllProdutos = ({ showActions = false }) => {
               {produtos.map((produto) => (
                 <GridItem
                   key={produto.id}
-                  _extra={{ className: "flex-1 p-4 relative" }}
+                  className="flex-1 p-4 relative rounded-md shadow-md bg-white"
+                  _extra={{
+                    className: "",
+                  }}
                 >
-                  <Box className="w-full overflow-hidden rounded-md h-72 shadow-md">
-                    <Image
-                      source={
-                        produto.imagem ||
-                        require("@/assets/dashboard/image2.png")
+                  <Pressable onPress={() => openViewModal(produto)}>
+                    <Box className="w-full overflow-hidden rounded-md h-72 relative group">
+                      <Image
+                        source={
+                          produto.imagem ||
+                          require("@/assets/dashboard/image2.png")
+                        }
+                        alt={produto.nome}
+                        size="full"
+                      />
+                      <Eye className="absolute w-40 h-40 inset-0 m-auto text-white opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
+                    </Box>
+                  </Pressable>
+                  <Text className="text-sm mt-2">
+                    Vendido por: {produto.vendedor}
+                  </Text>
+                  <VStack className="py-2">
+                    <Text className="font-semibold text-lg text-typography-900">
+                      {produto.nome}
+                    </Text>
+                    <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                      R$ {produto.valor.toFixed(2)}
+                    </Text>
+                    <Text className="text-sm text-typography-600">
+                      Quantidade: {produto.quantidade}
+                    </Text>
+                  </VStack>
+                  <HStack className="w-full items-center justify-between">
+                    <HStack className="items-center  ">
+                      {showActions && (
+                        <>
+                          <Pressable onPress={() => handleEditProduto(produto)}>
+                            <Edit className="text-typography-600 mr-4" />
+                          </Pressable>
+                          <Pressable
+                            onPress={() =>
+                              produto.id !== undefined &&
+                              handleOpenDeleteModal(produto.id)
+                            }
+                          >
+                            <Trash className="text-typography-600" />
+                          </Pressable>
+                        </>
+                      )}
+                    </HStack>
+                    <Pressable
+                      onPress={() =>
+                        console.log("Adicionar ao carrinho", produto)
                       }
-                      alt={produto.nome}
-                      size="full"
-                    />
-                  </Box>
-                  <HStack className="w-full justify-between mt-2">
-                    <VStack>
-                      <Text className="font-semibold text-typography-900">
-                        {produto.nome}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        R$ {produto.valor.toFixed(2)}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        Quantidade: {produto.quantidade}
-                      </Text>
-                    </VStack>
-                    {showActions && (
-                      <HStack space="md" className="mt-2">
-                        <Pressable onPress={() => handleEditProduto(produto)}>
-                          <Icon as={EditIcon} className="text-typography-600" />
-                        </Pressable>
-                        <Pressable
-                          onPress={() =>
-                            produto.id !== undefined &&
-                            handleOpenDeleteModal(produto.id)
-                          }
-                        >
-                          <Icon
-                            as={TrashIcon}
-                            className="text-typography-600"
-                          />
-                        </Pressable>
-                      </HStack>
-                    )}
-                  </HStack>
-                  <HStack className="w-full items-center mt-2">
-                    <Button
-                      variant="outline"
-                      className="w-full gap-3 center"
-                      onPress={() => openViewModal(produto)}
                     >
-                      <ButtonText>Visualizar</ButtonText>
-                    </Button>
+                      <ShoppingCart className="text-typography-600" />
+                    </Pressable>
                   </HStack>
                 </GridItem>
               ))}
@@ -194,5 +204,5 @@ const AllProdutos = ({ showActions = false }) => {
 };
 
 export const ProdutosList = () => {
-  return <AllProdutos showActions={true} />;
+  return <AllProdutos />;
 };

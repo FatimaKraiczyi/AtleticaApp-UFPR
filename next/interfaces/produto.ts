@@ -5,5 +5,6 @@ export interface Produto {
   quantidade: number;
 	tamanhos?: string[];
   atleticaId?: number;
+	vendedor?: string;
   imagem: string | null;
 }

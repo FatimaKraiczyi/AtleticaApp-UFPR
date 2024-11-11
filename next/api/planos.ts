@@ -9,7 +9,8 @@ import {
   getAssinantesPlano,
   deletePlano,
   updatePlano,
-	getPlanoByAtletica,
+  getPlanoByAtletica,
+  pagamentoAssinaturaId,
 } from "./routes/planos";
 
 export const getAllPlanosAssinatura = async (): Promise<
@@ -72,7 +73,9 @@ export const getPlanoByAtleticaId = async (
   atleticaId: string
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.get(`${getPlanoByAtletica}/${atleticaId}`);
+    const { data, status } = await API.get(
+      `${getPlanoByAtletica}/${atleticaId}`
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -82,6 +85,19 @@ export const getPlanoByAtleticaId = async (
 export const getAssinantes = async (): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(getAssinantesPlano);
+    return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+export const pagamentoAssinatura = async (
+  planoId: number
+): Promise<IResponse.Default<any>> => {
+  try {
+    const { data, status } = await API.post(
+      `${pagamentoAssinaturaId}/${planoId}`
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };

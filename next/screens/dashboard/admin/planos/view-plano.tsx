@@ -62,8 +62,8 @@ export const ViewAssinatura = ({
               {planosData.nome}
             </Heading>
           </Center>
-          <ModalBody className="px-10 py-6 max-h-[80vh] overflow-y-auto">
-            <Text className="mt-4 font-semibold text-2xl text-typography-900">
+          <ModalBody className="max-h-[80vh] overflow-y-auto">
+            <Text className="font-semibold text-2xl text-typography-600">
               {planosData.descricao}
             </Text>
             <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">

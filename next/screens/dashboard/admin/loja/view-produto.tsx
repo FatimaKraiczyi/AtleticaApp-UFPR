@@ -81,7 +81,7 @@ export const ViewProduto = ({
               {produtoData.nome}
             </Heading>
           </Center>
-          <ModalBody className="px-10 py-6 max-h-[80vh] overflow-y-auto">
+          <ModalBody className="max-h-[80vh] overflow-y-auto">
             <Box className="w-full overflow-hidden rounded-md h-72">
               <Image
                 source={
@@ -91,6 +91,7 @@ export const ViewProduto = ({
                 size="full"
               />
             </Box>
+            <Text className="text-sm mt-2">Vendido por: {produtoData.vendedor}</Text>
             <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
               R$ {valorDesconto}
             </Text>

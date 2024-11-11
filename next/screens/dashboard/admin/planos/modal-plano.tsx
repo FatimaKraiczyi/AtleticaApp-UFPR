@@ -98,6 +98,7 @@ export const ModalPlano = ({
       descricao: data.descricao,
       valor: Number(data.valor),
       duracao: Number(data.duracao),
+			id: planoData?.id,
     };
 
     try {
@@ -157,7 +158,7 @@ export const ModalPlano = ({
               : "Cadastrar Plano de Assinatura"}
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
+        <ModalBody className="max-h-[70vh] overflow-y-auto">
           <VStack space="xl">
             <FormControl isInvalid={!!errors.nome}>
               <FormControlLabel className="mb-2">

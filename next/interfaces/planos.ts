@@ -1,7 +1,9 @@
 export interface PlanoAssinatura {
-	id?: number;
+	beneficios?: string[];
+	id: number;
 	nome: string;
 	descricao: string;
 	valor: number;
 	duracao: number;
+
 }
