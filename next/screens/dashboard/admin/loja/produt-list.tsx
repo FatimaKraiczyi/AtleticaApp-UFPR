@@ -6,7 +6,7 @@ import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { Edit, Trash, ShoppingCart, Eye } from "lucide-react";
+import { Edit, Trash, Eye } from "lucide-react";
 import { HStack } from "@/components/ui/hstack";
 import { ModalProduto } from "./produto-modal";
 import { DeleteProduto } from "./delete-produto";
@@ -18,19 +18,6 @@ import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
-import {
-  Select,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectIcon,
-  SelectInput,
-  SelectItem,
-  SelectPortal,
-  SelectTrigger,
-} from "@/components/ui/select";
-import { ChevronDownIcon } from "lucide-react-native";
 
 const AllProdutos = () => {
   const atleticaId =
@@ -134,7 +121,7 @@ const AllProdutos = () => {
 
   return (
     <Box className="flex-1">
-      <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
+      <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
@@ -151,7 +138,7 @@ const AllProdutos = () => {
             className="p-4"
           >
             <Grid
-              className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              className="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
               _extra={{
                 className: "",
               }}
@@ -159,87 +146,89 @@ const AllProdutos = () => {
               {produtos.map((produto) => (
                 <GridItem
                   key={produto.id}
-                  className="flex-1 p-4 relative rounded-md shadow-md bg-white"
+                  className="flex flex-col p-4 bg-white rounded-md shadow-md"
                   _extra={{
                     className: "",
                   }}
                 >
                   <Pressable onPress={() => openViewModal(produto)}>
-                    <Box className="w-full overflow-hidden rounded-md h-72 relative group">
-                      <Image
+									<Box className="w-full overflow-hidden rounded-md h-48 relative group">
+									<Image
                         source={
                           produto.imagem ||
                           require("@/assets/dashboard/image2.png")
                         }
                         alt={produto.nome}
                         size="full"
+												 className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                       />
-                      <Eye className="absolute w-40 h-40 inset-0 m-auto text-white opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
+
                     </Box>
                   </Pressable>
-                  <Text className="text-sm mt-2">
-                    Vendido por: {produto.vendedor}
-                  </Text>
+
                   <VStack className="py-2">
-                    <Text className="font-semibold text-lg text-typography-900">
+                    <Text className="text-sm">
+                      Vendido por: {produto.vendedor}
+                    </Text>
+                    <Text className="font-semibold text-xl mt-4">
                       {produto.nome}
                     </Text>
-                    <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                    <HStack space="md" className="items-center gap-2">
+                      <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                        R$ {(produto.valor - produto.valor * 0.05).toFixed(2)}
+                      </Text>
+                      <Text className="text-sm text-green-900 line-clamp-1">
+                        5% off para sócios
+                      </Text>
+                    </HStack>
+                    <Text className="font-semibold  text-md text-typography-900">
                       R$ {produto.valor.toFixed(2)}
                     </Text>
-										<Select
-                        onValueChange={(value) => setQuantidade(Number(value))}
-                      >
-                        <SelectTrigger 												className="sm"
-												>
-                          <SelectInput placeholder="Quantidade" />
-                          <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                        </SelectTrigger>
-                        <SelectPortal>
-                          <SelectBackdrop />
-                          <SelectContent>
-                            <SelectDragIndicatorWrapper>
-                              <SelectDragIndicator />
-                            </SelectDragIndicatorWrapper>
-                            {Array.from(
-                              { length: produto.quantidade },
-                              (_, i) => (
-                                <SelectItem
-                                  key={i}
-                                  label={i.toString()}
-                                  value={i.toString()}
-                                />
-                              )
-                            )}
-                          </SelectContent>
-                        </SelectPortal>
-                      </Select>
                   </VStack>
-                  <HStack className="w-full items-center justify-between">
-                    <HStack className="items-center">
-                      {showActions && (
-                        <>
-                          <Pressable onPress={() => handleEditProduto(produto)}>
-                            <Edit className="text-typography-600 mr-4" />
-                          </Pressable>
-                          <Pressable
-                            onPress={() =>
-                              produto.id !== undefined &&
-                              handleOpenDeleteModal(produto.id)
-                            }
-                          >
-                            <Trash className="text-typography-600" />
-                          </Pressable>
-                        </>
-                      )}
-                    </HStack>
-                  
-              
-                   
-                    <Pressable onPress={() => handleAddToCart(produto)}>
-                      <ShoppingCart className="text-typography-600" />
-                    </Pressable>
+                  <HStack space="md" className="items-center gap-2">
+                    <Button variant="link" onPress={handleDecreaseQuantity}>
+                      -
+                    </Button>
+                    <Text>{quantidade}</Text>
+                    <Button
+                      variant="link"
+                      onPress={() => handleIncreaseQuantity}
+                    >
+                      +
+                    </Button>
+                    <Text className="text-sm">
+                      Em estoque: {""}
+                      {produto.quantidade}
+                    </Text>
                   </HStack>
+
+                  {showActions ? (
+                    <HStack className="w-full items-center justify-between mt-4">
+                      <HStack className="items-center">
+                        <Pressable onPress={() => handleEditProduto(produto)}>
+                          <Edit className="text-typography-600 mr-4" />
+                        </Pressable>
+                        <Pressable
+                          onPress={() =>
+                            produto.id !== undefined &&
+                            handleOpenDeleteModal(produto.id)
+                          }
+                        >
+                          <Trash className="text-typography-600" />
+                        </Pressable>
+                      </HStack>
+                    </HStack>
+                  ) : (
+                    <Button
+                      className="mt-auto w-full py-2 hover:bg-primary-500 "
+                      variant="outline"
+                      onPress={() => handleAddToCart(produto)}
+                    >
+                      <ButtonText className="text-secondary-600 group-hover/button:text-white">
+                        Adicionar no carrinho
+                      </ButtonText>
+                    </Button>
+                  )}
                 </GridItem>
               ))}
             </Grid>

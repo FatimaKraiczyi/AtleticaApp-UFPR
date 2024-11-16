@@ -106,7 +106,7 @@ const MainContent = () => {
         }}
         className="flex-1 mb-20 md:mb-2"
       >
-        <VStack className="p-4 pb-0 md:px-10 md:pt-6  w-full" space="2xl">
+        <VStack className="p-4  md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
             Bem-vindo
           </Heading>

@@ -4,19 +4,20 @@ import { Text } from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
+import { Pressable } from "@/components/ui/pressable";
 import { Image } from "@/components/ui/image";
+import { SafeAreaView } from "react-native";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
-import { getCart, deleteCartProdut } from "@/api/carrinho";
-import { SafeAreaView, ScrollView } from "react-native";
 import { MobileFooter } from "@/components/sections/MobileFooter";
 import { Produto } from "@/interfaces/produto";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { Trash } from "lucide-react-native";
-import { Pressable } from "@/components/ui/pressable";
+import { getCart, deleteCartProdut } from "@/api/carrinho";
 
 interface ProdutoCarrinho extends Produto {
   produtoId: number;
+	carrinhoCompraId: number;
   produtoNome: string;
   produtoValor: number;
   quantidade: number;
@@ -48,11 +49,11 @@ export const MainContent = () => {
           setProdutosCarrinho(response.data);
           calcularSubtotal(response.data);
         }
-        setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar dados do carrinho:", error);
       } finally {
         hasFetchedCart.current = true;
+        setLoading(false);
       }
     };
 
@@ -85,8 +86,6 @@ export const MainContent = () => {
           prevProdutos.filter((produto) => produto.produtoId !== produtoId)
         );
         calcularSubtotal(produtosCarrinho);
-      } else {
-        console.error("Erro ao remover produto do carrinho.");
       }
     } catch (error) {
       console.error("Erro ao remover produto:", error);
@@ -97,90 +96,87 @@ export const MainContent = () => {
     return <LoadingState />;
   }
 
-  const renderNoItems = () => (
-    <NoItemsFound message="Seu carrinho está vazio" />
-  );
+  if (produtosCarrinho.length === 0) {
+    return <NoItemsFound message="Seu carrinho está vazio" />;
+  }
+
+  const desconto = subtotal * 0.05;
+  const totalComDesconto = subtotal - desconto;
 
   return (
-    <Box className="flex flex-col w-full">
-      {produtosCarrinho.length === 0 ? (
-        renderNoItems()
-      ) : (
-        <Box className="w-full p-4">
-          <HStack className="hidden md:flex w-full p-4 justify-between text-sm font-semibold ">
-            <Text className="w-1/4">Produto</Text>
-            <Text className="w-1/4 text-center">Preço</Text>
-            <Text className="w-1/4 text-center">Qtd</Text>
-            <Text className="w-1/4 text-center">Total</Text>
-          </HStack>
-
-          {produtosCarrinho.map((produto) => (
-            <HStack
-              key={produto.produtoId}
-              className="flex w-full items-center justify-between p-4 border-b border-gray-200"
-            >
-              <HStack className="w-1/4 items-center">
-                <Image
-                  source={
-                    produto.imagem || require("@/assets/dashboard/image2.png")
-                  }
-                  alt={produto.produtoNome}
-                  className="w-16 h-16 object-cover"
-                />
-                <VStack className="ml-4">
-                  <Text className="font-semibold text-blue-500 underline">
-                    {produto.produtoNome}
-                  </Text>
-                  <Text className="text-sm text-gray-500">Descrição breve</Text>
-                </VStack>
-              </HStack>
-
-              {/* Preço */}
-              <Text className="w-1/4 text-center text-gray-700">
+    <Box className="flex flex-col p-4 md:px-10 md:pt-6 ">
+      {produtosCarrinho.map((produto) => (
+        <HStack
+          key={produto.produtoId}
+          className="border-b  py-4  border-gray-200 flex flex-row md:flex-row gap-4"
+        >
+          <HStack className="flex-1 gap-4">
+            <Image
+              source={
+                produto.imagem || require("@/assets/dashboard/image2.png")
+              }
+              alt={produto.produtoNome}
+              className="w-20 h-25 object-cover rounded"
+            />
+            <VStack className="flex-1">
+              <Text className="font-bold">{produto.produtoNome}</Text>
+              <Text className="text-sm text-gray-500">Size: Medium</Text>
+              <Text className="text-sm text-gray-500">Delivery by Mon 27</Text>
+              <Text className="text-lg font-semibold text-green-500">
                 R$ {produto.produtoValor.toFixed(2)}
               </Text>
+            </VStack>
+          </HStack>
 
-              {/* Quantidade */}
-              <HStack className="w-1/4 justify-center items-center space-x-2">
-                <Button
-                  onPress={() => atualizarQuantidade(produto.produtoId, false)}
-                  className="w-8 h-8 bg-gray-200 rounded-full text-center"
-                >
-                  -
-                </Button>
-                <Text className="w-8 text-center">{produto.quantidade}</Text>
-                <Button
-                  onPress={() => atualizarQuantidade(produto.produtoId, true)}
-                  className="w-8 h-8 bg-gray-200 rounded-full text-center"
-                >
-                  +
-                </Button>
-              </HStack>
-
-              {/* Total e lixeira */}
-              <HStack className="w-1/4 justify-center items-center">
-                <Text className="mr-4 font-semibold">
-                  R$ {(produto.quantidade * produto.produtoValor).toFixed(2)}
-                </Text>
-                <Pressable onPress={() => removerProduto(produto.produtoId)}>
-                  <Trash className="text-typography-600" />
-                </Pressable>
-              </HStack>
+          <VStack className="items-center gap-2">
+            <Pressable onPress={() => removerProduto(produto.produtoId)}>
+              <Trash className="text-red-500" />
+            </Pressable>
+						<HStack space="md" className="items-center gap-2">
+              <Button
+                onPress={() => atualizarQuantidade(produto.produtoId, false)}
+                variant="link"
+              >
+                -
+              </Button>
+              <Text>{produto.quantidade}</Text>
+              <Button
+                onPress={() => atualizarQuantidade(produto.produtoId, true)}
+                variant="link"
+              >
+                +
+              </Button>
             </HStack>
-          ))}
-          <VStack className="p-4 space-y-4">
-            <HStack className="justify-between">
-              <Text className="text-lg font-semibold">Order Total:</Text>
-              <Text className="text-lg font-semibold">
-                R$ {subtotal.toFixed(2)}
-              </Text>
-            </HStack>
-            <Button className="w-full bg-blue-500 text-white py-3 rounded">
-              Finalizar Compra
-            </Button>
           </VStack>
-        </Box>
-      )}
+        </HStack>
+      ))}
+
+			<VStack className="bg-gray-50 gap-4 md:pt-6 w-full space-y-4">
+			  <Text className="font-semibold text-lg">Detalhes do pedido</Text>
+        <HStack className="justify-between">
+          <Text>Subtotal</Text>
+          <Text>R$ {subtotal.toFixed(2)}</Text>
+        </HStack>
+        <HStack className="justify-between">
+          <Text>Desconto para sócios</Text>
+					<Text className="text-lg font-semibold text-green-500">
+					R$ {desconto.toFixed(2)}
+          </Text>
+        </HStack>
+        <HStack className="justify-between font-bold">
+          <Text>Total</Text>
+          <Text>R$ {totalComDesconto.toFixed(2)}</Text>
+        </HStack>
+			
+      </VStack>
+			<HStack
+          space="xs"
+          className="md:mt-40 mt-auto items-right justify-end"
+        >
+        <Button className="bg-purple-500 text-white py-3 rounded-md">
+          Fazer pedido
+        </Button>
+				</HStack>
     </Box>
   );
 };
