@@ -14,6 +14,7 @@ import type { LucideIcon } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Box } from "@/components/ui/box";
+import { useCarrinho } from "@/hooks/CarrinhoContext";
 
 type Icons = {
   iconName: LucideIcon | typeof Icon;
@@ -46,7 +47,8 @@ const list: Icons[] = [
 export const WebSidebar = () => {
   const router = useRouter();
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-
+	const { items } = useCarrinho();
+	
   useEffect(() => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
@@ -111,6 +113,11 @@ export const WebSidebar = () => {
             <Text className="ml-4 text-background-800 font-medium">
               {item.label}
             </Text>
+						{item.iconName === ShoppingCart && items > 0 && (
+              <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                <Text className="text-xs">{items}</Text>
+              </Box>
+            )}
           </HStack>
         </Pressable>
       ))}

@@ -120,7 +120,7 @@ export const ViewProduto = ({
                 +
               </Button>
               <Text className="text-sm">
-                Quantidade disponível: {produtoData.quantidade}
+                Quantidade: {produtoData.quantidade}
               </Text>
             </HStack>
 

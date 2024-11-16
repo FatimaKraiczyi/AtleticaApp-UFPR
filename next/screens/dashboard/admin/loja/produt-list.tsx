@@ -16,10 +16,26 @@ import { getProdutoById, getProdutos } from "@/api/produtos";
 import { Produto } from "@/interfaces/produto";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { addCartProduct } from "@/api/carrinho";
+import { useCarrinho } from "@/hooks/CarrinhoContext";
+import {
+  Select,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectItem,
+  SelectPortal,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { ChevronDownIcon } from "lucide-react-native";
 
 const AllProdutos = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
+  const { addItem } = useCarrinho();
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -31,6 +47,7 @@ const AllProdutos = () => {
     number | undefined
   >(undefined);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [quantidade, setQuantidade] = useState(1);
 
   const showActions =
     typeof window !== "undefined" &&
@@ -64,6 +81,18 @@ const AllProdutos = () => {
     fetchProdutos();
   }, []);
 
+  const handleAddToCart = async (produto: Produto) => {
+    try {
+      const response = await addCartProduct(produto.id, quantidade);
+      if (response.success) {
+        addItem();
+        console.log(`Produto ${produto.nome} adicionado ao carrinho`);
+      }
+    } catch (error) {
+      console.error("Erro ao adicionar produto ao carrinho:", error);
+    }
+  };
+
   const openModal = (produto?: Produto) => {
     setSelectedProduto(produto);
     setShowModal(true);
@@ -81,6 +110,18 @@ const AllProdutos = () => {
   const handleOpenDeleteModal = (id: number) => {
     setProdutoToDeleteId(id);
     setShowDeleteModal(true);
+  };
+
+  const handleIncreaseQuantity = (produto: Produto) => {
+    if (quantidade < produto.quantidade) {
+      setQuantidade(quantidade + 1);
+    }
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantidade > 1) {
+      setQuantidade(quantidade - 1);
+    }
   };
 
   if (loading) {
@@ -146,12 +187,36 @@ const AllProdutos = () => {
                     <Text className="font-semibold text-2xl text-typography-900 text-green-600">
                       R$ {produto.valor.toFixed(2)}
                     </Text>
-                    <Text className="text-sm text-typography-600">
-                      Quantidade: {produto.quantidade}
-                    </Text>
+										<Select
+                        onValueChange={(value) => setQuantidade(Number(value))}
+                      >
+                        <SelectTrigger 												className="sm"
+												>
+                          <SelectInput placeholder="Quantidade" />
+                          <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                        </SelectTrigger>
+                        <SelectPortal>
+                          <SelectBackdrop />
+                          <SelectContent>
+                            <SelectDragIndicatorWrapper>
+                              <SelectDragIndicator />
+                            </SelectDragIndicatorWrapper>
+                            {Array.from(
+                              { length: produto.quantidade },
+                              (_, i) => (
+                                <SelectItem
+                                  key={i}
+                                  label={i.toString()}
+                                  value={i.toString()}
+                                />
+                              )
+                            )}
+                          </SelectContent>
+                        </SelectPortal>
+                      </Select>
                   </VStack>
                   <HStack className="w-full items-center justify-between">
-                    <HStack className="items-center  ">
+                    <HStack className="items-center">
                       {showActions && (
                         <>
                           <Pressable onPress={() => handleEditProduto(produto)}>
@@ -168,11 +233,10 @@ const AllProdutos = () => {
                         </>
                       )}
                     </HStack>
-                    <Pressable
-                      onPress={() =>
-                        console.log("Adicionar ao carrinho", produto)
-                      }
-                    >
+                  
+              
+                   
+                    <Pressable onPress={() => handleAddToCart(produto)}>
                       <ShoppingCart className="text-typography-600" />
                     </Pressable>
                   </HStack>

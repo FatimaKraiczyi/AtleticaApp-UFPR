@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Box } from "@/components/ui/box";
 import { Grid, GridItem } from "@/components/ui/grid";
@@ -14,10 +14,34 @@ import { LoadingState } from "@/components/sections/LoadingState";
 import { MobileFooter } from "@/components/sections/MobileFooter";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { Produto } from "@/interfaces/produto";
+import { getCart } from "@/api/carrinho";
+
+interface ProdutoCarrinho {
+  produtoId: number;
+  carrinhoCompraId: number;
+  quantidade: number;
+  produtoNome: string;
+}
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [produtos, setProdutos] = useState<ProdutoCarrinho[]>([]);
+  const hasFetchedCart = useRef(false);
+
+  useEffect(() => {
+    if (hasFetchedCart.current) return;
+
+    const fetchCart = async () => {
+      const response = await getCart();
+      if (response.success) {
+        setProdutos(response.data);
+      }
+      setLoading(false);
+      hasFetchedCart.current = true;
+    };
+
+    fetchCart();
+  }, []);
 
   if (loading) {
     return <LoadingState />;
@@ -46,26 +70,20 @@ export const MainContent = () => {
             >
               {produtos.map((produto) => (
                 <GridItem
-                  key={produto.id}
+                  key={produto.produtoId}
                   _extra={{ className: "flex-1 p-4 relative" }}
                 >
                   <Box className="w-full overflow-hidden rounded-md h-72">
                     <Image
-                      source={
-                        produto.imagem ||
-                        require("@/assets/dashboard/image2.png")
-                      }
-                      alt={produto.nome}
+                      source={require("@/assets/dashboard/image2.png")}
+                      alt={produto.produtoNome}
                       size="full"
                     />
                   </Box>
                   <HStack className="w-full justify-between mt-2">
                     <VStack>
                       <Text className="font-semibold text-typography-900">
-                        {produto.nome}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        R$ {produto.valor.toFixed(2)}
+                        {produto.produtoNome}
                       </Text>
                       <Text className="line-clamp-1">
                         Quantidade: {produto.quantidade}
