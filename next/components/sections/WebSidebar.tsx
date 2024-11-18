@@ -7,7 +7,6 @@ import {
   UserRound,
   ShoppingCart,
   Search,
-  LogOut,
 } from "lucide-react-native";
 import { Text } from "@/components/ui/text";
 import type { LucideIcon } from "lucide-react-native";
@@ -28,7 +27,7 @@ const list: Icons[] = [
   },
   {
     iconName: Search,
-    label: "Listar Atléticas",
+    label: "Atléticas",
   },
   {
     iconName: ShoppingCart,
@@ -38,19 +37,15 @@ const list: Icons[] = [
     iconName: UserRound,
     label: "Assinaturas",
   },
-  {
-    iconName: LogOut,
-    label: "Sair",
-  },
 ];
 
 export const WebSidebar = () => {
   const router = useRouter();
-  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const { items } = useCarrinho();
   const [userType, setUserType] = useState<string | null>(null);
 
-  useEffect(() => {
+	useEffect(() => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
       const userType = sessionStorage.getItem("userType");
@@ -68,29 +63,15 @@ export const WebSidebar = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("userType");
-      sessionStorage.removeItem("atleticaId");
-    }
-    router.push("/auth/signin");
-  };
-
   const handlePress = (index: number) => {
-    if (index === 4) {
-      handleLogout();
-    } else {
-      setSelectedIndex(index);
-      if (index === 0) {
-        router.push("/dashboard");
-      } else if (index === 1) {
-        router.push("/dashboard/atleticas");
-      } else if (index === 2) {
-        router.push("/dashboard/carrinho");
-      } else if (index === 3) {
-        router.push("/dashboard/assinatura");
-      }
+    if (index === 0) {
+      router.push("/dashboard");
+    } else if (index === 1) {
+      router.push("/dashboard/atleticas");
+    } else if (index === 2) {
+      router.push("/dashboard/carrinho");
+    } else if (index === 3) {
+      router.push("/dashboard/assinatura");
     }
   };
 
@@ -103,13 +84,12 @@ export const WebSidebar = () => {
           }
           return true;
         })
-        .slice(0, -1)
         .map((item, index) => (
-          <Pressable
-            key={index}
-            className="w-full hover:bg-background-50"
-            onPress={() => handlePress(index)}
-          >
+        <Pressable
+          key={index}
+          className="w-full hover:bg-background-50"
+          onPress={() => handlePress(index)}
+        >
             <HStack
               className={`items-center px-4 py-3 h-12 w-full ${
                 index === selectedIndex ? "bg-background-200" : ""
@@ -119,11 +99,13 @@ export const WebSidebar = () => {
               <Icon
                 as={item.iconName}
                 className={`w-6 h-6 stroke-background-800 ${
-                  index === selectedIndex ? "fill-background-800" : "fill-none"
+                  index === selectedIndex ? "fill-background-800 stroke-background-800" : "fill-none"
                 }`}
               />
               <Text className="ml-4 text-background-800 font-medium">
-                {item.label}
+                {userType === "master" && item.label === "Atléticas"
+                  ? "Gerenciar Atléticas"
+                  : item.label}
               </Text>
               {item.iconName === ShoppingCart && items > 0 && (
                 <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
@@ -134,21 +116,6 @@ export const WebSidebar = () => {
           </Pressable>
         ))}
       <Box className="flex-grow" />
-      <Pressable
-        className="w-full hover:bg-background-50"
-        onPress={handleLogout}
-      >
-        <HStack
-          className="items-center px-4 py-3 h-12 w-full"
-          style={{ justifyContent: "flex-start" }}
-        >
-          <Icon
-            as={LogOut}
-            className="w-6 h-6 stroke-background-800 fill-background-800"
-          />
-          <Text className="ml-4 text-background-800 font-medium">Sair</Text>
-        </HStack>
-      </Pressable>
     </VStack>
   );
 };
