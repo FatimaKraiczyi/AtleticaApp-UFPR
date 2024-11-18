@@ -7,29 +7,10 @@ import {
   putAssinatura,
 } from "./routes/assinatura";
 
-export const visualizarAssinaturas = async (): Promise<
-  IResponse.Default<any>
-> => {
+export const assinaturaUsuario = async (): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(getAllAssinaturas);
     return { data, success: status === 200 };
-  } catch (error) {
-    return { ...objectCatch };
-  }
-};
-
-export const assinaturaUsuarioId = async (
-  usuarioId: number
-): Promise<IResponse.Default<any>> => {
-  try {
-    const { data, status } = await API.get(getAllAssinaturas);
-    if (status === 200 && data?.assinaturas) {
-      const assinaturasUsuario = data.assinaturas.filter(
-        (assinatura: { usuarioId: number; }) => assinatura.usuarioId === usuarioId
-      );
-      return { data: assinaturasUsuario, success: true };
-    }
-    return { data: [], success: false };
   } catch (error) {
     return { ...objectCatch };
   }

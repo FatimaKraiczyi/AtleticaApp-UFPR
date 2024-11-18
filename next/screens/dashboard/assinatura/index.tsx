@@ -10,19 +10,28 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
-import { assinaturaUsuarioId } from "@/api/assinatura";
+import { assinaturaUsuario } from "@/api/assinatura";
 import { Assinatura } from "@/interfaces/assinatura";
+import { pagamentoAssinatura } from "@/api/planos";
 
-const Main = ({ usuarioId }: { usuarioId: number }) => {
+const Main = () => {
   const [loading, setLoading] = useState(true);
   const [assinaturas, setAssinaturas] = useState<Assinatura[]>([]);
+  const usuarioId =
+    typeof window !== "undefined" ? sessionStorage.getItem("usuarioId") : null;
 
   const fetchAssinatura = async () => {
+    if (!usuarioId) return;
+
     setLoading(true);
     try {
-      const response = await assinaturaUsuarioId(usuarioId);
+      const response = await assinaturaUsuario();
       if (response.success) {
-        setAssinaturas(response.data);
+        const assinaturasUsuario = response.data.assinaturas.filter(
+          (assinatura: Assinatura) =>
+            assinatura.usuarioId === parseInt(usuarioId, 10)
+        );
+        setAssinaturas(assinaturasUsuario);
       } else {
         setAssinaturas([]);
       }
@@ -35,7 +44,11 @@ const Main = ({ usuarioId }: { usuarioId: number }) => {
   };
 
   useEffect(() => {
-    fetchAssinatura();
+    if (usuarioId) {
+      fetchAssinatura();
+    } else {
+      setLoading(false);
+    }
   }, [usuarioId]);
 
   if (loading) {
@@ -99,7 +112,20 @@ const Main = ({ usuarioId }: { usuarioId: number }) => {
                     </Text>
                   </VStack>
                   <VStack className="items-center">
-                    <Button variant="solid" className="w-full">
+                    <Button
+                      variant="solid"
+                      className="w-full"
+                      onPress={async () => {
+                        const response = await pagamentoAssinatura(
+                          assinatura.id
+                        );
+                        if (response?.data?.url) {
+                          window.location.href = response.data.url;
+                        } else {
+                          alert("Erro ao iniciar pagamento.");
+                        }
+                      }}
+                    >
                       <ButtonText>Efetuar pagamento</ButtonText>
                     </Button>
                   </VStack>
@@ -114,13 +140,10 @@ const Main = ({ usuarioId }: { usuarioId: number }) => {
 };
 
 export const Assinaturas = () => {
-  // Exemplo: Aqui você deve obter o ID do usuário autenticado
-  const usuarioId = 2; // Substitua pelo ID dinâmico obtido do contexto ou autenticação
-
   return (
     <SafeAreaView className="h-full w-full">
       <LayoutComponents title="Minhas Assinaturas" isSidebarVisible={true}>
-        <Main usuarioId={usuarioId} />
+        <Main />
       </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>

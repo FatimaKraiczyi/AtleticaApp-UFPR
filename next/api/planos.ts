@@ -92,11 +92,11 @@ export const getAssinantes = async (): Promise<IResponse.Default<any>> => {
 };
 
 export const pagamentoAssinatura = async (
-  planoId: number
+  assinaturaId: number
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(
-      `${pagamentoAssinaturaId}/${planoId}`
+      `${pagamentoAssinaturaId}/${assinaturaId}`
     );
     return { data, success: status === 200 };
   } catch (error) {
