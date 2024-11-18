@@ -15,6 +15,7 @@ import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { MobileFooter } from "@/components/sections/MobileFooter";
+import { Button, ButtonText } from "@/components/ui/button";
 
 interface CardData {
   bannerUri: string;
@@ -28,31 +29,31 @@ const HeadingCards: CardData[] = [
   {
     bannerUri: require("@/assets/dashboard/image3.png"),
     title: "Gerenciar Jogos",
-    description: "Add your details",
+    description: "Gerencie os jogos da atlética",
     route: "/dashboard/admin/jogos",
   },
   {
     bannerUri: require("@/assets/dashboard/image.png"),
     title: "Gerenciar Eventos",
-    description: "Add your skills here",
+    description: "Gerencie os eventos da atlética",
     route: "/dashboard/admin/eventos",
   },
   {
     bannerUri: require("@/assets/dashboard/image4.png"),
-    title: "Gerenciar Loja",
-    description: "Set a target to accomplish",
+    title: "Gerenciar Produtos",
+    description: "Gerencie os produtos da atlética",
     route: "/dashboard/admin/loja",
   },
   {
     bannerUri: require("@/assets/dashboard/image5.png"),
     title: "Gerenciar Planos de assinatura",
-    description: "Set a target to accomplish",
+    description: "Gerencie os planos de assinatura da atlética",
     route: "/dashboard/admin/planos",
   },
   {
     bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Gerenciar Membros",
-    description: "Set a target to accomplish",
+    description: "Gerencie os membros da atlética",
     route: "/dashboard/admin/membros",
   },
 ];
@@ -95,46 +96,51 @@ const MainContent = () => {
         }}
         className="flex-1 mb-20 md:mb-2"
       >
-        <VStack className="p-4 md:px-10 md:pt-6  w-full" space="2xl">
+        <VStack className="p-4  md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
             AQUI SERA O NOME DA ATLÉTICA
           </Heading>
 
-          <Grid _extra={{ className: "gap-5" }}>
-            {filteredCards.map((item, index) => {
-              return (
-                <GridItem
-                  _extra={{
-                    className: "col-span-12 sm:col-span-6 lg:col-span-4",
-                  }}
-                  key={index}
-                >
-                  <HStack
-                    space="md"
-                    className="border border-border-300 rounded-lg p-4 items-center justify-between"
+          <Grid
+            className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            _extra={{
+              className: "gap-5",
+            }}
+          >
+            {filteredCards.map((card, index) => (
+              <GridItem
+                key={index}
+                className="shadow-md  rounded-lg"
+                _extra={{
+                  className: "",
+                }}
+              >
+                <Box className="bg-violet-600 p-5 rounded-t-lg">
+                  <Image
+                    size="sm"
+                    source={card.bannerUri}
+                    alt={card.title}
+                    className="w-20 h-20 mx-auto rounded-full"
+                  />
+                </Box>
+                <Box className="p-4 md:h-[180px]">
+                  <Text className="text-lg font-semibold">{card.title}</Text>
+                  <Text className="text-sm text-gray-500">
+                    {card.description}
+                  </Text>
+
+                  <Button
+                    className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
+                    variant="outline"
+                    onPress={() => handleCardPress(card.route)}
                   >
-                    <HStack space="xl" className="items-center">
-                      <Box className="rounded-full">
-                        <Image
-                          size="sm"
-                          source={item.bannerUri}
-                          className="rounded-full"
-                        />
-                      </Box>
-                      <VStack>
-                        <Text className="font-semibold text-typography-900 line-clamp-1">
-                          {item.title}
-                        </Text>
-                        <Text className="line-clamp-1">{item.description}</Text>
-                      </VStack>
-                    </HStack>
-                    <Pressable onPress={() => handleCardPress(item.route)}>
-                      <Icon as={ChevronRightIcon} size="md" />
-                    </Pressable>
-                  </HStack>
-                </GridItem>
-              );
-            })}
+                    <ButtonText className="text-secondary-600 group-hover/button:text-white">
+                      Ver Mais
+                    </ButtonText>
+                  </Button>
+                </Box>
+              </GridItem>
+            ))}
           </Grid>
         </VStack>
       </ScrollView>
