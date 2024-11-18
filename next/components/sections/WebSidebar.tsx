@@ -58,7 +58,7 @@ export const WebSidebar = () => {
         setSelectedIndex(1);
       } else if (path.includes("carrinho")) {
         setSelectedIndex(2);
-      } else if (path.includes("assiantura")) {
+      } else if (path.includes("assinatura")) {
         setSelectedIndex(3);
       }
     }

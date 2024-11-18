@@ -14,24 +14,24 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { deletePlanoAssinatura } from "@/api/planos";
+import { excluirPlano } from "@/api/planos";
 
 interface deleteAssinaturaProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-  assinaturaId: number;
+  planoId: number;
   refreshPlanos: () => void;
 }
 
 export const DeletePlano = ({
   showModal,
   setShowModal,
-  assinaturaId,
+  planoId,
   refreshPlanos,
 }: deleteAssinaturaProps) => {
   const handleDelete = async () => {
     try {
-      const response = await deletePlanoAssinatura(assinaturaId);
+      const response = await excluirPlano(planoId);
       if (response.success) {
         setShowModal(false);
         refreshPlanos();

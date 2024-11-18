@@ -10,8 +10,8 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { HStack } from "@/components/ui/hstack";
 import { ModalPlano } from "./modal-plano";
 import { DeletePlano } from "./delete-plano";
-import { ViewAssinatura } from "./view-plano";
-import { getPlanoByAtleticaId, getAllPlanosAssinatura, pagamentoAssinatura } from "@/api/planos";
+import { ViewPlano } from "./view-plano";
+import { getPlanoByAtleticaId, getPlanos } from "@/api/planos";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { PlanoAssinatura } from "@/interfaces/planos";
@@ -21,15 +21,13 @@ const AllPlanos = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
-  const [planoAssinatura, setPlanoAssinatura] = useState<PlanoAssinatura[]>([]);
+  const [planos, setPlanos] = useState<PlanoAssinatura[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedPlanoAssinatura, setSelectedPlanoAssinatura] = useState<
+  const [selectedPlano, setSelectedPlano] = useState<
     PlanoAssinatura | undefined
   >(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [assinaturaIdToDelete, setAssinaturaIdToDelete] = useState<
-    number | null
-  >(null);
+  const [planoIdToDelete, setPlanoIdToDelete] = useState<number | null>(null);
   const [showViewModal, setShowViewModal] = useState(false);
 
   const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
@@ -47,12 +45,12 @@ const AllPlanos = () => {
       if (showActions && atleticaId) {
         response = await getPlanoByAtleticaId(atleticaId);
         if (response.success && Array.isArray(response.data)) {
-          setPlanoAssinatura(response.data);
+          setPlanos(response.data);
         }
       } else {
-        response = await getAllPlanosAssinatura();
+        response = await getPlanos();
         if (response.success && Array.isArray(response.data.planos)) {
-          setPlanoAssinatura(response.data.planos);
+          setPlanos(response.data.planos);
         }
       }
     } catch (error) {
@@ -67,7 +65,7 @@ const AllPlanos = () => {
   }, []);
 
   const openModal = (id?: PlanoAssinatura) => {
-    setSelectedPlanoAssinatura(id);
+    setSelectedPlano(id);
     setShowModal(true);
   };
 
@@ -76,7 +74,7 @@ const AllPlanos = () => {
   };
 
   const handleOpenDeleteModal = (id: number) => {
-    setAssinaturaIdToDelete(id);
+    setPlanoIdToDelete(id);
     setShowDeleteModal(true);
   };
 
@@ -97,10 +95,10 @@ const AllPlanos = () => {
   }
 
   const openViewModal = (plano?: PlanoAssinatura) => {
-    setSelectedPlanoAssinatura(plano);
+    setSelectedPlano(plano);
     setShowViewModal(true);
   };
-	
+
   const renderNoAssinatura = () => (
     <NoItemsFound message="Nenhum plano de assinatura encontrado." />
   );
@@ -115,7 +113,7 @@ const AllPlanos = () => {
             </Button>
           </VStack>
         )}
-        {planoAssinatura.length === 0 ? (
+        {planos.length === 0 ? (
           renderNoAssinatura()
         ) : (
           <ScrollView
@@ -129,7 +127,7 @@ const AllPlanos = () => {
                 className: "",
               }}
             >
-              {planoAssinatura.map((plano) => (
+              {planos.map((plano) => (
                 <GridItem
                   key={plano.id}
                   className="flex-1 p-6 rounded-md shadow-lg bg-white"
@@ -138,6 +136,9 @@ const AllPlanos = () => {
                   }}
                 >
                   <VStack className="items-center">
+									<Text className="text-sm font-bold">
+                     {plano.atleticaNome}
+                    </Text>
                     <Text className="text-gray-500 font-semibold text-sm uppercase">
                       {plano.nome.toUpperCase()}
                     </Text>
@@ -176,11 +177,8 @@ const AllPlanos = () => {
                   <VStack className="items-center">
                     <Button
                       variant="solid"
-                      className="w-full mb-4"
-											onPress={() =>
-											
-												openViewModal(plano)
-											}
+                      className="w-full"
+                      onPress={() => openViewModal(plano)}
                     >
                       <ButtonText>Seja sócio</ButtonText>
                     </Button>
@@ -211,19 +209,19 @@ const AllPlanos = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         refreshPlanos={fetchPlanos}
-        planoData={selectedPlanoAssinatura}
+        planoData={selectedPlano}
       />
       <DeletePlano
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
-        assinaturaId={assinaturaIdToDelete!}
+        planoId={planoIdToDelete!}
         refreshPlanos={fetchPlanos}
       />
-			<ViewAssinatura
-				showModal={showViewModal}
-				setShowModal={setShowViewModal}
-				planosData={selectedPlanoAssinatura}
-			/>
+      <ViewPlano
+        showModal={showViewModal}
+        setShowModal={setShowViewModal}
+        planosData={selectedPlano}
+      />
     </Box>
   );
 };

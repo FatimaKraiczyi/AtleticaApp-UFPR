@@ -158,7 +158,7 @@ const CreatePasswordForm = () => {
         <Heading className="mb-4 md:flex md:text-2xl ">
           Criar nova senha
         </Heading>
-        <Text className="text-sm mb-4 ">
+        <Text className="text-sm ">
           Sua nova senha deve ser diferente das senhas usadas anteriormente e
           deve ter pelo menos 6 caracteres.
         </Text>

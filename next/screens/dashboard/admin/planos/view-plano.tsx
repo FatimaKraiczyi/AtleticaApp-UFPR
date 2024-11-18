@@ -19,21 +19,23 @@ import { Center } from "@/components/ui/center";
 import { ChevronDown, ChevronUp } from "lucide-react-native";
 import { PlanoAssinatura } from "@/interfaces/planos";
 import { novaAssinatura } from "@/api/assinatura";
+import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import useRouter from "@unitools/router";
 
-interface ViewAssinaturaProps {
+interface ViewPlanoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   planosData?: PlanoAssinatura;
 }
 
-export const ViewAssinatura = ({
+export const ViewPlano = ({
   showModal,
   setShowModal,
   planosData,
-}: ViewAssinaturaProps) => {
+}: ViewPlanoProps) => {
   const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const toast = useToast();
+  const router = useRouter();
 
   const toggleExpand = (planoId: number) => {
     setExpandedPlanos((prevExpanded) => {
@@ -50,17 +52,30 @@ export const ViewAssinatura = ({
   const handlePurchase = async () => {
     if (!planosData) return;
 
-    setLoading(true);
-    setMessage(null);
 
     const response = await novaAssinatura(planosData.id);
 
-    setLoading(false);
     if (response.success) {
-      setMessage("Assinatura realizada com sucesso!");
-      setTimeout(() => setShowModal(false), 2000);
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} action="success">
+            <ToastTitle>Assinatura realizada com sucesso!</ToastTitle>
+          </Toast>
+        ),
+      });
+      router.push("/dashboard/assinatura");
     } else {
-      setMessage("Ocorreu um erro ao realizar a assinatura. Tente novamente.");
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} action="error">
+            <ToastTitle>
+              Ocorreu um erro ao realizar a assinatura. Tente novamente.
+            </ToastTitle>
+          </Toast>
+        ),
+      });
     }
   };
 
@@ -93,7 +108,7 @@ export const ViewAssinatura = ({
           </Center>
           <ModalBody className="max-h-[80vh] overflow-y-auto">
             <Text className="font-semibold text-2xl text-typography-600">
-              {planosData.descricao}
+              {planosData.atleticaNome}
             </Text>
             <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
               R$ {planosData.valor.toFixed(2)}
@@ -127,19 +142,10 @@ export const ViewAssinatura = ({
 
               <HStack className="items-center justify-between mt-4">
                 <Button onPress={handlePurchase} className="flex-1 ml-2">
-                  {loading ? (
-                    <ButtonText>Carregando...</ButtonText>
-                  ) : (
-                    <ButtonText>Assinar</ButtonText>
-                  )}
+                  <ButtonText>Assinar</ButtonText>
                 </Button>
               </HStack>
             </VStack>
-            {message && (
-              <Text className="mt-4 text-center text-sm text-red-500">
-                {message}
-              </Text>
-            )}
           </ModalBody>
         </ModalContent>
       )}

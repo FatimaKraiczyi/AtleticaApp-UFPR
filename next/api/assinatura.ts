@@ -1,8 +1,15 @@
 import { IResponse } from "@/interfaces";
 import { API, objectCatch } from "./api";
-import { getAllAssinaturas, getAssinaturaById, postAssinatura, putAssinatura } from "./routes/assinatura";
+import {
+  getAllAssinaturas,
+  getAssinaturaById,
+  postAssinatura,
+  putAssinatura,
+} from "./routes/assinatura";
 
-export const visualizarAssinaturas = async (): Promise<IResponse.Default<any>> => {
+export const visualizarAssinaturas = async (): Promise<
+  IResponse.Default<any>
+> => {
   try {
     const { data, status } = await API.get(getAllAssinaturas);
     return { data, success: status === 200 };
@@ -11,12 +18,28 @@ export const visualizarAssinaturas = async (): Promise<IResponse.Default<any>> =
   }
 };
 
-export const visualizarAssinaturaId = async (
-	id: number
+export const assinaturaUsuarioId = async (
+  usuarioId: number
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.get(
-			`${getAssinaturaById}/${id}`)
+    const { data, status } = await API.get(getAllAssinaturas);
+    if (status === 200 && data?.assinaturas) {
+      const assinaturasUsuario = data.assinaturas.filter(
+        (assinatura: { usuarioId: number; }) => assinatura.usuarioId === usuarioId
+      );
+      return { data: assinaturasUsuario, success: true };
+    }
+    return { data: [], success: false };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+export const visualizarAssinaturaId = async (
+  id: number
+): Promise<IResponse.Default<any>> => {
+  try {
+    const { data, status } = await API.get(`${getAssinaturaById}/${id}`);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -27,12 +50,10 @@ export const novaAssinatura = async (
   id: number
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(
-      `${postAssinatura}/${id}`
-    );
+    const { data, status } = await API.post(`${postAssinatura}/${id}`);
     return { data, success: status === 201 };
   } catch (error) {
-    return { ...objectCatch};
+    return { ...objectCatch };
   }
 };
 

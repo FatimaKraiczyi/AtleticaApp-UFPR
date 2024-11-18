@@ -167,9 +167,14 @@ const AllProdutos = () => {
                   </Pressable>
 
                   <VStack className="py-2">
+									<HStack>
                     <Text className="text-sm">
-                      Vendido por: {produto.vendedor}
+                      Vendido por: {""}
                     </Text>
+										<Text className="text-sm font-bold">
+                     {produto.atleticaNome}
+                    </Text>
+										</HStack>
                     <Text className="font-semibold text-xl mt-4">
                       {produto.nome}
                     </Text>

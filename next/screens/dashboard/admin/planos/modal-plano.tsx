@@ -27,7 +27,7 @@ import { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
-import { updatePlanoAssinatura, createPlanoAssinatura } from "@/api/planos";
+import { editPlano, newPlano } from "@/api/planos";
 
 const AssinaturaSchema = z.object({
   nome: z
@@ -103,7 +103,7 @@ export const ModalPlano = ({
 
     try {
       if (planoData) {
-        const response = await updatePlanoAssinatura(
+        const response = await editPlano(
           planoData.id,
           assinaturaPayload
         );
@@ -111,7 +111,7 @@ export const ModalPlano = ({
           refreshPlanos();
         }
       } else {
-        const response = await createPlanoAssinatura(assinaturaPayload);
+        const response = await newPlano(assinaturaPayload);
         if (response.success) {
           refreshPlanos();
         }
