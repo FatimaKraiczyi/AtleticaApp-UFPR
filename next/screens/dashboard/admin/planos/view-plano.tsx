@@ -131,8 +131,8 @@ export const ViewPlano = ({
 
               {expandedPlanos.has(planosData.id) && (
                 <VStack space="lg" className="items-center">
-                  {planosData.beneficios &&
-                    planosData.beneficios.map((beneficio, index) => (
+                  {planosData.descricao &&
+                    planosData.descricao.map((beneficio, index) => (
                       <Text key={index} className="text-gray-700 text-sm">
                         ✔️ {beneficio}
                       </Text>

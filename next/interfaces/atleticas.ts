@@ -9,7 +9,7 @@ export interface Atletica {
   nome: string;
   descricao: string;
   imagem?: string | null;
-  atividades: string;
+  atividades: string[];
   cursos?: Curso[];
 }
 

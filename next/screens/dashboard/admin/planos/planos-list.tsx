@@ -165,8 +165,8 @@ const AllPlanos = () => {
 
                     {expandedPlanos.has(plano.id) && (
                       <VStack space="lg" className="items-center">
-                        {plano.beneficios &&
-                          plano.beneficios.map((beneficio, index) => (
+                        {plano.descricao &&
+                          plano.descricao.map((beneficio, index) => (
                             <Text key={index} className="text-gray-700 text-sm">
                               ✔️ {beneficio}
                             </Text>

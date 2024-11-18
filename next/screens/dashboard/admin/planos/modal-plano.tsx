@@ -39,7 +39,7 @@ const AssinaturaSchema = z.object({
       typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
     return !isNaN(num) && num > 0;
   }, "Valor deve ser um número válido maior que 0"),
-  descricao: z.string().min(1, "Descrição é obrigatória"),
+  descricao: z.array(z.string().min(1, "Descrição é obrigatória")),
   duracao: z.union([z.string(), z.number()]).refine((val) => {
     const num = typeof val === "string" ? parseInt(val, 10) : val;
     return Number.isInteger(num) && num > 0;
@@ -71,7 +71,7 @@ export const ModalPlano = ({
       nome: "",
       valor: "",
       duracao: "",
-      descricao: "",
+      descricao: [""],
     },
   });
 
@@ -98,7 +98,7 @@ export const ModalPlano = ({
       descricao: data.descricao,
       valor: Number(data.valor),
       duracao: Number(data.duracao),
-			id: planoData?.id,
+      id: planoData?.id,
     };
 
     try {
@@ -228,8 +228,8 @@ export const ModalPlano = ({
                     <InputField
                       placeholder="Descrição do Plano"
                       type="text"
-                      value={value}
-                      onChangeText={onChange}
+                      value={value.join(", ")}
+                      onChangeText={(text) => onChange(text.split(",").map(item => item.trim()))}
                       onBlur={onBlur}
                     />
                   </Input>
