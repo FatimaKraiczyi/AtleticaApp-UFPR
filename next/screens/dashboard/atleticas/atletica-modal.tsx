@@ -477,7 +477,7 @@ export const ModalAtletica = ({
                             {atividadesEsportivas.map((atividade) => (
                               <SelectItem
                                 key={atividade.id}
-                                value={String(atividade.nome)}
+                                value={atividade.nome}
                                 label={atividade.nome}
                               >
                                 {atividade.nome}

@@ -28,7 +28,7 @@ const list: Icons[] = [
   },
   {
     iconName: Search,
-    label: "Atléticas",
+    label: "Listar Atléticas",
   },
   {
     iconName: ShoppingCart,
@@ -47,11 +47,15 @@ const list: Icons[] = [
 export const WebSidebar = () => {
   const router = useRouter();
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-	const { items } = useCarrinho();
-	
+  const { items } = useCarrinho();
+  const [userType, setUserType] = useState<string | null>(null);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
+      const userType = sessionStorage.getItem("userType");
+      setUserType(userType);
+
       if (path.includes("dashboard-layout")) {
         setSelectedIndex(0);
       } else if (path.includes("atleticas")) {
@@ -92,35 +96,43 @@ export const WebSidebar = () => {
 
   return (
     <VStack className="w-48 h-full border-r border-border-300">
-      {list.slice(0, -1).map((item, index) => (
-        <Pressable
-          key={index}
-          className="w-full hover:bg-background-50"
-          onPress={() => handlePress(index)}
-        >
-          <HStack
-            className={`items-center px-4 py-3 h-12 w-full ${
-              index === selectedIndex ? "bg-background-200" : ""
-            }`}
-            style={{ justifyContent: "flex-start" }}
+      {list
+        .filter((item, index) => {
+          if (userType === "master" && (index === 2 || index === 3)) {
+            return false;
+          }
+          return true;
+        })
+        .slice(0, -1)
+        .map((item, index) => (
+          <Pressable
+            key={index}
+            className="w-full hover:bg-background-50"
+            onPress={() => handlePress(index)}
           >
-            <Icon
-              as={item.iconName}
-              className={`w-6 h-6 stroke-background-800 ${
-                index === selectedIndex ? "fill-background-800" : "fill-none"
+            <HStack
+              className={`items-center px-4 py-3 h-12 w-full ${
+                index === selectedIndex ? "bg-background-200" : ""
               }`}
-            />
-            <Text className="ml-4 text-background-800 font-medium">
-              {item.label}
-            </Text>
-						{item.iconName === ShoppingCart && items > 0 && (
-              <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
-                <Text className="text-xs">{items}</Text>
-              </Box>
-            )}
-          </HStack>
-        </Pressable>
-      ))}
+              style={{ justifyContent: "flex-start" }}
+            >
+              <Icon
+                as={item.iconName}
+                className={`w-6 h-6 stroke-background-800 ${
+                  index === selectedIndex ? "fill-background-800" : "fill-none"
+                }`}
+              />
+              <Text className="ml-4 text-background-800 font-medium">
+                {item.label}
+              </Text>
+              {item.iconName === ShoppingCart && items > 0 && (
+                <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                  <Text className="text-xs">{items}</Text>
+                </Box>
+              )}
+            </HStack>
+          </Pressable>
+        ))}
       <Box className="flex-grow" />
       <Pressable
         className="w-full hover:bg-background-50"
