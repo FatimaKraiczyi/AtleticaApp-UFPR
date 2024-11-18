@@ -96,22 +96,10 @@ const AllPlanos = () => {
     return <LoadingState />;
   }
 
-	const handleCheckout = async (id: number) => {
-		try {
-			const response = await pagamentoAssinatura(
-				id,
-			);
-	
-			if (response.data && response.data.url) {
-				window.location.href = response.data.url;
-			} else {
-				alert("Erro ao iniciar o pagamento. Tente novamente mais tarde.");
-			}
-		} catch (error) {
-			console.error("Erro ao redirecionar ao checkout:", error);
-			alert("Erro ao iniciar o pagamento. Tente novamente mais tarde.");
-		}
-	};
+  const openViewModal = (plano?: PlanoAssinatura) => {
+    setSelectedPlanoAssinatura(plano);
+    setShowViewModal(true);
+  };
 	
   const renderNoAssinatura = () => (
     <NoItemsFound message="Nenhum plano de assinatura encontrado." />
@@ -189,7 +177,10 @@ const AllPlanos = () => {
                     <Button
                       variant="solid"
                       className="w-full mb-4"
-											onPress={() => handleCheckout(plano.id)}
+											onPress={() =>
+											
+												openViewModal(plano)
+											}
                     >
                       <ButtonText>Seja sócio</ButtonText>
                     </Button>
@@ -228,6 +219,11 @@ const AllPlanos = () => {
         assinaturaId={assinaturaIdToDelete!}
         refreshPlanos={fetchPlanos}
       />
+			<ViewAssinatura
+				showModal={showViewModal}
+				setShowModal={setShowViewModal}
+				planosData={selectedPlanoAssinatura}
+			/>
     </Box>
   );
 };

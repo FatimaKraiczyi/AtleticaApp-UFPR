@@ -29,7 +29,7 @@ const bottomTabsList: BottomTabs[] = [
   },
   {
     iconName: UserRound,
-    iconText: "Meu Perfil",
+    iconText: "Assinauras",
   },
 ];
 
@@ -46,7 +46,7 @@ export const MobileFooter = () => {
     } else if (index === 2) {
       router.push("/dashboard/carrinho");
     } else if (index === 3) {
-      router.push("/dashboard/meu-perfil");
+      router.push("/dashboard/assinatura");
     }
   };
 

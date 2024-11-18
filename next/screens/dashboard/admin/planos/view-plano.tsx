@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Modal,
   ModalBackdrop,
@@ -13,10 +14,11 @@ import { Heading } from "@/components/ui/heading";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
-import { useForm } from "react-hook-form";
 import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
+import { ChevronDown, ChevronUp } from "lucide-react-native";
 import { PlanoAssinatura } from "@/interfaces/planos";
+import { novaAssinatura } from "@/api/assinatura";
 
 interface ViewAssinaturaProps {
   showModal: boolean;
@@ -29,10 +31,37 @@ export const ViewAssinatura = ({
   setShowModal,
   planosData,
 }: ViewAssinaturaProps) => {
-  const { handleSubmit } = useForm();
+  const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
-  const handlePurchase = () => {
-    // Lógica para realizar a assinatura
+  const toggleExpand = (planoId: number) => {
+    setExpandedPlanos((prevExpanded) => {
+      const newExpanded = new Set(prevExpanded);
+      if (newExpanded.has(planoId)) {
+        newExpanded.delete(planoId);
+      } else {
+        newExpanded.add(planoId);
+      }
+      return newExpanded;
+    });
+  };
+
+  const handlePurchase = async () => {
+    if (!planosData) return;
+
+    setLoading(true);
+    setMessage(null);
+
+    const response = await novaAssinatura(planosData.id);
+
+    setLoading(false);
+    if (response.success) {
+      setMessage("Assinatura realizada com sucesso!");
+      setTimeout(() => setShowModal(false), 2000);
+    } else {
+      setMessage("Ocorreu um erro ao realizar a assinatura. Tente novamente.");
+    }
   };
 
   return (
@@ -52,7 +81,7 @@ export const ViewAssinatura = ({
               <Icon
                 as={CloseIcon}
                 size="md"
-                className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
+                className="stroke-background-400"
               />
             </ModalCloseButton>
           </ModalHeader>
@@ -70,13 +99,47 @@ export const ViewAssinatura = ({
               R$ {planosData.valor.toFixed(2)}
             </Text>
             <Text className="text-sm">Duração: {planosData.duracao} dias</Text>
+
             <VStack space="2xl">
+              <Button
+                variant="link"
+                className="text-gray-500 text-sm"
+                onPress={() => toggleExpand(planosData.id)}
+              >
+                <span>Veja os benefícios</span>
+                {expandedPlanos.has(planosData.id) ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
+
+              {expandedPlanos.has(planosData.id) && (
+                <VStack space="lg" className="items-center">
+                  {planosData.beneficios &&
+                    planosData.beneficios.map((beneficio, index) => (
+                      <Text key={index} className="text-gray-700 text-sm">
+                        ✔️ {beneficio}
+                      </Text>
+                    ))}
+                </VStack>
+              )}
+
               <HStack className="items-center justify-between mt-4">
                 <Button onPress={handlePurchase} className="flex-1 ml-2">
-                  <ButtonText>Comprar</ButtonText>
+                  {loading ? (
+                    <ButtonText>Carregando...</ButtonText>
+                  ) : (
+                    <ButtonText>Assinar</ButtonText>
+                  )}
                 </Button>
               </HStack>
             </VStack>
+            {message && (
+              <Text className="mt-4 text-center text-sm text-red-500">
+                {message}
+              </Text>
+            )}
           </ModalBody>
         </ModalContent>
       )}

@@ -1,5 +1,4 @@
 import { IResponse } from "@/interfaces";
-import { Produto } from "@/interfaces/produto";
 import { API, objectCatch } from "./api";
 import { getProductsCart, addProductCart, removeProductCart } from "./routes/carrinho";
 

@@ -36,7 +36,7 @@ const list: Icons[] = [
   },
   {
     iconName: UserRound,
-    label: "Meu Perfil",
+    label: "Assinaturas",
   },
   {
     iconName: LogOut,
@@ -58,7 +58,7 @@ export const WebSidebar = () => {
         setSelectedIndex(1);
       } else if (path.includes("carrinho")) {
         setSelectedIndex(2);
-      } else if (path.includes("meu-perfil")) {
+      } else if (path.includes("assiantura")) {
         setSelectedIndex(3);
       }
     }
@@ -85,7 +85,7 @@ export const WebSidebar = () => {
       } else if (index === 2) {
         router.push("/dashboard/carrinho");
       } else if (index === 3) {
-        router.push("/dashboard/meu-perfil");
+        router.push("/dashboard/assinatura");
       }
     }
   };

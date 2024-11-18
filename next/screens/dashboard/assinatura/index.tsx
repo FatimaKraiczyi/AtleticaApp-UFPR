@@ -1,13 +1,12 @@
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-
-import { PlanosList } from "../admin/planos/planos-list";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { MobileFooter } from "@/components/sections/MobileFooter";
+import { PlanosList } from "../admin/planos/planos-list";
 
-export const Planos = () => {
+export const Assinaturas = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Planos de assinatura" isSidebarVisible={true}>
+      <LayoutComponents title="Minhas Assinaturas" isSidebarVisible={true}>
         <PlanosList />
       </LayoutComponents>
       <MobileFooter />

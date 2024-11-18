@@ -102,12 +102,12 @@ export const ModalProduto = ({
 
     try {
       if (produtoData) {
-        const response = await updateProduto(produtoData.id, produtoPayload);
+        const response = await updateProduto(produtoData.id, { ...produtoPayload, id: produtoData.id });
         if (response.success) {
           refreshProdutos();
         }
       } else {
-        const response = await createProduto(produtoPayload);
+        const response = await createProduto({ ...produtoPayload, id: Date.now() });
         if (response.success) {
           refreshProdutos();
         }
