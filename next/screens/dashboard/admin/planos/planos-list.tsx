@@ -29,7 +29,6 @@ const AllPlanos = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [planoIdToDelete, setPlanoIdToDelete] = useState<number | null>(null);
   const [showViewModal, setShowViewModal] = useState(false);
-
   const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
 
   const showActions =
@@ -78,15 +77,15 @@ const AllPlanos = () => {
     setShowDeleteModal(true);
   };
 
-  const toggleExpand = (planoId: number) => {
-    setExpandedPlanos((prevExpanded) => {
-      const newExpanded = new Set(prevExpanded);
-      if (newExpanded.has(planoId)) {
-        newExpanded.delete(planoId);
+  const toggleExpand = (id: number) => {
+    setExpandedPlanos((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
       } else {
-        newExpanded.add(planoId);
+        newSet.add(id);
       }
-      return newExpanded;
+      return newSet;
     });
   };
 
@@ -136,8 +135,8 @@ const AllPlanos = () => {
                   }}
                 >
                   <VStack className="items-center">
-									<Text className="text-sm font-bold">
-                     {plano.atleticaNome}
+                    <Text className="text-sm font-bold">
+                      {plano.atleticaNome}
                     </Text>
                     <Text className="text-gray-500 font-semibold text-sm uppercase">
                       {plano.nome.toUpperCase()}
@@ -152,7 +151,7 @@ const AllPlanos = () => {
 
                     <Button
                       variant="link"
-                      className="text-gray-500 text-sm "
+                      className="text-gray-500 text-sm"
                       onPress={() => toggleExpand(plano.id)}
                     >
                       <span>Veja os benefícios</span>
@@ -162,15 +161,13 @@ const AllPlanos = () => {
                         <ChevronDown className="h-4 w-4" />
                       )}
                     </Button>
-
                     {expandedPlanos.has(plano.id) && (
                       <VStack space="lg" className="items-center">
-                        {plano.descricao &&
-                          plano.descricao.map((beneficio, index) => (
-                            <Text key={index} className="text-gray-700 text-sm">
-                              ✔️ {beneficio}
-                            </Text>
-                          ))}
+                        {plano.descricao && (
+                          <Text className="text-gray-700 text-sm">
+                            ✔️ {plano.descricao}
+                          </Text>
+                        )}
                       </VStack>
                     )}
                   </VStack>

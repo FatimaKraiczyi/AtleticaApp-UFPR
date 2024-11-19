@@ -181,7 +181,6 @@ export const ModalAtletica = ({
       imagem: profileImage,
       cursoIds: (data.cursoIds ?? []).filter((id: any) => id !== ""),
     };
-    console.log(atleticaPayload)
     try {
       if (atleticaData) {
         if (atleticaData.id !== undefined) {

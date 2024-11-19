@@ -9,6 +9,7 @@ export interface Assinatura {
 	planoValor: number;
 	planoDuracao: number;
 	atleticaNome: string;
+	planoDescricao: string[];
 }
 
 export interface AssinaturaProps {

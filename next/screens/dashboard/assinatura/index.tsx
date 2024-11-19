@@ -13,10 +13,12 @@ import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { assinaturaUsuario } from "@/api/assinatura";
 import { Assinatura } from "@/interfaces/assinatura";
 import { pagamentoAssinatura } from "@/api/planos";
+import { ChevronDown, ChevronUp } from "lucide-react-native";
 
 const Main = () => {
   const [loading, setLoading] = useState(true);
   const [assinaturas, setAssinaturas] = useState<Assinatura[]>([]);
+  const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
   const usuarioId =
     typeof window !== "undefined" ? sessionStorage.getItem("usuarioId") : null;
 
@@ -50,6 +52,18 @@ const Main = () => {
       setLoading(false);
     }
   }, [usuarioId]);
+
+  const toggleExpand = (id: number) => {
+    setExpandedPlanos((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   if (loading) {
     return <LoadingState />;
@@ -112,22 +126,49 @@ const Main = () => {
                     </Text>
                   </VStack>
                   <VStack className="items-center">
-                    <Button
-                      variant="solid"
-                      className="w-full"
-                      onPress={async () => {
-                        const response = await pagamentoAssinatura(
-                          assinatura.id
-                        );
-                        if (response?.data?.url) {
-                          window.location.href = response.data.url;
-                        } else {
-                          alert("Erro ao iniciar pagamento.");
-                        }
-                      }}
-                    >
-                      <ButtonText>Efetuar pagamento</ButtonText>
-                    </Button>
+                    {assinatura.statusAssinatura === "PAGA" ? (
+                      <VStack space="2xl">
+                        <Button
+                          variant="link"
+                          className="text-gray-500 text-sm"
+                          onPress={() => toggleExpand(assinatura.id)}
+                        >
+                          <span>Veja os benefícios</span>
+                          {expandedPlanos.has(assinatura.id) ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+
+                        {expandedPlanos.has(assinatura.id) && (
+                          <VStack space="lg" className="items-center">
+                            {assinatura.planoDescricao && (
+                                <Text className="text-gray-700 text-sm">
+                                  ✔️ {assinatura.planoDescricao}
+                                </Text>
+                              )}
+                          </VStack>
+                        )}
+                      </VStack>
+                    ) : (
+                      <Button
+                        variant="solid"
+                        className="w-full"
+                        onPress={async () => {
+                          const response = await pagamentoAssinatura(
+                            assinatura.id
+                          );
+                          if (response?.data?.url) {
+                            window.location.href = response.data.url;
+                          } else {
+                            alert("Erro ao iniciar pagamento.");
+                          }
+                        }}
+                      >
+                        <ButtonText>Efetuar pagamento</ButtonText>
+                      </Button>
+                    )}
                   </VStack>
                 </GridItem>
               ))}

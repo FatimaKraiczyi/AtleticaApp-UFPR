@@ -37,21 +37,20 @@ export const ViewPlano = ({
   const toast = useToast();
   const router = useRouter();
 
-  const toggleExpand = (planoId: number) => {
-    setExpandedPlanos((prevExpanded) => {
-      const newExpanded = new Set(prevExpanded);
-      if (newExpanded.has(planoId)) {
-        newExpanded.delete(planoId);
+	const toggleExpand = (id: number) => {
+    setExpandedPlanos((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
       } else {
-        newExpanded.add(planoId);
+        newSet.add(id);
       }
-      return newExpanded;
+      return newSet;
     });
   };
 
   const handlePurchase = async () => {
     if (!planosData) return;
-
 
     const response = await novaAssinatura(planosData.id);
 
@@ -131,12 +130,11 @@ export const ViewPlano = ({
 
               {expandedPlanos.has(planosData.id) && (
                 <VStack space="lg" className="items-center">
-                  {planosData.descricao &&
-                    planosData.descricao.map((beneficio, index) => (
-                      <Text key={index} className="text-gray-700 text-sm">
-                        ✔️ {beneficio}
-                      </Text>
-                    ))}
+                  {planosData.descricao && (
+                    <Text className="text-gray-700 text-sm">
+                      ✔️ {planosData.descricao}
+                    </Text>
+                  )}
                 </VStack>
               )}
 

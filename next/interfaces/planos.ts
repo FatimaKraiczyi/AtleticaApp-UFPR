@@ -1,5 +1,5 @@
 export interface PlanoAssinatura {
-	descricao?: string[];
+	descricao: string[];
 	id: number;
 	nome: string;
 	valor: number;
