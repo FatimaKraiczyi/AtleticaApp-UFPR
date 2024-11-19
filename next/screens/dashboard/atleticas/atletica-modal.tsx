@@ -175,6 +175,7 @@ export const ModalAtletica = ({
 
   const onSubmit = async (data: any) => {
     const atleticaPayload = {
+			id: atleticaData?.id,
       nome: data.nome,
       descricao: data.descricao,
       atividades: data.atividades ?? [],

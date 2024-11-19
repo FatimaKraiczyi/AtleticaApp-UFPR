@@ -5,7 +5,7 @@ export interface Curso {
 }
 
 export interface Atletica {
-  id?: number;
+  id: number;
   nome: string;
   descricao: string;
   imagem?: string | null;
