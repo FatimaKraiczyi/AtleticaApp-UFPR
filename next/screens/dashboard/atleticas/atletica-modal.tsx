@@ -97,7 +97,9 @@ export const ModalAtletica = ({
 
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["cursoIds"]);
-  const [atividadeFields, setAtividadeFields] = useState<string[]>(["atividades"]);
+  const [atividadeFields, setAtividadeFields] = useState<string[]>([
+    "atividades",
+  ]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [departamentos, setDepartamentos] = useState<string[]>([]);
   const [departamentoSelecionado, setDepartamentoSelecionado] = useState<
@@ -139,7 +141,10 @@ export const ModalAtletica = ({
   };
 
   const addAtividadeField = () => {
-    setAtividadeFields([...atividadeFields, `atividades${atividadeFields.length}`]);
+    setAtividadeFields([
+      ...atividadeFields,
+      `atividades${atividadeFields.length}`,
+    ]);
   };
 
   const removeAtividadeField = (index: number) => {
@@ -175,7 +180,7 @@ export const ModalAtletica = ({
 
   const onSubmit = async (data: any) => {
     const atleticaPayload = {
-			id: atleticaData?.id,
+      id: atleticaData?.id,
       nome: data.nome,
       descricao: data.descricao,
       atividades: data.atividades ?? [],
@@ -452,7 +457,9 @@ export const ModalAtletica = ({
             {atividadeFields.map((field, index) => (
               <FormControl key={field} isInvalid={!!errors.atividades}>
                 <FormControlLabel className="mb-2 flex items-center">
-                  <FormControlLabelText>Atividade Esportiva</FormControlLabelText>
+                  <FormControlLabelText>
+                    Atividade Esportiva
+                  </FormControlLabelText>
                 </FormControlLabel>
                 <div className="flex items-center w-full">
                   <Controller
@@ -460,10 +467,7 @@ export const ModalAtletica = ({
                     name={`atividades.${index}`}
                     control={control}
                     render={({ field: { onChange } }) => (
-                      <Select
-                        onValueChange={onChange}
-                        className="flex-1"
-                      >
+                      <Select onValueChange={onChange} className="flex-1">
                         <SelectTrigger variant="outline" size="md">
                           <SelectInput placeholder="Selecione uma atividade" />
                           <SelectIcon className="mr-3" as={ChevronDownIcon} />

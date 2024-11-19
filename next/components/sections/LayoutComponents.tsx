@@ -21,7 +21,6 @@ export const LayoutComponents = (props: LayoutComponents) => {
     setIsSidebarVisible(!isSidebarVisible);
   }
 
-
   return (
     <VStack className="h-full w-full bg-background-0">
       <Box className="md:hidden">

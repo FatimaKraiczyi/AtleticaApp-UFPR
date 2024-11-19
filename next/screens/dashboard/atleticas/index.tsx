@@ -22,12 +22,14 @@ import { LoadingState } from "@/components/sections/LoadingState";
 import { MobileFooter } from "@/components/sections/MobileFooter";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { Atletica, AtleticaResponse } from "@/interfaces/atleticas";
+import { useAtletica } from "@/hooks/AtleticaContex";
+import { Heading } from "@/components/ui/heading";
 
 const MainContent = () => {
   const router = useRouter();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [atleticaToEdit, setAtleticaToEdit] = useState<Atletica | null>(null);
+  const [atleticaToEdit, setAtleticaToEdit] = useState<number | null>(null);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [atleticas, setAtleticas] = useState<AtleticaResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,6 +37,7 @@ const MainContent = () => {
     null
   );
   const { setMembros } = useMembros();
+  const { setAtleticaData } = useAtletica();
 
   const userType =
     typeof window !== "undefined" ? sessionStorage.getItem("userType") : null;
@@ -53,12 +56,10 @@ const MainContent = () => {
 
   const handleViewAtletica = async (atleticaId: number) => {
     const response = await getAtleticaById(atleticaId);
-    if (response.success) {
-      if (response.data) {
-        setMembros(response.data);
-      }
+    if (response.success && response.data) {
+      setAtleticaData(response.data);
+      router.push("/dashboard/perfil-atletica");
     }
-    router.push("/dashboard/membros");
   };
 
   const handleCadastrarAtleticaPress = () => {
@@ -67,10 +68,10 @@ const MainContent = () => {
     setAtleticaToEdit(null);
   };
 
-  const handleEditAtleticaPress = (atletica: Atletica) => {
+  const handleEditAtleticaPress = (id: number) => {
     setIsModalVisible(true);
     setIsEditMode(true);
-    setAtleticaToEdit(atletica);
+    setAtleticaToEdit(id);
   };
 
   const handleCloseModal = () => {
@@ -140,21 +141,13 @@ const MainContent = () => {
           </Box>
           <Box className="p-4 md:h-[180px]">
             <Text className="text-lg font-semibold">{item.atletica.nome}</Text>
-            <Text className="text-sm text-gray-500">
+            <Text className="text-sm text-gray-500 break-words">
               {item.atletica.descricao}
             </Text>
-            <Text className="line-clamp-1">
-              Atividades: {item.atletica.atividades}
-            </Text>
-            {item.cursos && (
-              <Text className="line-clamp-1">
-                Cursos: {item.cursos.map((curso) => curso.nome).join(", ")}
-              </Text>
-            )}
             {userType === "master" ? (
               <HStack space="md">
                 <Pressable
-                  onPress={() => handleEditAtleticaPress(item.atletica)}
+                  onPress={() => handleEditAtleticaPress(item.atletica.id)}
                 >
                   <Icon as={EditIcon} className="text-typography-600" />
                 </Pressable>
@@ -194,9 +187,20 @@ const MainContent = () => {
   );
 
   return (
-    <Box className="flex-1">
-      <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
-        <VStack space="lg" className="items-center">
+    <Box className="flex-1 ">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: isWeb ? 0 : 100,
+          flexGrow: 1,
+        }}
+        className="flex-1 mb-20 md:mb-2"
+      >
+        <VStack className="p-4  md:px-10 md:pt-6  w-full" space="2xl">
+          <Heading size="2xl" className="font-roboto">
+            Atléticas
+          </Heading>
+
           {userType === "master" && (
             <Button
               className="gap-3 relative"
@@ -205,22 +209,9 @@ const MainContent = () => {
               <ButtonText>Cadastrar Atlética</ButtonText>
             </Button>
           )}
+          {atleticas.length === 0 ? renderNoAtleticas() : renderAtleticas()}
         </VStack>
-        {atleticas.length === 0 ? (
-          renderNoAtleticas()
-        ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: isWeb ? 0 : 100,
-              flexGrow: 1,
-            }}
-            className="flex-1 mb-20 md:mb-2"
-          >
-            {renderAtleticas()}
-          </ScrollView>
-        )}
-      </VStack>
+      </ScrollView>
       <ModalAtletica
         showModal={isModalVisible}
         setShowModal={handleCloseModal}
