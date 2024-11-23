@@ -6,7 +6,7 @@ import { EventsList } from "./event-list";
 export const AdminEventos = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Eventos" isSidebarVisible={true}>
+      <LayoutComponents title="Festas" isSidebarVisible={true}>
         <EventsList />
       </LayoutComponents>
       <MobileFooter />

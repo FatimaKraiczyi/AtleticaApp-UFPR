@@ -14,7 +14,7 @@ import { DeleteEvento } from "./delete-evento";
 import { Evento } from "@/interfaces/evento";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
-import { getAllEventosAPI, getEventoByIdAPI } from "@/api/evento";
+import { getAllEventosAPI } from "@/api/evento";
 import { getAtleticaById } from "@/api/atleticas";
 
 interface Plataformas {
@@ -29,7 +29,7 @@ const plataformas = {
 
 const plataformasTyped: Plataformas = plataformas;
 
-const AllEvents = () => {
+export const EventsList = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
@@ -46,6 +46,10 @@ const AllEvents = () => {
     ["/dashboard/admin/eventos", "/dashboard/admin/jogos"].includes(
       window.location.pathname
     );
+  const pathname =
+    typeof window !== "undefined" ? window.location.pathname : "";
+
+  const modalidade = pathname.includes("eventos") ? "FESTA" : "JOGO";
 
   const fetchEventos = async () => {
     setLoading(true);
@@ -59,23 +63,25 @@ const AllEvents = () => {
       }
     }
 
-    if (showActions) {
-      const response = await getAllEventosAPI();
-      if (response.success && response.data) {
-        const eventosFiltrados = atleticaId
-          ? response.data.filter(
-              (evento: Evento) => evento.atleticaId.toString() === atleticaId
-            )
-          : response.data;
+    const response = await getAllEventosAPI();
+    if (response.success && response.data) {
+      let eventosFiltrados;
 
-        setEventos(eventosFiltrados);
+      if (showActions) {
+        eventosFiltrados = response.data.filter(
+          (evento: Evento) =>
+            evento.modalidade === modalidade &&
+            evento.atleticaId.toString() === atleticaId
+        );
+      } else {
+        eventosFiltrados = response.data.filter(
+          (evento: Evento) => evento.modalidade === modalidade
+        );
       }
-    } else {
-      const response = await getAllEventosAPI();
-      if (response.success && response.data) {
-        setEventos(response.data);
-      }
+
+      setEventos(eventosFiltrados);
     }
+
     setLoading(false);
   };
 
@@ -96,8 +102,9 @@ const AllEvents = () => {
     setShowDeleteModal(true);
   };
 
+	
   const renderNoItems = () => (
-    <NoItemsFound message="Nenhum evento encontrado." />
+		    <NoItemsFound message={`Nenhum ${modalidade === "JOGO" ? "jogo" : "evento"} encontrado.`} />
   );
 
   const getPlatformImage = (url: string) => {
@@ -116,7 +123,9 @@ const AllEvents = () => {
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
-              <ButtonText>Adicionar Evento</ButtonText>
+              <ButtonText>
+                Adicionar {modalidade === "JOGO" ? "Jogo" : "Evento"}
+              </ButtonText>
             </Button>
           </VStack>
         )}
@@ -246,8 +255,4 @@ const AllEvents = () => {
       />
     </Box>
   );
-};
-
-export const EventsList = () => {
-  return <AllEvents />;
 };
