@@ -16,6 +16,7 @@ import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { MobileFooter } from "@/components/sections/MobileFooter";
 import { Button, ButtonText } from "@/components/ui/button";
+import { getAtleticaById } from "@/api/atleticas";
 
 interface CardData {
   bannerUri: string;
@@ -61,14 +62,27 @@ const HeadingCards: CardData[] = [
 const MainContent = () => {
   const router = useRouter();
   const [userType, setUserType] = useState<string | null>(null);
+  const [atleticaName, setAtleticaName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUserType = sessionStorage.getItem("userType");
-      setUserType(storedUserType);
-    }
-    setLoading(false);
+    const fetchData = async () => {
+      if (typeof window !== "undefined") {
+        const storedUserType = sessionStorage.getItem("userType");
+        const atleticaId = sessionStorage.getItem("atletica");
+
+        setUserType(storedUserType);
+        if (atleticaId && !atleticaName) {
+          const response = await getAtleticaById(Number(atleticaId));
+          if (response.success && response.data) {
+            setAtleticaName(response.data.atletica.nome);
+          }
+        }
+      }
+      setLoading(false);
+    };
+
+    fetchData();
   }, []);
 
   const filteredCards = HeadingCards.filter((card) => {
@@ -98,7 +112,7 @@ const MainContent = () => {
       >
         <VStack className="p-4  md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
-            AQUI SERA O NOME DA ATLÉTICA
+            {atleticaName}
           </Heading>
 
           <Grid
