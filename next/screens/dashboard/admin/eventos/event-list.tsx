@@ -7,12 +7,10 @@ import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { Edit, Trash, Eye } from "lucide-react";
-import { format } from "date-fns";
+import { Trash } from "lucide-react";
 import { HStack } from "@/components/ui/hstack";
 import { ModalEvento } from "./event-modal";
 import { DeleteEvento } from "./delete-evento";
-import { ViewEvento } from "./view-event";
 import { Evento } from "@/interfaces/evento";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
@@ -37,14 +35,10 @@ const AllEvents = () => {
   const [loading, setLoading] = useState(true);
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedEvento, setSelectedEvento] = useState<string | undefined>(
-    undefined
-  );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventoToDeleteId, setEventoToDeleteId] = useState<number | undefined>(
     undefined
   );
-  const [showViewModal, setShowViewModal] = useState(false);
   const [atleticaName, setAtleticaName] = useState<string | null>(null);
 
   const showActions =
@@ -97,11 +91,6 @@ const AllEvents = () => {
     setShowModal(true);
   };
 
-  const openViewModal = (link?: string) => {
-    setSelectedEvento(link);
-    setShowViewModal(true);
-  };
-
   const handleOpenDeleteModal = (id: number) => {
     setEventoToDeleteId(id);
     setShowDeleteModal(true);
@@ -140,92 +129,106 @@ const AllEvents = () => {
             className="p-4"
           >
             <Grid className="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
-              {eventos.map((evento) => (
-                <GridItem
-                  key={evento.id}
-                  className="flex flex-col p-4 bg-white rounded-md shadow-md"
-                >
-                  <Pressable
-                    onPress={() =>
-                      openViewModal(evento.linkPlataformaIngressos)
-                    }
-                  >
-                    <Box className="w-full overflow-hidden rounded-md h-48 relative group">
-                      <Image
-                        source={getPlatformImage(
-                          evento.linkPlataformaIngressos
-                        )}
-                        size="full"
-                        alt="Imagem do evento"
-                        className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
-                      />
-                    </Box>
-                  </Pressable>
+              {eventos.map((evento) => {
+                const eventoData = evento.data;
+                const [ano, mes, dia] = eventoData.split("-");
+                const mesAbreviado = mes.substring(0, 3).toUpperCase();
+                const diaNumerico = parseInt(dia, 10);
 
+                return (
                   <GridItem
                     key={evento.id}
-                    className="flex flex-row items-center pt-4 space-x-4"
+                    className="flex flex-col p-4 bg-white rounded-md shadow-md"
                   >
-                    <Box className="flex flex-col items-center justify-center bg-primary-100 rounded-lg px-4 py-2">
-                      <Text className="text-primary-500 font-bold text-sm">
-                        {format(new Date(evento.data), "MMM").toUpperCase()}
-                      </Text>
-                      <Text className="text-primary-900 font-extrabold text-2xl">
-                        {format(new Date(evento.data), "dd")}
-                      </Text>
-                    </Box>
-
-                    <VStack className="flex-1">
-                      <HStack>
-                        <Text className="text-sm text-gray-600">
-                          Evento realizado por: {""}
-                        </Text>
-                        <Text className="text-sm text-gray-600 font-semibold">
-                          {atleticaName}
-                        </Text>
-                      </HStack>
-                      <Text className="text-lg font-bold text-gray-900">
-                        {evento.descricao}
-                      </Text>
-                      <HStack>
-                        <Text className="text-sm text-gray-600">
-                          Local: {""}
-                        </Text>
-                        <Text className="text-sm text-gray-600 font-semibold">
-                          {evento.endereco}
-                        </Text>
-                      </HStack>
-                    </VStack>
-                  </GridItem>
-
-                  <VStack className="items-center pt-4">
-                    <Button
-                      variant="solid"
-                      className="w-full"
+                    <Pressable
                       onPress={() => {
                         if (evento.linkPlataformaIngressos) {
                           window.open(evento.linkPlataformaIngressos, "_blank");
                         }
                       }}
                     >
-                      <ButtonText>Visualizar Evento</ButtonText>
-                    </Button>
-
-                    {showActions && (
-                      <HStack space="md" className="pt-4">
-                        <Pressable
-                          onPress={() =>
-                            evento.id !== undefined &&
-                            handleOpenDeleteModal(evento.id)
+                      <Box className="w-full overflow-hidden rounded-md h-48 relative group">
+                        <Image
+                          source={
+                            evento.linkPlataformaIngressos
+                              ? getPlatformImage(evento.linkPlataformaIngressos)
+                              : ""
                           }
-                        >
-                          <Trash className="text-typography-600" />
-                        </Pressable>
-                      </HStack>
-                    )}
-                  </VStack>
-                </GridItem>
-              ))}
+                          size="full"
+                          alt="Imagem do evento"
+                          className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                        />
+                      </Box>
+                    </Pressable>
+
+                    <GridItem
+                      key={evento.id}
+                      className="flex flex-row items-center pt-4 space-x-4"
+                    >
+                      <Box className="flex flex-col items-center justify-center bg-primary-100 rounded-lg px-6 py-2">
+                        <Text className="text-primary-500 font-bold text-sm">
+                          {mesAbreviado}
+                        </Text>
+                        <Text className="text-primary-900 font-extrabold text-2xl">
+                          {diaNumerico}
+                        </Text>
+                      </Box>
+
+                      <VStack className="flex-1">
+                        <HStack>
+                          <Text className="text-sm text-gray-600">
+                            Evento realizado por: {""}
+                          </Text>
+                          <Text className="text-sm text-gray-600 font-semibold">
+                            {atleticaName}
+                          </Text>
+                        </HStack>
+                        <Text className="text-lg font-bold text-gray-900">
+                          {evento.descricao}
+                        </Text>
+                        <HStack>
+                          <Text className="text-sm text-gray-600">
+                            Local: {""}
+                          </Text>
+                          <Text className="text-sm text-gray-600 font-semibold">
+                            {evento.endereco}
+                          </Text>
+                        </HStack>
+                      </VStack>
+                    </GridItem>
+
+                    <VStack className="items-center pt-4">
+                      <Button
+                        variant="solid"
+                        className="w-full"
+                        onPress={() => {
+                          if (evento.linkPlataformaIngressos) {
+                            window.open(
+                              evento.linkPlataformaIngressos,
+                              "_blank"
+                            );
+                          }
+                        }}
+                      >
+                        <ButtonText>Visualizar Evento</ButtonText>
+                      </Button>
+
+                      {showActions && (
+                        <HStack space="md" className="pt-4">
+                          <Pressable
+                            onPress={() =>
+                              evento.id !== undefined &&
+                              handleOpenDeleteModal(evento.id)
+                            }
+                          >
+                            <Trash className="text-typography-600" />
+                          </Pressable>
+                        </HStack>
+                      )}
+                    </VStack>
+                  </GridItem>
+                );
+              })}
             </Grid>
           </ScrollView>
         )}
@@ -240,11 +243,6 @@ const AllEvents = () => {
         setShowModal={setShowDeleteModal}
         id={eventoToDeleteId}
         refreshEventos={fetchEventos}
-      />
-      <ViewEvento
-        showModal={showViewModal}
-        setShowModal={setShowViewModal}
-        produtoData={selectedEvento}
       />
     </Box>
   );
