@@ -65,6 +65,39 @@ const HeadingCards: CardData[] = [
   },
 ];
 
+const Card = ({
+  card,
+  onPress,
+}: {
+  card: CardData;
+  onPress: (route: string) => void;
+}) => (
+  <GridItem className="shadow-md rounded-lg">
+    <Box className="bg-violet-600 p-5 rounded-t-lg">
+      <Image
+        size="sm"
+        source={card.bannerUri}
+        alt={card.title}
+        className="w-20 h-20 mx-auto rounded-full"
+      />
+    </Box>
+    <Box className="p-4 md:h-[180px]">
+      <Text className="text-lg font-semibold">{card.title}</Text>
+      <Text className="text-sm text-gray-500">{card.description}</Text>
+
+      <Button
+        className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
+        variant="outline"
+        onPress={() => onPress(card.route)}
+      >
+        <ButtonText className="text-secondary-600 group-hover/button:text-white">
+          Ver Mais
+        </ButtonText>
+      </Button>
+    </Box>
+  </GridItem>
+);
+
 const MainContent = () => {
   const router = useRouter();
   const [userType, setUserType] = useState<string | null>(null);
@@ -100,21 +133,14 @@ const MainContent = () => {
     fetchData();
   }, []);
 
-  const filteredCards = HeadingCards.filter((card) => {
-    if (userType === "master" && card.userType !== "master") {
-      return false;
-    }
-    if (card.userType && card.userType !== userType) {
-      return false;
-    }
-    return true;
-  });
-
-  const adminCards = filteredCards.filter(
-    (card) => card.userType === "ADMIN" || card.userType === "master"
+  const mainCards = HeadingCards.filter((card, index) =>
+    [0, 1, 2, 3].includes(index)
   );
-  const normalCards = filteredCards.filter(
-    (card) => card.userType !== "ADMIN" && card.userType !== "master"
+  const adminCards = HeadingCards.filter(
+    (card, index) => index === 4 && userType === "ADMIN"
+  );
+  const masterCards = HeadingCards.filter(
+    (card, index) => index === 5 && userType === "master"
   );
 
   const handleCardPress = (route: string) => {
@@ -135,53 +161,15 @@ const MainContent = () => {
         }}
         className="flex-1 mb-20 md:mb-2"
       >
-        <VStack className="p-4  md:px-10 md:pt-6  w-full" space="2xl">
+        <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
           {userType === "master" ? (
             <>
               <Heading size="2xl" className="font-roboto font-bold">
-                Administrador: master
+                Administrador: Master
               </Heading>
-              <Grid
-                className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-                _extra={{
-                  className: "gap-5",
-                }}
-              >
-                {filteredCards.map((card, index) => (
-                  <GridItem
-                    key={index}
-                    className="shadow-md  rounded-lg"
-                    _extra={{
-                      className: "",
-                    }}
-                  >
-                    <Box className="bg-violet-600 p-5 rounded-t-lg">
-                      <Image
-                        size="sm"
-                        source={card.bannerUri}
-                        alt={card.title}
-                        className="w-20 h-20 mx-auto rounded-full"
-                      />
-                    </Box>
-                    <Box className="p-4 md:h-[180px]">
-                      <Text className="text-lg font-semibold">
-                        {card.title}
-                      </Text>
-                      <Text className="text-sm text-gray-500">
-                        {card.description}
-                      </Text>
-
-                      <Button
-                        className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
-                        variant="outline"
-                        onPress={() => handleCardPress(card.route)}
-                      >
-                        <ButtonText className="text-secondary-600 group-hover/button:text-white">
-                          Ver Mais
-                        </ButtonText>
-                      </Button>
-                    </Box>
-                  </GridItem>
+              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {masterCards.map((card, index) => (
+                  <Card key={index} card={card} onPress={handleCardPress} />
                 ))}
               </Grid>
             </>
@@ -190,95 +178,20 @@ const MainContent = () => {
               <Heading size="2xl" className="font-roboto font-bold">
                 Olá, {userName}
               </Heading>
-              <Grid
-                className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-                _extra={{
-                  className: "gap-5",
-                }}
-              >
-                {normalCards.map((card, index) => (
-                  <GridItem
-                    key={index}
-                    className="shadow-md  rounded-lg"
-                    _extra={{
-                      className: "",
-                    }}
-                  >
-                    <Box className="bg-violet-600 p-5 rounded-t-lg">
-                      <Image
-                        size="sm"
-                        source={card.bannerUri}
-                        alt={card.title}
-                        className="w-20 h-20 mx-auto rounded-full"
-                      />
-                    </Box>
-                    <Box className="p-4 md:h-[180px]">
-                      <Text className="text-lg font-semibold">
-                        {card.title}
-                      </Text>
-                      <Text className="text-sm text-gray-500">
-                        {card.description}
-                      </Text>
-
-                      <Button
-                        className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
-                        variant="outline"
-                        onPress={() => handleCardPress(card.route)}
-                      >
-                        <ButtonText className="text-secondary-600 group-hover/button:text-white">
-                          Ver Mais
-                        </ButtonText>
-                      </Button>
-                    </Box>
-                  </GridItem>
+              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {mainCards.map((card, index) => (
+                  <Card key={index} card={card} onPress={handleCardPress} />
                 ))}
               </Grid>
+
               {adminCards.length > 0 && (
                 <>
                   <Heading size="xl" className="font-roboto font-bold mt-10">
                     Administrador: {String(atleticaData)}
                   </Heading>
-                  <Grid
-                    className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-                    _extra={{
-                      className: "gap-5",
-                    }}
-                  >
+                  <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                     {adminCards.map((card, index) => (
-                      <GridItem
-                        key={index}
-                        className="shadow-md  rounded-lg"
-                        _extra={{
-                          className: "",
-                        }}
-                      >
-                        <Box className="bg-violet-600 p-5 rounded-t-lg">
-                          <Image
-                            size="sm"
-                            source={card.bannerUri}
-                            alt={card.title}
-                            className="w-20 h-20 mx-auto rounded-full"
-                          />
-                        </Box>
-                        <Box className="p-4 md:h-[180px]">
-                          <Text className="text-lg font-semibold">
-                            {card.title}
-                          </Text>
-                          <Text className="text-sm text-gray-500">
-                            {card.description}
-                          </Text>
-
-                          <Button
-                            className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
-                            variant="outline"
-                            onPress={() => handleCardPress(card.route)}
-                          >
-                            <ButtonText className="text-secondary-600 group-hover/button:text-white">
-                              Ver Mais
-                            </ButtonText>
-                          </Button>
-                        </Box>
-                      </GridItem>
+                      <Card key={index} card={card} onPress={handleCardPress} />
                     ))}
                   </Grid>
                 </>

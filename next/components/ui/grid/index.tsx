@@ -127,7 +127,7 @@ const Grid = forwardRef<React.ElementRef<typeof View>, IGridProps>(
     const [calculatedWidth, setCalculatedWidth] = useState<number | null>(null);
 
     const gridClass = _extra?.className;
-    const obj = generateResponsiveNumColumns({ gridClass: gridClass || "" });
+    const obj = generateResponsiveNumColumns({ gridClass });
     const responsiveNumColumns: any = useBreakpointValue(obj);
 
     const itemsPerRow = useMemo(() => {
@@ -256,7 +256,7 @@ const GridItem = forwardRef<React.ElementRef<typeof View>, IGridItemProps>(
     const gridItemClass = _extra?.className;
     const responsiveColSpan: number =
       useBreakpointValue(
-        generateResponsiveColSpans({ gridItemClassName: gridItemClass || "" })
+        generateResponsiveColSpans({ gridItemClassName: gridItemClass })
       ) ?? 1;
 
     useEffect(() => {
@@ -309,7 +309,8 @@ const GridItem = forwardRef<React.ElementRef<typeof View>, IGridItemProps>(
         gridItemClass={gridItemClass}
         className={gridItemStyle({
           class:
-            className + " " + Platform.select({ web: gridItemClass ?? "" }),
+            className + " " + Platform.select({ web: gridItemClass ?? "" }) ??
+            "",
         })}
         {...props}
         style={[

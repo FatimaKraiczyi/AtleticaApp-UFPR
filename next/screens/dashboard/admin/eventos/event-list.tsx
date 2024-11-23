@@ -48,16 +48,15 @@ const AllEvents = () => {
   const [atleticaName, setAtleticaName] = useState<string | null>(null);
 
   const showActions =
-    (typeof window !== "undefined" &&
-      window.location.pathname === "/dashboard/admin/eventos") ||
-    "/dashboard/admin/jogos";
+    typeof window !== "undefined" &&
+    ["/dashboard/admin/eventos", "/dashboard/admin/jogos"].includes(
+      window.location.pathname
+    );
 
   const fetchEventos = async () => {
     setLoading(true);
 
     if (typeof window !== "undefined") {
-      const atleticaId = sessionStorage.getItem("atletica");
-
       if (atleticaId && !atleticaName) {
         const response = await getAtleticaById(Number(atleticaId));
         if (response.success && response.data) {
@@ -66,16 +65,22 @@ const AllEvents = () => {
       }
     }
 
-    const response = await getAllEventosAPI();
+    if (showActions) {
+      const response = await getAllEventosAPI();
+      if (response.success && response.data) {
+        const eventosFiltrados = atleticaId
+          ? response.data.filter(
+              (evento: Evento) => evento.atleticaId.toString() === atleticaId
+            )
+          : response.data;
 
-    if (response.success && response.data) {
-      const eventosFiltrados = atleticaId
-        ? response.data.filter(
-            (evento: Evento) => evento.atleticaId.toString() === atleticaId
-          )
-        : response.data;
-
-      setEventos(eventosFiltrados);
+        setEventos(eventosFiltrados);
+      }
+    } else {
+      const response = await getAllEventosAPI();
+      if (response.success && response.data) {
+        setEventos(response.data);
+      }
     }
     setLoading(false);
   };
@@ -134,19 +139,11 @@ const AllEvents = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid
-              className="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2"
-              _extra={{
-                className: "",
-              }}
-            >
+            <Grid className="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
               {eventos.map((evento) => (
                 <GridItem
                   key={evento.id}
                   className="flex flex-col p-4 bg-white rounded-md shadow-md"
-                  _extra={{
-                    className: "",
-                  }}
                 >
                   <Pressable
                     onPress={() =>
@@ -205,9 +202,11 @@ const AllEvents = () => {
                     <Button
                       variant="solid"
                       className="w-full"
-                      onPress={() =>
-                        openViewModal(evento.linkPlataformaIngressos)
-                      }
+                      onPress={() => {
+                        if (evento.linkPlataformaIngressos) {
+                          window.open(evento.linkPlataformaIngressos, "_blank");
+                        }
+                      }}
                     >
                       <ButtonText>Visualizar Evento</ButtonText>
                     </Button>
