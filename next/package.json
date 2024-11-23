@@ -52,7 +52,6 @@
     "@unitools/router-next": "^0.0.1",
     "autoprefixer": "latest",
     "axios": "^1.7.7",
-    "date-fns": "^4.1.0",
     "expo-image": "^1.12.9",
     "lucide-react": "^0.454.0",
     "lucide-react-native": "^0.454.0",

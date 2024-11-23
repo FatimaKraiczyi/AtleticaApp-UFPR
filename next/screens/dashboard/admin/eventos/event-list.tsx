@@ -41,43 +41,33 @@ export const EventsList = () => {
   );
   const [atleticaName, setAtleticaName] = useState<string | null>(null);
 
-  const showActions =
-    typeof window !== "undefined" &&
-    ["/dashboard/admin/eventos", "/dashboard/admin/jogos"].includes(
-      window.location.pathname
-    );
   const pathname =
     typeof window !== "undefined" ? window.location.pathname : "";
 
   const modalidade = pathname.includes("eventos") ? "FESTA" : "JOGO";
 
+  const showActions =
+    typeof window !== "undefined" &&
+    ["/dashboard/admin/eventos", "/dashboard/admin/jogos"].includes(pathname);
+
   const fetchEventos = async () => {
     setLoading(true);
 
-    if (typeof window !== "undefined") {
-      if (atleticaId && !atleticaName) {
-        const response = await getAtleticaById(Number(atleticaId));
-        if (response.success && response.data) {
-          setAtleticaName(response.data.atletica.nome);
-        }
+    if (typeof window !== "undefined" && atleticaId && !atleticaName) {
+      const response = await getAtleticaById(Number(atleticaId));
+      if (response.success && response.data) {
+        setAtleticaName(response.data.atletica.nome);
       }
     }
 
     const response = await getAllEventosAPI();
     if (response.success && response.data) {
-      let eventosFiltrados;
-
-      if (showActions) {
-        eventosFiltrados = response.data.filter(
-          (evento: Evento) =>
-            evento.modalidade === modalidade &&
+      const eventosFiltrados = response.data.filter((evento: Evento) =>
+        showActions
+          ? evento.modalidade === modalidade &&
             evento.atleticaId.toString() === atleticaId
-        );
-      } else {
-        eventosFiltrados = response.data.filter(
-          (evento: Evento) => evento.modalidade === modalidade
-        );
-      }
+          : evento.modalidade === modalidade
+      );
 
       setEventos(eventosFiltrados);
     }
@@ -87,24 +77,25 @@ export const EventsList = () => {
 
   useEffect(() => {
     fetchEventos();
-  }, []);
+  }, [showActions, modalidade]);
 
   if (loading) {
     return <LoadingState />;
   }
 
-  const openModal = () => {
-    setShowModal(true);
-  };
+  const openModal = () => setShowModal(true);
 
   const handleOpenDeleteModal = (id: number) => {
     setEventoToDeleteId(id);
     setShowDeleteModal(true);
   };
 
-	
   const renderNoItems = () => (
-		    <NoItemsFound message={`Nenhum ${modalidade === "JOGO" ? "jogo" : "evento"} encontrado.`} />
+    <NoItemsFound
+      message={`Nenhum ${
+        modalidade === "JOGO" ? "jogo" : "evento"
+      } encontrado.`}
+    />
   );
 
   const getPlatformImage = (url: string) => {
@@ -122,7 +113,7 @@ export const EventsList = () => {
       <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
         {showActions && (
           <VStack space="lg" className="items-center">
-            <Button className="gap-3 relative" onPress={() => openModal()}>
+            <Button className="gap-3 relative" onPress={openModal}>
               <ButtonText>
                 Adicionar {modalidade === "JOGO" ? "Jogo" : "Evento"}
               </ButtonText>
