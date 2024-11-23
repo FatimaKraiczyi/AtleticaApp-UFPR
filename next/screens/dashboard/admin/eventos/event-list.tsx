@@ -135,7 +135,7 @@ const AllEvents = () => {
             className="p-4"
           >
             <Grid
-              className="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              className="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-2"
               _extra={{
                 className: "",
               }}
@@ -165,27 +165,55 @@ const AllEvents = () => {
                     </Box>
                   </Pressable>
 
-                  <VStack className="py-2">
-                    <HStack>
-                      <Text className="text-sm">Vendido por: {""}</Text>
-                      <Text className="text-sm font-bold">{atleticaName}</Text>
-                    </HStack>
-                    <Text className="font-semibold mt-4 text-md text-typography-900">
-                      {evento.descricao}
-                    </Text>
-                    <Text className="font-semibold text-xl ">
-                      Dia {format(new Date(evento.data), "dd/MM/yy")} a partir
-                      das{" "}
-                      {format(new Date(`1970-01-01T${evento.hora}`), "HH:mm")}
-                    </Text>
-                    <Text className="font-semibold  text-md text-typography-700">
-                      R$ {evento.ingresso.toFixed(2)}
-                    </Text>
-                  </VStack>
+                  <GridItem
+                    key={evento.id}
+                    className="flex flex-row items-center pt-4 space-x-4"
+                  >
+                    <Box className="flex flex-col items-center justify-center bg-primary-100 rounded-lg px-4 py-2">
+                      <Text className="text-primary-500 font-bold text-sm">
+                        {format(new Date(evento.data), "MMM").toUpperCase()}
+                      </Text>
+                      <Text className="text-primary-900 font-extrabold text-2xl">
+                        {format(new Date(evento.data), "dd")}
+                      </Text>
+                    </Box>
 
-                  {showActions ? (
-                    <HStack className="w-full items-center justify-between mt-4">
-                      <HStack className="items-center">
+                    <VStack className="flex-1">
+                      <HStack>
+                        <Text className="text-sm text-gray-600">
+                          Evento realizado por: {""}
+                        </Text>
+                        <Text className="text-sm text-gray-600 font-semibold">
+                          {atleticaName}
+                        </Text>
+                      </HStack>
+                      <Text className="text-lg font-bold text-gray-900">
+                        {evento.descricao}
+                      </Text>
+                      <HStack>
+                        <Text className="text-sm text-gray-600">
+                          Local: {""}
+                        </Text>
+                        <Text className="text-sm text-gray-600 font-semibold">
+                          {evento.endereco}
+                        </Text>
+                      </HStack>
+                    </VStack>
+                  </GridItem>
+
+                  <VStack className="items-center pt-4">
+                    <Button
+                      variant="solid"
+                      className="w-full"
+                      onPress={() =>
+                        openViewModal(evento.linkPlataformaIngressos)
+                      }
+                    >
+                      <ButtonText>Visualizar Evento</ButtonText>
+                    </Button>
+
+                    {showActions && (
+                      <HStack space="md" className="pt-4">
                         <Pressable
                           onPress={() =>
                             evento.id !== undefined &&
@@ -195,20 +223,8 @@ const AllEvents = () => {
                           <Trash className="text-typography-600" />
                         </Pressable>
                       </HStack>
-                    </HStack>
-                  ) : (
-                    <Button
-                      className="mt-auto w-full py-2 hover:bg-primary-500 "
-                      variant="outline"
-                      onPress={() =>
-                        openViewModal(evento.linkPlataformaIngressos)
-                      }
-                    >
-                      <ButtonText className="text-secondary-600 group-hover/button:text-white">
-                        Adquirir Ingresso
-                      </ButtonText>
-                    </Button>
-                  )}
+                    )}
+                  </VStack>
                 </GridItem>
               ))}
             </Grid>

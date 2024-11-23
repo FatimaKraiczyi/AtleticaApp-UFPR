@@ -181,7 +181,7 @@ const AllPlanos = () => {
                     </Button>
 
                     {showActions && (
-                      <HStack space="md">
+                      <HStack space="md" className="pt-4">
                         <Pressable onPress={() => handleEditProduto(plano)}>
                           <Icon as={EditIcon} className="text-gray-600" />
                         </Pressable>
