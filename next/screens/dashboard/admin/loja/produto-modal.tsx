@@ -102,12 +102,12 @@ export const ModalProduto = ({
 
     try {
       if (produtoData) {
-        const response = await updateProduto(produtoData.id, produtoPayload);
+        const response = await updateProduto(produtoData.id, { ...produtoPayload, id: produtoData.id });
         if (response.success) {
           refreshProdutos();
         }
       } else {
-        const response = await createProduto(produtoPayload);
+        const response = await createProduto({ ...produtoPayload, id: Date.now() });
         if (response.success) {
           refreshProdutos();
         }
@@ -166,7 +166,7 @@ export const ModalProduto = ({
             {produtoData ? "Editar Produto" : "Cadastrar Produto"}
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
+        <ModalBody className="max-h-[70vh] overflow-y-auto">
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
               <Box>

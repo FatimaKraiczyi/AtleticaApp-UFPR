@@ -69,7 +69,7 @@ export const DeleteMembro = ({
             Deletar Membro
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6">
+        <ModalBody>
           <Center className="w-full mb-6">
             <Box className="text-center m-6">
               Tem certeza? Essa ação não pode ser desfeita.

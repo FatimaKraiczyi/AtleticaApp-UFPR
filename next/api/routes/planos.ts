@@ -6,3 +6,4 @@ export const updatePlano = `${base}/editarPlano`;
 export const deletePlano = `${base}/removerPlano`;
 export const getPlanoByAtletica = `${base}/buscarPorAtletica`;
 export const getAssinantesPlano = `${base}/visulizarAssinantes`
+export const pagamentoAssinaturaId = `pagamento/realizarPagamento`;

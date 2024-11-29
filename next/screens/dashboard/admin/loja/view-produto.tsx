@@ -14,9 +14,11 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
+import { Produto } from "@/interfaces/produto";
+import { addCartProduct } from "@/api/carrinho";
+import { useCarrinho } from "@/hooks/CarrinhoContext";
 
 interface ViewProdutoProps {
   showModal: boolean;
@@ -31,7 +33,7 @@ export const ViewProduto = ({
 }: ViewProdutoProps) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantidade, setQuantidade] = useState<number>(1);
-  const { handleSubmit } = useForm();
+	const { addItem } = useCarrinho();
 
   const handleSizeSelection = (size: string) => {
     setSelectedSize(size);
@@ -42,10 +44,24 @@ export const ViewProduto = ({
     console.log("Produto comprado:", produtoData);
   };
 
-  const handleIncreaseQuantity = () => {
-    setQuantidade((prev) => prev + 1);
+  const handleIncreaseQuantity = (produto: Produto) => {
+    if (quantidade < produto.quantidade) {
+      setQuantidade(quantidade + 1);
+    }
   };
 
+	const handleAddToCart = async (produto: Produto) => {
+    try {
+      const response = await addCartProduct(produto.id, quantidade);
+      if (response.success) {
+        addItem();
+        console.log(`Produto ${produto.nome} adicionado ao carrinho`);
+      }
+    } catch (error) {
+      console.error("Erro ao adicionar produto ao carrinho:", error);
+    }
+  };
+	
   const handleDecreaseQuantity = () => {
     if (quantidade > 1) {
       setQuantidade((prev) => prev - 1);
@@ -81,7 +97,7 @@ export const ViewProduto = ({
               {produtoData.nome}
             </Heading>
           </Center>
-          <ModalBody className="px-10 py-6 max-h-[80vh] overflow-y-auto">
+          <ModalBody className="max-h-[80vh] overflow-y-auto">
             <Box className="w-full overflow-hidden rounded-md h-72">
               <Image
                 source={
@@ -91,35 +107,34 @@ export const ViewProduto = ({
                 size="full"
               />
             </Box>
-            <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
-              R$ {valorDesconto}
-            </Text>
-            <Text className="text-sm text-green-900 line-clamp-1">
-              5% desconto para assinantes
+						<VStack className="py-2">
+            <Text className="text-sm">
+              Vendido por: {produtoData.vendedor}
             </Text>
 
-            <Text className="mt-4 font-semibold  text-md text-typography-900">
+            <HStack space="md" className="items-center gap-2">
+						<Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
+						R$ {valorDesconto}
+              </Text>
+              <Text className="text-sm text-green-900 line-clamp-1">
+                5% off para sócios
+              </Text>
+            </HStack>
+
+            <Text className=" font-semibold  text-md text-typography-900">
               R$ {produtoData.valor.toFixed(2)}
             </Text>
-
-            <HStack space="md" className="mt-4 items-center gap-2">
-              <Button
-                className="w-4 h-6"
-                variant="outline"
-                onPress={handleDecreaseQuantity}
-              >
+						</VStack>
+            <HStack space="md" className="items-center gap-2">
+              <Button variant="link" onPress={handleDecreaseQuantity}>
                 -
               </Button>
               <Text>{quantidade}</Text>
-              <Button
-                className="w-4 h-6"
-                variant="outline"
-                onPress={handleIncreaseQuantity}
-              >
+              <Button variant="link" onPress={() => handleIncreaseQuantity}>
                 +
               </Button>
               <Text className="text-sm">
-                Quantidade disponível: {produtoData.quantidade}
+                Em estoque: {produtoData.quantidade}
               </Text>
             </HStack>
 
@@ -141,10 +156,11 @@ export const ViewProduto = ({
             </HStack>
 
             <VStack space="2xl">
-              <HStack className="items-center justify-between mt-4">
+              <HStack className="items-center justify-between">
                 <Button
                   className="flex-1 mr-2 hover:bg-primary-500 "
                   variant="outline"
+									onPress={() => handleAddToCart(produtoData)}
                 >
                   <ButtonText className="text-secondary-600 group-hover/button:text-white">
                     Adicionar no carrinho

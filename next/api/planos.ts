@@ -9,10 +9,11 @@ import {
   getAssinantesPlano,
   deletePlano,
   updatePlano,
-	getPlanoByAtletica,
+  getPlanoByAtletica,
+  pagamentoAssinaturaId,
 } from "./routes/planos";
 
-export const getAllPlanosAssinatura = async (): Promise<
+export const getPlanos = async (): Promise<
   IResponse.Default<any>
 > => {
   try {
@@ -23,7 +24,7 @@ export const getAllPlanosAssinatura = async (): Promise<
   }
 };
 
-export const createPlanoAssinatura = async (
+export const newPlano = async (
   plano: PlanoAssinatura
 ): Promise<IResponse.Default<any>> => {
   try {
@@ -34,7 +35,7 @@ export const createPlanoAssinatura = async (
   }
 };
 
-export const updatePlanoAssinatura = async (
+export const editPlano = async (
   id: number,
   plano: PlanoAssinatura
 ): Promise<IResponse.Default<any>> => {
@@ -46,7 +47,7 @@ export const updatePlanoAssinatura = async (
   }
 };
 
-export const deletePlanoAssinatura = async (
+export const excluirPlano = async (
   id: number
 ): Promise<IResponse.Default<any>> => {
   try {
@@ -72,7 +73,9 @@ export const getPlanoByAtleticaId = async (
   atleticaId: string
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.get(`${getPlanoByAtletica}/${atleticaId}`);
+    const { data, status } = await API.get(
+      `${getPlanoByAtletica}/${atleticaId}`
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };
@@ -82,6 +85,19 @@ export const getPlanoByAtleticaId = async (
 export const getAssinantes = async (): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(getAssinantesPlano);
+    return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+export const pagamentoAssinatura = async (
+  assinaturaId: number
+): Promise<IResponse.Default<any>> => {
+  try {
+    const { data, status } = await API.post(
+      `${pagamentoAssinaturaId}/${assinaturaId}`
+    );
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };

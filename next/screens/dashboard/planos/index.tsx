@@ -8,7 +8,7 @@ export const Planos = () => {
   return (
     <SafeAreaView className="h-full w-full">
       <LayoutComponents title="Planos de assinatura" isSidebarVisible={true}>
-        <PlanosList showActions={false} />
+        <PlanosList />
       </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>

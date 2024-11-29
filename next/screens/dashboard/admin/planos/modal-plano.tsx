@@ -23,11 +23,11 @@ import {
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
-import { updatePlanoAssinatura, createPlanoAssinatura } from "@/api/planos";
+import { editPlano, newPlano } from "@/api/planos";
 
 const AssinaturaSchema = z.object({
   nome: z
@@ -39,7 +39,9 @@ const AssinaturaSchema = z.object({
       typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
     return !isNaN(num) && num > 0;
   }, "Valor deve ser um número válido maior que 0"),
-  descricao: z.string().min(1, "Descrição é obrigatória"),
+  descricao: z.array(
+    z.string().min(1, "Descrição dos benefícios são obrigatórios")
+  ),
   duracao: z.union([z.string(), z.number()]).refine((val) => {
     const num = typeof val === "string" ? parseInt(val, 10) : val;
     return Number.isInteger(num) && num > 0;
@@ -67,13 +69,8 @@ export const ModalPlano = ({
     setValue,
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
-    defaultValues: {
-      nome: "",
-      valor: "",
-      duracao: "",
-      descricao: "",
-    },
   });
+  const [descricaoFields, setADescricaoFields] = useState<string[]>(["descricao"]);
 
   useEffect(() => {
     if (showModal) {
@@ -82,7 +79,10 @@ export const ModalPlano = ({
 
     if (planoData) {
       setValue("nome", planoData.nome);
-      setValue("descricao", planoData.descricao);
+      setValue(
+        "descricao",
+        planoData.descricao?.map((beneficios: any) => beneficios) || []
+      );
       setValue("valor", planoData.valor);
       setValue("duracao", planoData.duracao);
     }
@@ -95,22 +95,20 @@ export const ModalPlano = ({
   const onSubmit = async (data: AssianaturaSchemaDetails) => {
     const assinaturaPayload = {
       nome: data.nome,
-      descricao: data.descricao,
+      descricao: data.descricao || [],
       valor: Number(data.valor),
       duracao: Number(data.duracao),
+      id: planoData?.id,
     };
 
     try {
       if (planoData) {
-        const response = await updatePlanoAssinatura(
-          planoData.id,
-          assinaturaPayload
-        );
+        const response = await editPlano(planoData.id, assinaturaPayload);
         if (response.success) {
           refreshPlanos();
         }
       } else {
-        const response = await createPlanoAssinatura(assinaturaPayload);
+        const response = await newPlano(assinaturaPayload);
         if (response.success) {
           refreshPlanos();
         }
@@ -157,7 +155,7 @@ export const ModalPlano = ({
               : "Cadastrar Plano de Assinatura"}
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
+        <ModalBody className="max-h-[70vh] overflow-y-auto">
           <VStack space="xl">
             <FormControl isInvalid={!!errors.nome}>
               <FormControlLabel className="mb-2">
@@ -227,8 +225,10 @@ export const ModalPlano = ({
                     <InputField
                       placeholder="Descrição do Plano"
                       type="text"
-                      value={value}
-                      onChangeText={onChange}
+                      value={value.join(", ")}
+                      onChangeText={(text) =>
+                        onChange(text.split(",").map((item) => item.trim()))
+                      }
                       onBlur={onBlur}
                     />
                   </Input>

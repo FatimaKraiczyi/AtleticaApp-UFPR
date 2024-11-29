@@ -10,26 +10,30 @@ import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { HStack } from "@/components/ui/hstack";
 import { ModalPlano } from "./modal-plano";
 import { DeletePlano } from "./delete-plano";
-import { ViewAssinatura } from "./view-plano";
-import { getPlanoByAtleticaId, getAllPlanosAssinatura } from "@/api/planos";
+import { ViewPlano } from "./view-plano";
+import { getPlanoByAtleticaId, getPlanos } from "@/api/planos";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { PlanoAssinatura } from "@/interfaces/planos";
+import { ChevronDown, ChevronUp } from "lucide-react-native";
 
-const AllPlanos = ({ showActions = false }) => {
+const AllPlanos = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
-  const [planoAssinatura, setPlanoAssinatura] = useState<PlanoAssinatura[]>([]);
+  const [planos, setPlanos] = useState<PlanoAssinatura[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedPlanoAssinatura, setSelectedPlanoAssinatura] = useState<
+  const [selectedPlano, setSelectedPlano] = useState<
     PlanoAssinatura | undefined
   >(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [assinaturaIdToDelete, setAssinaturaIdToDelete] = useState<
-    number | null
-  >(null);
+  const [planoIdToDelete, setPlanoIdToDelete] = useState<number | null>(null);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
+
+  const showActions =
+    typeof window !== "undefined" &&
+    window.location.pathname === "/dashboard/admin/planos";
 
   const fetchPlanos = async () => {
     setLoading(true);
@@ -40,12 +44,12 @@ const AllPlanos = ({ showActions = false }) => {
       if (showActions && atleticaId) {
         response = await getPlanoByAtleticaId(atleticaId);
         if (response.success && Array.isArray(response.data)) {
-          setPlanoAssinatura(response.data);
+          setPlanos(response.data);
         }
       } else {
-        response = await getAllPlanosAssinatura();
+        response = await getPlanos();
         if (response.success && Array.isArray(response.data.planos)) {
-          setPlanoAssinatura(response.data.planos);
+          setPlanos(response.data.planos);
         }
       }
     } catch (error) {
@@ -60,13 +64,8 @@ const AllPlanos = ({ showActions = false }) => {
   }, []);
 
   const openModal = (id?: PlanoAssinatura) => {
-    setSelectedPlanoAssinatura(id);
+    setSelectedPlano(id);
     setShowModal(true);
-  };
-
-  const openViewModal = (id?: PlanoAssinatura) => {
-    setSelectedPlanoAssinatura(id);
-    setShowViewModal(true);
   };
 
   const handleEditProduto = (id: PlanoAssinatura) => {
@@ -74,13 +73,30 @@ const AllPlanos = ({ showActions = false }) => {
   };
 
   const handleOpenDeleteModal = (id: number) => {
-    setAssinaturaIdToDelete(id);
+    setPlanoIdToDelete(id);
     setShowDeleteModal(true);
+  };
+
+  const toggleExpand = (id: number) => {
+    setExpandedPlanos((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   if (loading) {
     return <LoadingState />;
   }
+
+  const openViewModal = (plano?: PlanoAssinatura) => {
+    setSelectedPlano(plano);
+    setShowViewModal(true);
+  };
 
   const renderNoAssinatura = () => (
     <NoItemsFound message="Nenhum plano de assinatura encontrado." />
@@ -88,7 +104,7 @@ const AllPlanos = ({ showActions = false }) => {
 
   return (
     <Box className="flex-1">
-      <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
+      <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
@@ -96,7 +112,7 @@ const AllPlanos = ({ showActions = false }) => {
             </Button>
           </VStack>
         )}
-        {planoAssinatura.length === 0 ? (
+        {planos.length === 0 ? (
           renderNoAssinatura()
         ) : (
           <ScrollView
@@ -110,51 +126,76 @@ const AllPlanos = ({ showActions = false }) => {
                 className: "",
               }}
             >
-              {planoAssinatura.map((planos) => (
+              {planos.map((plano) => (
                 <GridItem
-                  key={planos.id}
-                  _extra={{ className: "flex-1 p-4 relative" }}
+                  key={plano.id}
+                  className="flex-1 p-6 rounded-md shadow-lg bg-white"
+                  _extra={{
+                    className: "",
+                  }}
                 >
-                  <HStack className="w-full justify-between mt-2">
-                    <VStack>
-                      <Text className="font-semibold text-typography-900">
-                        {planos.nome}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        R$ {planos.valor.toFixed(2)}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        Quantidade: {planos.duracao}
-                      </Text>
-                    </VStack>
+                  <VStack className="items-center">
+                    <Text className="text-sm font-bold">
+                      {plano.atleticaNome}
+                    </Text>
+                    <Text className="text-gray-500 font-semibold text-sm uppercase">
+                      {plano.nome.toUpperCase()}
+                    </Text>
+                    <Text className="font-bold text-3xl mt-2">
+                      R$ {plano.valor.toFixed(2)}
+                    </Text>
+                    <Text className="text-gray-500 text-sm mb-4">
+                      /{" "}
+                      {plano.duracao === 30 ? "mês" : `${plano.duracao} meses`}
+                    </Text>
+
+                    <Button
+                      variant="link"
+                      className="text-gray-500 text-sm"
+                      onPress={() => toggleExpand(plano.id)}
+                    >
+                      <span>Veja os benefícios</span>
+                      {expandedPlanos.has(plano.id) ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
+                    {expandedPlanos.has(plano.id) && (
+                      <VStack space="lg" className="items-center">
+                        {plano.descricao && (
+                          <Text className="text-gray-700 text-sm">
+                            ✔️ {plano.descricao}
+                          </Text>
+                        )}
+                      </VStack>
+                    )}
+                  </VStack>
+                  <VStack className="items-center">
+                    <Button
+                      variant="solid"
+                      className="w-full"
+                      onPress={() => openViewModal(plano)}
+                    >
+                      <ButtonText>Seja sócio</ButtonText>
+                    </Button>
+
                     {showActions && (
-                      <HStack space="md" className="mt-2">
-                        <Pressable onPress={() => handleEditProduto(planos)}>
-                          <Icon as={EditIcon} className="text-typography-600" />
+                      <HStack space="md" className="pt-4">
+                        <Pressable onPress={() => handleEditProduto(plano)}>
+                          <Icon as={EditIcon} className="text-gray-600" />
                         </Pressable>
                         <Pressable
                           onPress={() =>
-                            planos.id !== undefined &&
-                            handleOpenDeleteModal(planos.id)
+                            plano.id !== undefined &&
+                            handleOpenDeleteModal(plano.id)
                           }
                         >
-                          <Icon
-                            as={TrashIcon}
-                            className="text-typography-600"
-                          />
+                          <Icon as={TrashIcon} className="text-gray-600" />
                         </Pressable>
                       </HStack>
                     )}
-                  </HStack>
-                  <HStack className="w-full items-center mt-2">
-                    <Button
-                      variant="outline"
-                      className="w-full gap-3 center"
-                      onPress={() => openViewModal(planos)}
-                    >
-                      <ButtonText>Visualizar</ButtonText>
-                    </Button>
-                  </HStack>
+                  </VStack>
                 </GridItem>
               ))}
             </Grid>
@@ -165,23 +206,23 @@ const AllPlanos = ({ showActions = false }) => {
         showModal={showModal}
         setShowModal={setShowModal}
         refreshPlanos={fetchPlanos}
-        planoData={selectedPlanoAssinatura}
+        planoData={selectedPlano}
       />
       <DeletePlano
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
-        assinaturaId={assinaturaIdToDelete!}
+        planoId={planoIdToDelete!}
         refreshPlanos={fetchPlanos}
       />
-      <ViewAssinatura
+      <ViewPlano
         showModal={showViewModal}
         setShowModal={setShowViewModal}
-        planosData={selectedPlanoAssinatura}
+        planosData={selectedPlano}
       />
     </Box>
   );
 };
 
 export const PlanosList = () => {
-  return <AllPlanos showActions={true} />;
+  return <AllPlanos />;
 };

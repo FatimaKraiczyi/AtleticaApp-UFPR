@@ -24,13 +24,17 @@ export const userAuthentication = async (
     if (status === 200 && data?.token) {
       const token = data.token;
       const userType = data.userType;
-      const atletica = data.atletica;
+			const atleticaId = data.atletica;
+			const usuarioId = data.usuarioId;
+			const usuarioNome = data.usuarioNome;
 
       await setToken(token);
       if (typeof window !== "undefined") {
         sessionStorage.setItem("userType", userType);
-        sessionStorage.setItem("atletica", atletica.toString());
+        sessionStorage.setItem("atletica", atleticaId.toString());
         sessionStorage.setItem("x-access-token", token);
+				sessionStorage.setItem("usuarioId", usuarioId.toString());
+				sessionStorage.setItem("usuarioNome", usuarioNome);
       }
     }
 

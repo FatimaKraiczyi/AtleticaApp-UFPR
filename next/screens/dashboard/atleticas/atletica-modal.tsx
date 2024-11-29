@@ -50,6 +50,7 @@ import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
 import { createAtletica, updateAtletica } from "@/api/atleticas";
 import { Atletica } from "@/interfaces/atleticas";
 import { CursoProps } from "@/interfaces/cursos";
+import atividadesEsportivas from "@/mock/atividades_esportivas";
 
 const userSchema = z.object({
   nome: z
@@ -60,7 +61,9 @@ const userSchema = z.object({
   cursoIds: z.array(z.string()).min(1, "Curso é obrigatório"),
   imagem: z.string().optional(),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  atividades: z.string().min(1, "Atividades esportivas são obrigatórias"),
+  atividades: z.array(
+    z.string().min(1, "Atividades esportivas são obrigatórias")
+  ),
 });
 type userSchemaDetails = z.infer<typeof userSchema>;
 
@@ -75,7 +78,7 @@ export const ModalAtletica = ({
   setShowModal: any;
   addAtletica: (newAtletica: Atletica) => void;
   editAtletica?: (atletica: Atletica) => void;
-  atleticaData?: Atletica;
+  atleticaData?: any;
 }) => {
   const ref = useRef(null);
   const {
@@ -94,6 +97,9 @@ export const ModalAtletica = ({
 
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["cursoIds"]);
+  const [atividadeFields, setAtividadeFields] = useState<string[]>([
+    "atividades",
+  ]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [departamentos, setDepartamentos] = useState<string[]>([]);
   const [departamentoSelecionado, setDepartamentoSelecionado] = useState<
@@ -134,6 +140,17 @@ export const ModalAtletica = ({
     setCursoFields(cursoFields.filter((_, i) => i !== index));
   };
 
+  const addAtividadeField = () => {
+    setAtividadeFields([
+      ...atividadeFields,
+      `atividades${atividadeFields.length}`,
+    ]);
+  };
+
+  const removeAtividadeField = (index: number) => {
+    setAtividadeFields(atividadeFields.filter((_, i) => i !== index));
+  };
+
   useEffect(() => {
     if (showModal) {
       resetForm();
@@ -142,10 +159,13 @@ export const ModalAtletica = ({
     if (atleticaData) {
       setValue("nome", atleticaData.nome);
       setValue("descricao", atleticaData.descricao);
-      setValue("atividades", atleticaData.atividades);
+      setValue(
+        "atividades",
+        atleticaData.atividades?.map((atividade: any) => atividade) || []
+      );
       setValue(
         "cursoIds",
-        atleticaData.cursos?.map((curso) => String(curso.id)) || []
+        atleticaData.cursos?.map((curso: CursoProps) => String(curso.id)) || []
       );
       setProfileImage(atleticaData.imagem || null);
     }
@@ -154,18 +174,19 @@ export const ModalAtletica = ({
   const resetForm = () => {
     reset();
     setCursoFields(["cursoIds"]);
+    setAtividadeFields(["atividades"]);
     setProfileImage(null);
   };
 
   const onSubmit = async (data: any) => {
     const atleticaPayload = {
+      id: atleticaData?.id,
       nome: data.nome,
       descricao: data.descricao,
-      atividades: data.atividades,
+      atividades: data.atividades ?? [],
       imagem: profileImage,
       cursoIds: (data.cursoIds ?? []).filter((id: any) => id !== ""),
     };
-
     try {
       if (atleticaData) {
         if (atleticaData.id !== undefined) {
@@ -238,7 +259,7 @@ export const ModalAtletica = ({
             {atleticaData ? "Editar Atlética" : "Cadastrar Atlética"}
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6 max-h-[70vh] overflow-y-auto">
+        <ModalBody className="max-h-[70vh] overflow-y-auto">
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
               <Avatar size="2xl">
@@ -433,41 +454,76 @@ export const ModalAtletica = ({
               </FormControl>
             ))}
 
-            <FormControl isInvalid={!!errors.atividades}>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>
-                  Atividades esportivas
-                </FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                defaultValue=""
-                name="atividades"
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input>
-                    <InputField
-                      placeholder="Atividades esportivas"
-                      type="text"
-                      value={value}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      onSubmitEditing={handleKeyPress}
-                      returnKeyType="done"
-                    />
-                  </Input>
-                )}
-              />
-              <FormControlError>
-                <FormControlErrorIcon size="md" as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.atividades?.message}
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
+            {atividadeFields.map((field, index) => (
+              <FormControl key={field} isInvalid={!!errors.atividades}>
+                <FormControlLabel className="mb-2 flex items-center">
+                  <FormControlLabelText>
+                    Atividade Esportiva
+                  </FormControlLabelText>
+                </FormControlLabel>
+                <div className="flex items-center w-full">
+                  <Controller
+                    defaultValue=""
+                    name={`atividades.${index}`}
+                    control={control}
+                    render={({ field: { onChange } }) => (
+                      <Select onValueChange={onChange} className="flex-1">
+                        <SelectTrigger variant="outline" size="md">
+                          <SelectInput placeholder="Selecione uma atividade" />
+                          <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                        </SelectTrigger>
+                        <SelectPortal>
+                          <SelectBackdrop />
+                          <SelectContent>
+                            <SelectDragIndicatorWrapper>
+                              <SelectDragIndicator />
+                            </SelectDragIndicatorWrapper>
+                            {atividadesEsportivas.map((atividade) => (
+                              <SelectItem
+                                key={atividade.id}
+                                value={atividade.nome}
+                                label={atividade.nome}
+                              >
+                                {atividade.nome}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </SelectPortal>
+                      </Select>
+                    )}
+                  />
+                  {index === atividadeFields.length - 1 && (
+                    <Button
+                      onPress={addAtividadeField}
+                      className="ml-2 p-1"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Icon as={PlusIcon} size="sm" />
+                    </Button>
+                  )}
+                  {index > 0 && (
+                    <Button
+                      onPress={() => removeAtividadeField(index)}
+                      className="ml-2 p-1"
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Icon as={XIcon} size="sm" />
+                    </Button>
+                  )}
+                </div>
+                <FormControlError>
+                  <FormControlErrorIcon size="sm" as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors?.atividades?.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              </FormControl>
+            ))}
+
             <Button
-              onPress={() => {
-                handleSubmit(onSubmit)();
-              }}
+              onPress={handleSubmit(onSubmit)}
               className="flex-1 p-2 mt-8"
             >
               <ButtonText>Salvar</ButtonText>

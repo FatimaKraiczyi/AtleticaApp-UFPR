@@ -76,7 +76,7 @@ const modalContentStyle = tva({
 });
 
 const modalBodyStyle = tva({
-  base: 'mt-4 mb-6',
+  base: 'px-8 py-8',
 });
 
 const modalCloseButtonStyle = tva({

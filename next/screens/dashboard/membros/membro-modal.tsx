@@ -148,7 +148,7 @@ export const ModalMembros = ({
             {editMembro ? "Editar Membro" : "Adicionar Membro"}
           </Heading>
         </Center>
-        <ModalBody className="px-10 py-6">
+        <ModalBody>
           <VStack space="xl">
             <FormControl isInvalid={!!errors.email}>
               <FormControlLabel className="mb-2">

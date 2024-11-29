@@ -7,7 +7,7 @@ export const ProdutosAtletica = () => {
   return (
     <SafeAreaView className="h-full w-full">
       <LayoutComponents title="Produtos" isSidebarVisible={true}>
-        <ProdutosList showActions={false} />
+        <ProdutosList />
       </LayoutComponents>
       <MobileFooter />
     </SafeAreaView>

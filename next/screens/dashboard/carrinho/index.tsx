@@ -1,83 +1,182 @@
-import { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { useEffect, useState, useRef } from "react";
 import { Box } from "@/components/ui/box";
-import { Grid, GridItem } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
-import { Pressable } from "@/components/ui/pressable";
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { HStack } from "@/components/ui/hstack";
+import { Pressable } from "@/components/ui/pressable";
 import { Image } from "@/components/ui/image";
+import { SafeAreaView } from "react-native";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
-import { LoadingState } from "@/components/sections/LoadingState";
-import { MobileFooter } from "@/components/sections/MobileFooter";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { MobileFooter } from "@/components/sections/MobileFooter";
 import { Produto } from "@/interfaces/produto";
+import { LoadingState } from "@/components/sections/LoadingState";
+import { Trash } from "lucide-react-native";
+import { getCart, deleteCartProdut } from "@/api/carrinho";
+
+interface ProdutoCarrinho extends Produto {
+  produtoId: number;
+	carrinhoCompraId: number;
+  produtoNome: string;
+  produtoValor: number;
+  quantidade: number;
+}
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);
-  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [produtosCarrinho, setProdutosCarrinho] = useState<ProdutoCarrinho[]>(
+    []
+  );
+  const [subtotal, setSubtotal] = useState(0);
+  const hasFetchedCart = useRef(false);
+
+  const calcularSubtotal = (items: ProdutoCarrinho[]) => {
+    const total = items.reduce(
+      (acc, item) => acc + item.quantidade * item.produtoValor,
+      0
+    );
+    setSubtotal(total);
+  };
+
+  useEffect(() => {
+    if (hasFetchedCart.current) return;
+
+    const fetchCartData = async () => {
+      try {
+        const response = await getCart();
+        if (response.success) {
+          setProdutosCarrinho(response.data);
+          calcularSubtotal(response.data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados do carrinho:", error);
+      } finally {
+        hasFetchedCart.current = true;
+        setLoading(false);
+      }
+    };
+
+    fetchCartData();
+  }, []);
+
+  const atualizarQuantidade = (produtoId: number, incremento: boolean) => {
+    setProdutosCarrinho((prevProdutos) => {
+      const atualizados = prevProdutos.map((produto) =>
+        produto.produtoId === produtoId
+          ? {
+              ...produto,
+              quantidade: Math.max(
+                1,
+                produto.quantidade + (incremento ? 1 : -1)
+              ),
+            }
+          : produto
+      );
+      calcularSubtotal(atualizados);
+      return atualizados;
+    });
+  };
+
+  const removerProduto = async (produtoId: number) => {
+    try {
+      const response = await deleteCartProdut(produtoId);
+      if (response.success) {
+        setProdutosCarrinho((prevProdutos) =>
+          prevProdutos.filter((produto) => produto.produtoId !== produtoId)
+        );
+        calcularSubtotal(produtosCarrinho);
+      }
+    } catch (error) {
+      console.error("Erro ao remover produto:", error);
+    }
+  };
 
   if (loading) {
     return <LoadingState />;
   }
 
-  const renderNoItems = () => (
-    <NoItemsFound message="Seu carrinho está vazio" />
-  );
+  if (produtosCarrinho.length === 0) {
+    return <NoItemsFound message="Seu carrinho está vazio" />;
+  }
+
+  const desconto = subtotal * 0.05;
+  const totalComDesconto = subtotal - desconto;
 
   return (
-    <Box className="flex-1">
-      <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
-        {produtos.length === 0 ? (
-          renderNoItems()
-        ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-            className="p-4"
-          >
-            <Grid
-              className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-              _extra={{
-                className: "",
-              }}
-            >
-              {produtos.map((produto) => (
-                <GridItem
-                  key={produto.id}
-                  _extra={{ className: "flex-1 p-4 relative" }}
-                >
-                  <Box className="w-full overflow-hidden rounded-md h-72">
-                    <Image
-                      source={
-                        produto.imagem ||
-                        require("@/assets/dashboard/image2.png")
-                      }
-                      alt={produto.nome}
-                      size="full"
-                    />
-                  </Box>
-                  <HStack className="w-full justify-between mt-2">
-                    <VStack>
-                      <Text className="font-semibold text-typography-900">
-                        {produto.nome}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        R$ {produto.valor.toFixed(2)}
-                      </Text>
-                      <Text className="line-clamp-1">
-                        Quantidade: {produto.quantidade}
-                      </Text>
-                    </VStack>
-                  </HStack>
-                </GridItem>
-              ))}
-            </Grid>
-          </ScrollView>
-        )}
+    <Box className="flex flex-col p-4 md:px-10 md:pt-6 ">
+      {produtosCarrinho.map((produto) => (
+        <HStack
+          key={produto.produtoId}
+          className="border-b  py-4  border-gray-200 flex flex-row md:flex-row gap-4"
+        >
+          <HStack className="flex-1 gap-4">
+            <Image
+              source={
+                produto.imagem || require("@/assets/dashboard/image2.png")
+              }
+              alt={produto.produtoNome}
+              className="w-20 h-25 object-cover rounded"
+            />
+            <VStack className="flex-1">
+              <Text className="font-bold">{produto.produtoNome}</Text>
+              <Text className="text-sm text-gray-500">Size: Medium</Text>
+              <Text className="text-sm text-gray-500">Delivery by Mon 27</Text>
+              <Text className="text-lg font-semibold text-green-500">
+                R$ {produto.produtoValor.toFixed(2)}
+              </Text>
+            </VStack>
+          </HStack>
+
+          <VStack className="items-center gap-2">
+            <Pressable onPress={() => removerProduto(produto.produtoId)}>
+              <Trash className="text-red-500" />
+            </Pressable>
+						<HStack space="md" className="items-center gap-2">
+              <Button
+                onPress={() => atualizarQuantidade(produto.produtoId, false)}
+                variant="link"
+              >
+                -
+              </Button>
+              <Text>{produto.quantidade}</Text>
+              <Button
+                onPress={() => atualizarQuantidade(produto.produtoId, true)}
+                variant="link"
+              >
+                +
+              </Button>
+            </HStack>
+          </VStack>
+        </HStack>
+      ))}
+
+			<VStack className="bg-gray-50 gap-4 md:pt-6 w-full space-y-4">
+			  <Text className="font-semibold text-lg">Detalhes do pedido</Text>
+        <HStack className="justify-between">
+          <Text>Subtotal</Text>
+          <Text>R$ {subtotal.toFixed(2)}</Text>
+        </HStack>
+        <HStack className="justify-between">
+          <Text>Desconto para sócios</Text>
+					<Text className="text-lg font-semibold text-green-500">
+					R$ {desconto.toFixed(2)}
+          </Text>
+        </HStack>
+        <HStack className="justify-between font-bold">
+          <Text>Total</Text>
+          <Text>R$ {totalComDesconto.toFixed(2)}</Text>
+        </HStack>
+			
       </VStack>
+			<HStack
+          space="xs"
+          className="md:mt-40 mt-auto items-right justify-end"
+        >
+        <Button className="bg-purple-500 text-white py-3 rounded-md">
+          Fazer pedido
+        </Button>
+				</HStack>
     </Box>
   );
 };

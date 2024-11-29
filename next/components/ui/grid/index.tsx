@@ -117,7 +117,7 @@ type IGridProps = ViewProps &
     paddingRight?: number;
     paddingStart?: number;
     paddingEnd?: number;
-    _extra: {
+    _extra?: {
       className: string;
     };
   };
@@ -233,7 +233,7 @@ cssInterop(Grid, {
 type IGridItemProps = ViewProps &
   VariantProps<typeof gridItemStyle> & {
     index?: number;
-    _extra: {
+    _extra?: {
       className: string;
     };
   };
