@@ -18,7 +18,7 @@ import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
 import AuthLayout from "../layout";
 import { Text } from "@/components/ui/text";
-import { resetPasswordRequest, validateUserToken } from "@/api/users";
+import { validateUserToken } from "@/api/users";
 import { HStack } from "@/components/ui/hstack";
 import Link from "@unitools/link";
 import { Center } from "@/components/ui/center";
@@ -28,7 +28,7 @@ import { Box } from "@/components/ui/box";
 import { useAuthContext } from "@/hooks/AuthProvider";
 
 const ValidateTokenSchema = z.object({
-  token: z.string().min(1, "Token é obrigatório"),
+  code: z.string().min(1, "Código de verificação é obrigatório"),
 });
 
 type ValidateTokenSchemaType = z.infer<typeof ValidateTokenSchema>;
@@ -96,7 +96,7 @@ const TokenVerification = () => {
   const { email } = useAuthContext();
 
   const onSubmit = async (data: ValidateTokenSchemaType) => {
-    const response = await validateUserToken(data.token);
+    const response = await validateUserToken(data.code);
     if (response.success) {
       toast.show({
         placement: "bottom right",
@@ -112,6 +112,7 @@ const TokenVerification = () => {
       } else if (response.data && response.data.acao === "recSenha") {
         router.push("/auth/create-password");
       }
+			console.log(response.data);
     } else {
       toast.show({
         placement: "bottom right",
@@ -136,7 +137,7 @@ const TokenVerification = () => {
 
   const ResendLink = ({ email }: { email: string }) => {
     const handleResend = async () => {
-      const response = await resetPasswordRequest(email);
+      const response = await validateUserToken(email);
 
       if (response.success) {
         toast.show({
@@ -199,17 +200,17 @@ const TokenVerification = () => {
         <VStack className="justify-between">
           <FormControl
             className="my-8"
-            isInvalid={!!errors?.token}
+            isInvalid={!!errors?.code}
             isRequired={true}
           >
             <Controller
               defaultValue=""
-              name="token"
+              name="code"
               control={control}
               rules={{
                 validate: async (value) => {
                   try {
-                    await ValidateTokenSchema.parseAsync({ token: value });
+                    await ValidateTokenSchema.parseAsync({ code: value });
                     return true;
                   } catch (error: any) {
                     return error.message;
@@ -232,7 +233,7 @@ const TokenVerification = () => {
             <FormControlError>
               <FormControlErrorIcon size="sm" as={AlertTriangle} />
               <FormControlErrorText>
-                {errors?.token?.message}
+                {errors?.code?.message}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>

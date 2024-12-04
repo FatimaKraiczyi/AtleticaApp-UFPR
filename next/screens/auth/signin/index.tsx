@@ -66,7 +66,9 @@ const SignInForm = () => {
     if (response.success) {
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("userType", response.data.tipo);
-      sessionStorage.setItem("atleticaId", response.data.atletica.toString());
+      sessionStorage.setItem("atleticaId", response.data.atletica ? response.data.atletica.toString() : "");
+      sessionStorage.setItem("usuarioId", response.data.usuarioId.toString());
+      sessionStorage.setItem("usuarioNome", response.data.usuarioNome);
 
       toast.show({
         placement: "bottom right",

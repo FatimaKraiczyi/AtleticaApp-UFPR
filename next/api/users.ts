@@ -23,18 +23,21 @@ export const userAuthentication = async (
 
     if (status === 200 && data?.token) {
       const token = data.token;
-      const userType = data.userType;
-			const atleticaId = data.atletica;
-			const usuarioId = data.usuarioId;
-			const usuarioNome = data.usuarioNome;
+      const userType = data.tipo;
+      const atleticaId = data.atletica;
+      const usuarioId = data.usuarioId;
+      const usuarioNome = data.usuarioNome;
 
       await setToken(token);
       if (typeof window !== "undefined") {
         sessionStorage.setItem("userType", userType);
-        sessionStorage.setItem("atletica", atleticaId.toString());
+        sessionStorage.setItem(
+          "atletica",
+          atleticaId ? atleticaId.toString() : ""
+        );
         sessionStorage.setItem("x-access-token", token);
-				sessionStorage.setItem("usuarioId", usuarioId.toString());
-				sessionStorage.setItem("usuarioNome", usuarioNome);
+        sessionStorage.setItem("usuarioId", usuarioId.toString());
+        sessionStorage.setItem("usuarioNome", usuarioNome);
       }
     }
 
@@ -47,25 +50,13 @@ export const userAuthentication = async (
 
 export const sendEmailRequest = async (
   email: string,
-  nome: string
+  action: string
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(sendEmail, { email, nome });
+    const { data, status } = await API.post(sendEmail, { email, action });
 
-    return { data, success: status === 200 };
-  } catch (error) {
-    return { ...objectCatch };
-  }
-};
-
-export const validateUserToken = async (
-  token: string
-): Promise<IResponse.Default<UserNovaSenha>> => {
-  try {
-    const { data, status } = await API.post(validateToken, { token });
-
-    if (status === 200 && typeof window !== "undefined") {
-      sessionStorage.setItem("x-access-token", token);
+    if (status === 200 && data?.token) {
+      await setToken(data.token);
     }
 
     return { data, success: status === 200 };
@@ -74,11 +65,24 @@ export const validateUserToken = async (
   }
 };
 
-export const resetPasswordRequest = async (
-  email: string
-): Promise<IResponse.Default<any>> => {
+export const validateUserToken = async (
+  code: string
+): Promise<IResponse.Default<UserNovaSenha>> => {
   try {
-    const { data, status } = await API.post(resetPassword, { email });
+    const token = await getToken();
+    if (!token) {
+      throw new Error("Token não encontrado");
+    }
+
+    const { data, status } = await API.post(
+      validateToken,
+      { code },
+      {
+        headers: {
+          "x-access-token": token,
+        },
+      }
+    );
 
     return { data, success: status === 200 };
   } catch (error) {

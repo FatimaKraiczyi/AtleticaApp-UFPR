@@ -32,7 +32,6 @@ const EmailSchema = z.object({
     .min(1, "Email é obrigatório")
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
-  name: z.string().min(1, "Nome é obrigatório"),
 });
 type EmailSchemaType = z.infer<typeof EmailSchema>;
 
@@ -49,30 +48,30 @@ const EmailForm = () => {
   const router = useRouter();
 
   const onSubmit = async (data: EmailSchemaType) => {
-		const response = await sendEmailRequest(data.email, data.name);
-	
-		if (response.success) {
-			toast.show({
-				placement: "bottom right",
-				render: ({ id }) => (
-					<Toast nativeID={id} variant="solid" action="success">
-						<ToastTitle>Sucesso</ToastTitle>
-					</Toast>
-				),
-			});
-			reset();
-			router.push("/auth/token");
-		} else {
-			toast.show({
-				placement: "bottom right",
-				render: ({ id }) => (
-					<Toast nativeID={id} variant="solid" action="error">
-						<ToastTitle>Erro ao enviar token de autenticação</ToastTitle>
-					</Toast>
-				),
-			});
-		}
-	};
+    const response = await sendEmailRequest(data.email, "cadastro");
+
+    if (response.success) {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="solid" action="success">
+            <ToastTitle>Sucesso</ToastTitle>
+          </Toast>
+        ),
+      });
+      reset();
+      router.push("/auth/token");
+    } else {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} variant="solid" action="error">
+            <ToastTitle>Erro ao enviar código de verficação</ToastTitle>
+          </Toast>
+        ),
+      });
+    }
+  };
 
   const handleKeyPress = () => {
     Keyboard.dismiss();
@@ -82,35 +81,6 @@ const EmailForm = () => {
   return (
     <>
       <VStack className="justify-between">
-        <FormControl
-          className="my-4"
-          isInvalid={!!errors.name}
-          isRequired={true}
-        >
-          <Controller
-            name="name"
-            defaultValue=""
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input>
-                <InputField
-                  placeholder="Nome completo"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  onSubmitEditing={handleKeyPress}
-                  returnKeyType="done"
-                  className="text-sm"
-                />
-              </Input>
-            )}
-          />
-          <FormControlError>
-            <FormControlErrorIcon size="sm" as={AlertTriangle} />
-            <FormControlErrorText>{errors?.name?.message}</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-
         <FormControl isInvalid={!!errors?.email} isRequired={true}>
           <Controller
             name="email"
@@ -221,14 +191,14 @@ const Main = () => {
             dark:bg-background-50 md:pt-8 md:px-8"
       >
         <Heading className="mb-8 md:flex md:text-2xl hidden">
-				Preencha os seus dados para continuar
+          Preencha os seus dados para continuar
         </Heading>
         <EmailForm />
         <HStack
           space="xs"
           className="md:mt-40 mt-auto items-center justify-center"
         >
-           <Text className="color-typography-500 text-sm dark:color-typography-400">
+          <Text className="color-typography-500 text-sm dark:color-typography-400">
             Já tem uma conta?
           </Text>
           <Link href="/auth/signin">
