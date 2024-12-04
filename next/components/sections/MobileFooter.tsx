@@ -49,11 +49,11 @@ export const MobileFooter = () => {
 
       if (path.includes("dashboard")) {
         setSelectedIndex(0);
-      } else if (path.includes("atleticas")) {
+      } else if (path.includes("visualizar/atleticas")) {
         setSelectedIndex(1);
-      } else if (path.includes("carrinho")) {
+      } else if (path.includes("visualizar/carrinho")) {
         setSelectedIndex(2);
-      } else if (path.includes("assinatura")) {
+      } else if (path.includes("visualizar/assinatura")) {
         setSelectedIndex(3);
       }
     }

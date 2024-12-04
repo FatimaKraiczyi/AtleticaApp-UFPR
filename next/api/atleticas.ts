@@ -9,23 +9,23 @@ import {
   getAtleticaByIdEndpoint,
 } from "./routes/atleticas";
 
-export const getAtletica = async (): Promise<IResponse.Default<AtleticaResponse[]>> => {
+export const getAtletica = async (): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(getAtleticaEndpoint);
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...arrayCatch };
+    return { ...objectCatch };
   }
 };
 
 export const createAtletica = async (
   atletica: Atletica
-): Promise<IResponse.Default<AtleticaResponse>> => {
+): Promise<IResponse.Default<Atletica>> => {
   try {
     const { data, status } = await API.post(createAtleticaEndpoint, atletica);
     return { data, success: status === 201 };
   } catch (error) {
-    return { ...objectCatch as IResponse.Default<AtleticaResponse> };
+    return { ...objectCatch as IResponse.Default<Atletica> };
   }
 };
 
@@ -58,7 +58,7 @@ export const deleteAtletica = async (
 };
 
 export const getAtleticaById = async (
-  id: number
+  id: string
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(`${getAtleticaByIdEndpoint}/${id}`);

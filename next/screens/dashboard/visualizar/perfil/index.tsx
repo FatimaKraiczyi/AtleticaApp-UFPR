@@ -63,9 +63,11 @@ export const MainContent = () => {
           <VStack space="sm">
             <Text className="text-gray-600">{descricao}</Text>
             {atividadesArray.map((atividade, index) => (
-              <Text key={index} className="text-gray-700">
-                {atividade}
-              </Text>
+              atividade && (
+                <Text key={index} className="text-gray-700">
+                  {atividade.nome}
+                </Text>
+              )
             ))}
           </VStack>
         );

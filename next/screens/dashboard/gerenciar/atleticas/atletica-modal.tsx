@@ -7,13 +7,8 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
 } from "@/components/ui/form-control";
-import { ChevronDownIcon, CloseIcon, Icon } from "@/components/ui/icon";
-import {
-  AlertTriangle,
-  FilePenLine,
-  PlusIcon,
-  XIcon,
-} from "lucide-react-native";
+import { CloseIcon, Icon, EditIcon } from "@/components/ui/icon";
+import { AlertTriangle, ChevronDownIcon, PlusIcon, XIcon } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -23,13 +18,12 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import { Image } from "@/components/ui/image";
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Keyboard, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
@@ -46,10 +40,9 @@ import {
   SelectPortal,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Avatar, AvatarBadge, AvatarImage } from "@/components/ui/avatar";
+import { AtividadesProps, Atletica, CursoProps } from "@/interfaces/atleticas";
 import { createAtletica, updateAtletica } from "@/api/atleticas";
-import { Atletica } from "@/interfaces/atleticas";
-import { CursoProps } from "@/interfaces/cursos";
+import { Image } from "@/components/ui/image";
 import atividadesEsportivas from "@/mock/atividades_esportivas";
 
 const userSchema = z.object({
@@ -61,7 +54,7 @@ const userSchema = z.object({
   cursoIds: z.array(z.string()).min(1, "Curso é obrigatório"),
   imagem: z.string().optional(),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  atividades: z.array(
+  atividadesIds: z.array(
     z.string().min(1, "Atividades esportivas são obrigatórias")
   ),
 });
@@ -70,14 +63,12 @@ type userSchemaDetails = z.infer<typeof userSchema>;
 export const ModalAtletica = ({
   showModal,
   setShowModal,
-  addAtletica,
-  editAtletica,
+  refreshAtleticas,
   atleticaData,
 }: {
   showModal: boolean;
   setShowModal: any;
-  addAtletica: (newAtletica: Atletica) => void;
-  editAtletica?: (atletica: Atletica) => void;
+  refreshAtleticas: () => void;
   atleticaData?: any;
 }) => {
   const ref = useRef(null);
@@ -89,23 +80,27 @@ export const ModalAtletica = ({
     setValue,
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
+    defaultValues: {
+      nome: "",
+      descricao: "",
+      departamento: "",
+      imagem: "",
+      cursoIds: [],
+      atividadesIds: [],
+    },
   });
-
-  const handleKeyPress = () => {
-    Keyboard.dismiss();
-  };
 
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["cursoIds"]);
   const [atividadeFields, setAtividadeFields] = useState<string[]>([
-    "atividades",
+    "atividadesIds",
   ]);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [departamentos, setDepartamentos] = useState<string[]>([]);
   const [departamentoSelecionado, setDepartamentoSelecionado] = useState<
     string | null
   >(null);
   const [cursosFiltrados, setCursosFiltrados] = useState<CursoProps[]>([]);
+  const [atleticaImage, setAtleticaImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -160,51 +155,53 @@ export const ModalAtletica = ({
       setValue("nome", atleticaData.nome);
       setValue("descricao", atleticaData.descricao);
       setValue(
-        "atividades",
-        atleticaData.atividades?.map((atividade: any) => atividade) || []
+        "atividadesIds",
+        atleticaData.atividades?.map((atividade: AtividadesProps) =>
+          String(atividade.id)
+        ) || []
       );
       setValue(
         "cursoIds",
         atleticaData.cursos?.map((curso: CursoProps) => String(curso.id)) || []
       );
-      setProfileImage(atleticaData.imagem || null);
+      setAtleticaImage(atleticaData.imagem || null);
     }
   }, [showModal, atleticaData, setValue]);
 
   const resetForm = () => {
     reset();
     setCursoFields(["cursoIds"]);
-    setAtividadeFields(["atividades"]);
-    setProfileImage(null);
+    setAtividadeFields(["atividadesIds"]);
+    setAtleticaImage(null);
   };
 
   const onSubmit = async (data: any) => {
     const atleticaPayload = {
-      id: atleticaData?.id,
       nome: data.nome,
       descricao: data.descricao,
-      atividades: data.atividades ?? [],
-      imagem: profileImage,
+      atividades: (data.atividadesIds ?? []).filter((id: any) => id !== ""),
+      imagem: atleticaImage,
       cursoIds: (data.cursoIds ?? []).filter((id: any) => id !== ""),
     };
+
     try {
       if (atleticaData) {
-        if (atleticaData.id !== undefined) {
-          const response = await updateAtletica(
-            atleticaData.id,
-            atleticaPayload
-          );
-          if (response.success) {
-            editAtletica && editAtletica(atleticaPayload);
-          }
+        const response = await updateAtletica(atleticaData.id, {
+          ...atleticaPayload,
+          id: atleticaData.id,
+        });
+        if (response.success) {
+          refreshAtleticas();
         }
       } else {
-        const response = await createAtletica(atleticaPayload);
+        const response = await createAtletica({
+          ...atleticaPayload,
+          id: Date.now(),
+        });
         if (response.success) {
-          addAtletica(atleticaPayload);
+          refreshAtleticas();
         }
       }
-
       setShowModal(false);
       resetForm();
     } catch (error) {
@@ -222,7 +219,7 @@ export const ModalAtletica = ({
 
     if (!result.canceled) {
       const { uri } = result.assets[0];
-      setProfileImage(uri);
+      setAtleticaImage(uri);
     } */
   };
 
@@ -241,8 +238,8 @@ export const ModalAtletica = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
+            alt="Imagem de fundo"
             size="full"
-            alt="Banner Image"
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
@@ -262,19 +259,18 @@ export const ModalAtletica = ({
         <ModalBody className="max-h-[70vh] overflow-y-auto">
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
-              <Avatar size="2xl">
-                <AvatarImage
+              <Box>
+                <Image
+                  size="xl"
+                  class="rounded-full"
                   source={
-                    profileImage
-                      ? { uri: profileImage }
+                    atleticaImage
+                      ? { uri: atleticaImage }
                       : require("@/assets/dashboard/image2.png")
                   }
-                  alt={"Imagem de perfil"}
+                  alt={"Imagem da atletica"}
                 />
-                <AvatarBadge className="justify-center items-center bg-background-500">
-                  <Icon as={FilePenLine} />
-                </AvatarBadge>
-              </Avatar>
+              </Box>
             </TouchableOpacity>
           </Center>
           <VStack space="xl">
@@ -283,7 +279,6 @@ export const ModalAtletica = ({
                 <FormControlLabelText>Nome da Atlética</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="nome"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -294,8 +289,6 @@ export const ModalAtletica = ({
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      onSubmitEditing={handleKeyPress}
-                      returnKeyType="done"
                     />
                   </Input>
                 )}
@@ -312,7 +305,6 @@ export const ModalAtletica = ({
                 <FormControlLabelText>Descrição</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="descricao"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -320,11 +312,8 @@ export const ModalAtletica = ({
                     <InputField
                       placeholder="Descrição"
                       type="text"
-                      value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      onSubmitEditing={handleKeyPress}
-                      returnKeyType="done"
                     />
                   </Input>
                 )}
@@ -341,7 +330,6 @@ export const ModalAtletica = ({
                 <FormControlLabelText>Departamento</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="departamento"
                 control={control}
                 render={({ field: { onChange } }) => (
@@ -390,7 +378,6 @@ export const ModalAtletica = ({
                 </FormControlLabel>
                 <div className="flex items-center w-full">
                   <Controller
-                    defaultValue=""
                     name={`cursoIds.${index}`}
                     control={control}
                     render={({ field: { onChange } }) => (
@@ -455,7 +442,7 @@ export const ModalAtletica = ({
             ))}
 
             {atividadeFields.map((field, index) => (
-              <FormControl key={field} isInvalid={!!errors.atividades}>
+              <FormControl key={field} isInvalid={!!errors.atividadesIds}>
                 <FormControlLabel className="mb-2 flex items-center">
                   <FormControlLabelText>
                     Atividade Esportiva
@@ -463,8 +450,7 @@ export const ModalAtletica = ({
                 </FormControlLabel>
                 <div className="flex items-center w-full">
                   <Controller
-                    defaultValue=""
-                    name={`atividades.${index}`}
+                    name={`atividadesIds.${index}`}
                     control={control}
                     render={({ field: { onChange } }) => (
                       <Select onValueChange={onChange} className="flex-1">
@@ -516,7 +502,7 @@ export const ModalAtletica = ({
                 <FormControlError>
                   <FormControlErrorIcon size="sm" as={AlertTriangle} />
                   <FormControlErrorText>
-                    {errors?.atividades?.message}
+                    {errors?.atividadesIds?.message}
                   </FormControlErrorText>
                 </FormControlError>
               </FormControl>

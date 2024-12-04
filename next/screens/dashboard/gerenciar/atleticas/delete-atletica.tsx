@@ -6,38 +6,40 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import { Image } from "@/components/ui/image";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { deleteAtletica } from "@/api/atleticas";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
+import { deleteAtletica } from "@/api/atleticas";
 
 interface DeleteAtleticaProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-  atleticaId: number;
-  updateAtleticasList: () => void;
+  id?: number;
+  refreshAtleticas: () => void;
 }
 
 export const DeleteAtletica = ({
   showModal,
   setShowModal,
-  atleticaId,
-  updateAtleticasList,
+  id,
+  refreshAtleticas,
 }: DeleteAtleticaProps) => {
   const handleDelete = async () => {
     try {
-      const response = await deleteAtletica(atleticaId);
-      if (response.success) {
-        updateAtleticasList();
-        setShowModal(false);
+      if (id !== undefined) {
+        const response = await deleteAtletica(id);
+        if (response.success) {
+          setShowModal(false);
+          refreshAtleticas();
+        }
       }
     } catch (error) {
-      console.error("Erro ao deletar atlética:", error);
+      console.error("Erro ao deletar:", error);
     }
   };
 
@@ -48,8 +50,8 @@ export const DeleteAtletica = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
+            alt="Imagem de fundo"
             size="full"
-            alt="Banner Image"
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">

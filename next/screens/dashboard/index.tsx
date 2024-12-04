@@ -61,7 +61,7 @@ const HeadingCards: CardData[] = [
     title: "Gerenciar Atléticas",
     description: "Cadastrar e gerenciar as atléticas e seus membros",
     userType: "master",
-    route: "/dashboard/gerenciar/master",
+    route: "/dashboard/gerenciar/atleticas",
   },
 ];
 
@@ -110,7 +110,7 @@ const MainContent = () => {
       if (typeof window !== "undefined") {
         const storedUserType = sessionStorage.getItem("userType");
         const usuarioNome = sessionStorage.getItem("usuarioNome");
-        const atleticaId = sessionStorage.getItem("atletica");
+        const atleticaId = sessionStorage.getItem("atleticaId");
 
         setUserType(storedUserType);
         if (usuarioNome) {
@@ -121,7 +121,7 @@ const MainContent = () => {
           setUserName(nomeFormatado);
         }
         if (storedUserType === "ADMIN" && atleticaId) {
-          const response = await getAtleticaById(Number(atleticaId));
+          const response = await getAtleticaById(atleticaId);
           if (response.success && response.data) {
             setAtleticaData(response.data.atletica.nome);
           }

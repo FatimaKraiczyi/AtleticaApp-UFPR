@@ -69,11 +69,11 @@ const MainContent = () => {
     const fetchData = async () => {
       if (typeof window !== "undefined") {
         const storedUserType = sessionStorage.getItem("userType");
-        const atleticaId = sessionStorage.getItem("atletica");
+        const atleticaId = sessionStorage.getItem("atleticaId");
 
         setUserType(storedUserType);
         if (atleticaId && !atleticaName) {
-          const response = await getAtleticaById(Number(atleticaId));
+          const response = await getAtleticaById(atleticaId);
           if (response.success && response.data) {
             setAtleticaName(response.data.atletica.nome);
           }

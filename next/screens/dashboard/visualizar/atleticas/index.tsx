@@ -1,7 +1,7 @@
 import { SafeAreaView } from "@/components/ui/safe-area-view";
-import { AtleticasList } from "../../gerenciar/atleticas/atleticas-list";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { MobileFooter } from "@/components/sections/MobileFooter";
+import { AtleticasList } from "../../gerenciar/atleticas/atletica-list";
 
 export const Atleticas = () => {
   return (
