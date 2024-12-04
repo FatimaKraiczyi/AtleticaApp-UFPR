@@ -47,7 +47,7 @@ export const MobileFooter = () => {
       const userType = sessionStorage.getItem("userType");
       setUserType(userType);
 
-      if (path.includes("dashboard-layout")) {
+      if (path.includes("dashboard")) {
         setSelectedIndex(0);
       } else if (path.includes("atleticas")) {
         setSelectedIndex(1);
@@ -63,11 +63,11 @@ export const MobileFooter = () => {
     if (index === 0) {
       router.push("/dashboard/");
     } else if (index === 1) {
-      router.push("/dashboard/atleticas");
+      router.push("/dashboard/visualizar/atleticas");
     } else if (index === 2) {
-      router.push("/dashboard/carrinho");
+      router.push("/dashboard/visualizar/carrinho");
     } else if (index === 3) {
-      router.push("/dashboard/assinatura");
+      router.push("/dashboard/visualizar/assinatura");
     }
   };
 

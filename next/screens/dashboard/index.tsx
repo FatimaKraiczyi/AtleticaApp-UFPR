@@ -29,39 +29,39 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/assets/dashboard/image2.png"),
     title: "Jogos",
     description: "Visualizar todos os jogos",
-    route: "/dashboard/jogos",
+    route: "/dashboard/visualizar/jogos",
   },
   {
     bannerUri: require("@/assets/dashboard/image.png"),
     title: "Eventos",
     description: "Visualizar todos os eventos",
-    route: "/dashboard/eventos",
+    route: "/dashboard/visualizar/eventos",
   },
   {
     bannerUri: require("@/assets/dashboard/image4.png"),
-    title: "Produtos",
+    title: "Loja",
     description: "Visualizar todos os produtos",
-    route: "/dashboard/produtos",
+    route: "/dashboard/visualizar/loja",
   },
   {
     bannerUri: require("@/assets/dashboard/image5.png"),
     title: "Planos de assinatura",
     description: "Visualizar todos os planos de assinatura",
-    route: "/dashboard/planos",
+    route: "/dashboard/visualizar/planos",
   },
   {
     bannerUri: require("@/assets/dashboard/image6.png"),
-    title: "Admin Atlética",
-    description: "Administrar sua atlética e seus membros",
+    title: "Gerenciar Atlética",
+    description: "Gerenciar sua atlética e seus membros",
     userType: "ADMIN",
-    route: "/dashboard/admin",
+    route: "/dashboard/gerenciar",
   },
   {
     bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Gerenciar Atléticas",
     description: "Cadastrar e gerenciar as atléticas e seus membros",
     userType: "master",
-    route: "/dashboard/atleticas",
+    route: "/dashboard/gerenciar/master",
   },
 ];
 
@@ -165,7 +165,7 @@ const MainContent = () => {
           {userType === "master" ? (
             <>
               <Heading size="2xl" className="font-roboto font-bold">
-                Administrador: Master
+                Gerenciar: Master
               </Heading>
               <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 {masterCards.map((card, index) => (
@@ -187,7 +187,7 @@ const MainContent = () => {
               {adminCards.length > 0 && (
                 <>
                   <Heading size="xl" className="font-roboto font-bold mt-10">
-                    Administrador: {String(atleticaData)}
+                    Gerenciar: {String(atleticaData)}
                   </Heading>
                   <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                     {adminCards.map((card, index) => (

@@ -5,7 +5,6 @@ import {
   userAuthenticationEndpoint,
   sendEmail,
   validateToken,
-  resetPassword,
   createUserEndpoint,
   newPasswordResquest,
 } from "./routes/auth";
@@ -31,10 +30,7 @@ export const userAuthentication = async (
       await setToken(token);
       if (typeof window !== "undefined") {
         sessionStorage.setItem("userType", userType);
-        sessionStorage.setItem(
-          "atletica",
-          atleticaId ? atleticaId.toString() : ""
-        );
+				sessionStorage.setItem("atleticaId", atleticaId.toString());
         sessionStorage.setItem("x-access-token", token);
         sessionStorage.setItem("usuarioId", usuarioId.toString());
         sessionStorage.setItem("usuarioNome", usuarioNome);

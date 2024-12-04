@@ -184,6 +184,34 @@ const SignUpForm = () => {
 
   return (
     <>
+		<FormControl
+        className="my-2  md:my-2"
+				isInvalid={!!errors.nome}
+          isRequired={true}
+        >
+          <Controller
+            name="nome"
+            defaultValue=""
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Nome completo"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  onSubmitEditing={handleKeyPress}
+                  returnKeyType="done"
+                  className="text-sm"
+                />
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="sm" as={AlertTriangle} />
+            <FormControlErrorText>{errors?.nome?.message}</FormControlErrorText>
+          </FormControlError>
+        </FormControl>
       <FormControl
         className="my-2  md:my-2"
         isRequired={true}

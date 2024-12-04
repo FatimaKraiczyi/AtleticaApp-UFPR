@@ -1,4 +1,4 @@
-const atividadesEsportivas = [
+export const atividadesEsportivas = [
   {
     id: 1,
     nome: "Futebol",
