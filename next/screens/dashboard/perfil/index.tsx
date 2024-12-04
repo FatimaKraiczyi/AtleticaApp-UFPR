@@ -3,23 +3,13 @@ import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Image } from "@/components/ui/image";
-import { Button, ButtonText } from "@/components/ui/button";
-import useCustomRouter from "@/hooks/useCustomRouter";
-import useRouter from "@unitools/router";
-import { AtleticaResponse } from "@/interfaces/atleticas";
-import {
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useState,
-} from "react";
+import { useState } from "react";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { useAtletica } from "@/hooks/AtleticaContex";
-import { Instagram, Twitter, Github, Linkedin } from "lucide-react-native";
+import { Instagram, Twitter } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
+import { ProdutosList } from "../admin/loja/produt-list";
+import { Box } from "@/components/ui/box";
 
 interface NavBarProps {
   tabs: string[];
@@ -29,7 +19,7 @@ interface NavBarProps {
 
 const NavBar = ({ tabs, activeTab, setActiveTab }: NavBarProps) => {
   return (
-    <div className="relative border-b border-gray-300">
+    <div className="relative border-b border-gray-300 bg-white">
       <div className="flex justify-around">
         {tabs.map((tab, index) => (
           <button
@@ -45,7 +35,6 @@ const NavBar = ({ tabs, activeTab, setActiveTab }: NavBarProps) => {
           </button>
         ))}
       </div>
-      {/* Indicador */}
       <div
         className="absolute bottom-0 bg-violet-600 h-1 transition-all"
         style={{
@@ -63,17 +52,16 @@ export const MainContent = () => {
   const cursos = atleticaData.cursos;
   const atividadesArray = Array.isArray(atividades) ? atividades : [atividades];
 
-  // Estado da aba ativa
   const [activeTab, setActiveTab] = useState(0);
 
-  const tabs = ["Atividades", "Cursos", "Sobre"];
+  const tabs = ["Sobre", "Produtos", "Eventos", "Jogos", "Planos", "Membros"];
 
-  // Renderiza o conteúdo de acordo com a aba ativa
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
         return (
           <VStack space="sm">
+            <Text className="text-gray-600">{descricao}</Text>
             {atividadesArray.map((atividade, index) => (
               <Text key={index} className="text-gray-700">
                 {atividade}
@@ -84,11 +72,7 @@ export const MainContent = () => {
       case 1:
         return (
           <VStack space="sm">
-            {cursos.map((curso) => (
-              <Text key={curso.id} className="text-gray-700">
-                {curso.nome} - {curso.departamento}
-              </Text>
-            ))}
+            <ProdutosList />;
           </VStack>
         );
       case 2:
@@ -104,7 +88,7 @@ export const MainContent = () => {
   };
 
   return (
-    <SafeAreaView className="h-full w-full bg-gray-50">
+    <>
       <LayoutComponents title={`${nome}`} isSidebarVisible={true}>
         <VStack className="px-6 py-6 space-y-6">
           {/* Cabeçalho com Foto e Detalhes */}
@@ -125,28 +109,21 @@ export const MainContent = () => {
               <HStack space="md" className="mt-2">
                 <Instagram color="#6B7280" size={20} />
                 <Twitter color="#6B7280" size={20} />
-                <Github color="#6B7280" size={20} />
-                <Linkedin color="#6B7280" size={20} />
               </HStack>
             </VStack>
           </HStack>
-
-          {/* Cursos */}
-          <VStack className="space-y-2">
-            <Text className="text-lg font-semibold text-gray-800">Cursos</Text>
-            {cursos.map((curso) => (
-              <Text key={curso.id} className="text-gray-600">
-                {curso.nome} - {curso.departamento}
-              </Text>
-            ))}
-          </VStack>
         </VStack>
-
         {/* Navegação e Conteúdo */}
-        <NavBar tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div className="p-4">{renderTabContent()}</div>
+        <div className="flex flex-col">
+          <NavBar
+            tabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
+        </div>
+        <Box className="flex-1">{renderTabContent()}</Box>
       </LayoutComponents>
-    </SafeAreaView>
+    </>
   );
 };
 

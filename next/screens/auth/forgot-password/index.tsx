@@ -22,7 +22,7 @@ import { AlertTriangle, ArrowLeftIcon } from "lucide-react-native";
 import { Link as RNLink } from "react-native-web-next-link";
 import useRouter from "@unitools/router";
 import AuthLayout from "../layout";
-import { resetPasswordRequest } from "@/api/users";
+import { sendEmailRequest } from "@/api/users";
 import Link from "@unitools/link";
 import { Divider } from "@/components/ui/divider";
 import { LinkText } from "@/components/ui/link";
@@ -30,7 +30,7 @@ import { Keyboard } from "react-native";
 import { useAuthContext } from "@/hooks/AuthProvider";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, "Email é obrigatório").email(),
+  email: z.string().min(1, "Email é obrigatório").email()
 });
 
 export type forgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
@@ -110,7 +110,7 @@ const ForgotPasswordForm = () => {
   const onSubmit = async (data: forgotPasswordSchemaType) => {
     setEmail(data.email);
 
-    const response = await resetPasswordRequest(data.email);
+    const response = await sendEmailRequest(data.email,"recSenha" );
     if (response.success) {
       toast.show({
         placement: "bottom right",

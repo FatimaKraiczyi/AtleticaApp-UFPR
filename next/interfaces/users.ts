@@ -1,4 +1,5 @@
 export interface UserProps {
+	nome?: string;
   email?: string;
   senha?: string;
   repSenha?: string;

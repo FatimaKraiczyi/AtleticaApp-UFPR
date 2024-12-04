@@ -59,6 +59,7 @@ import {
 } from "@/components/ui/select";
 
 const signUpSchema = z.object({
+  nome: z.string().min(1, "Nome é obrigatório"),
   password: z
     .string()
     .min(8, "A senha deve ter no mínimo 8 caracteres")
@@ -135,6 +136,7 @@ const SignUpForm = () => {
       const formattedDate = `${day}-${month}-${year}`;
 
       const user: UserProps = {
+        nome: data.nome,
         senha: data.password,
         repSenha: data.confirmpassword,
         cursoId: data.curso,
@@ -475,7 +477,7 @@ const Main = () => {
             dark:bg-background-50 md:pt-8 md:px-8"
       >
         <Heading className="mb-8 md:flex md:text-2xl hidden">
-				Finalize o cadastro para continuar
+          Finalize o cadastro para continuar
         </Heading>
         <SignUpForm />
       </Box>
