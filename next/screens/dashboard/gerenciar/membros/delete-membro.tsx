@@ -6,41 +6,40 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import { Image } from "@/components/ui/image";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { deletarMembro } from "@/api/membros";
-import { useMembros } from "@/hooks/MembrosContext";
 
 interface DeleteMembroProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-  email: string;
+  email?: string;
+  refreshMembros: () => void;
 }
 
 export const DeleteMembro = ({
   showModal,
   setShowModal,
   email,
+  refreshMembros,
 }: DeleteMembroProps) => {
-  const { setMembros } = useMembros();
-
   const handleDelete = async () => {
     try {
-      const response = await deletarMembro(email);
-      if (response.success) {
-        setMembros((prevMembros) =>
-          prevMembros.filter((membro) => membro.Usuario?.email !== email)
-        );
+      if (email !== undefined) {
+        const response = await deletarMembro(email);
+        if (response.success) {
+          setShowModal(false);
+          refreshMembros();
+        }
       }
-      setShowModal(false);
     } catch (error) {
-      console.error("Erro ao deletar membro:", error);
+      console.error("Erro ao deletar:", error);
     }
   };
 
@@ -51,8 +50,8 @@ export const DeleteMembro = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
+            alt="Imagem de fundo"
             size="full"
-            alt="Banner Image"
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">

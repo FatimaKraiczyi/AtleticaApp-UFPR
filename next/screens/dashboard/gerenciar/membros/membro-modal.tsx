@@ -7,7 +7,7 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
 } from "@/components/ui/form-control";
-import { CloseIcon, Icon } from "@/components/ui/icon";
+import { CloseIcon, Icon, EditIcon } from "@/components/ui/icon";
 import { AlertTriangle } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
@@ -22,14 +22,15 @@ import { Image } from "@/components/ui/image";
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Keyboard, Switch } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { adicionarMembro, editarMembro, getMembros } from "@/api/membros";
 import { MembrosResponse } from "@/interfaces/membros";
+import { Switch } from "@/components/ui/switch";
 
 const userSchema = z.object({
   email: z
@@ -45,15 +46,13 @@ type userSchemaDetails = z.infer<typeof userSchema>;
 export const ModalMembros = ({
   showModal,
   setShowModal,
-  editMembro,
-  membros,
-  setMembros,
+  refreshMembros,
+  membroData,
 }: {
   showModal: boolean;
   setShowModal: any;
-  setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
-  membros: MembrosResponse[];
-  editMembro: MembrosResponse | null;
+  refreshMembros: () => void;
+  membroData?: any;
 }) => {
   const ref = useRef(null);
   const {
@@ -61,77 +60,75 @@ export const ModalMembros = ({
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
+    defaultValues: {
+      email: "",
+      administrador: false,
+    },
   });
-
-  const handleKeyPress = () => {
-    Keyboard.dismiss();
-  };
 
   useEffect(() => {
     if (showModal) {
-      if (editMembro) {
-        reset({
-          email: editMembro.Usuario?.email || "",
-          administrador: editMembro.administrador,
-        });
-      } else {
-        reset({
-          email: "",
-          administrador: false,
-        });
+      resetForm();
+      if (membroData) {
+        setValue("email", membroData.nome);
+        setValue("administrador", membroData.administrador);
       }
     }
-  }, [editMembro, showModal, reset]);
+  }, [showModal, membroData, setValue]);
 
-  const onSubmit = async (formData: userSchemaDetails) => {
+  const resetForm = () => {
+    reset();
+  };
+
+  const onSubmit = async (data: any) => {
+    const membroPayload = {
+      email: data.email,
+      administrador: data.administrador,
+      atleticaId: sessionStorage.getItem("atleticaId"),
+    };
+
     try {
-      if (editMembro && editMembro.Usuario?.email) {
-        const response = await editarMembro(
-          editMembro.Usuario.email,
-          formData.administrador
-        );
-
+      if (membroData) {
+        const response = await editarMembro(membroData.email, {
+          administrador: membroData.administrador,
+        });
         if (response.success) {
-          setMembros((prevMembros) =>
-            prevMembros.map((membro) =>
-              membro.Usuario?.email === editMembro.Usuario?.email
-                ? { ...membro, administrador: formData.administrador }
-                : membro
-            )
-          );
+          refreshMembros();
         }
       } else {
         const response = await adicionarMembro({
-          email: formData.email,
-          administrador: formData.administrador,
-          atleticaId: membros[0].atleticaId,
+          ...membroPayload,
         });
-
         if (response.success) {
-          const atleticaId = membros[0].atleticaId;
-          const response = await getMembros(atleticaId);
-          const updatedMembros: MembrosResponse[] = response.data;
-          setMembros(updatedMembros);
+          refreshMembros();
         }
       }
       setShowModal(false);
-      reset();
+      resetForm();
     } catch (error) {
-      console.error("Erro ao adicionar/editar membro:", error);
+      console.error("Erro:", error);
     }
   };
-
   return (
-    <Modal isOpen={showModal} finalFocusRef={ref} size="lg">
+    <Modal
+      isOpen={showModal}
+      onClose={() => {
+        setShowModal(false);
+        resetForm();
+      }}
+      finalFocusRef={ref}
+      size="lg"
+    >
       <ModalBackdrop />
       <ModalContent>
-        <Box className={"w-full h-[110px]"}>
+        <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
+            alt="Imagem de fundo"
             size="full"
-            alt="Banner Image"
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
@@ -145,10 +142,10 @@ export const ModalMembros = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            {editMembro ? "Editar Membro" : "Adicionar Membro"}
+            {membroData ? "Editar Membro" : "Adicionar Membro"}
           </Heading>
         </Center>
-        <ModalBody>
+        <ModalBody className="max-h-[70vh] overflow-y-auto">
           <VStack space="xl">
             <FormControl isInvalid={!!errors.email}>
               <FormControlLabel className="mb-2">
@@ -160,27 +157,25 @@ export const ModalMembros = ({
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Email"
+                      placeholder="Email do membro"
                       type="text"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      onSubmitEditing={handleKeyPress}
-                      enterKeyHint="done"
                     />
                   </Input>
                 )}
               />
               <FormControlError>
-                <FormControlErrorIcon as={AlertTriangle} size="md" />
+                <FormControlErrorIcon size="md" as={AlertTriangle} />
                 <FormControlErrorText>
                   {errors?.email?.message}
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={!!errors.administrador}>
               <FormControlLabel className="mb-2">
-                <FormControlLabelText>Gerenciar</FormControlLabelText>
+                <FormControlLabelText>Administrador</FormControlLabelText>
               </FormControlLabel>
               <Controller
                 name="administrador"
@@ -194,6 +189,12 @@ export const ModalMembros = ({
                   />
                 )}
               />
+              <FormControlError>
+                <FormControlErrorIcon size="md" as={AlertTriangle} />
+                <FormControlErrorText>
+                  {errors?.administrador?.message}
+                </FormControlErrorText>
+              </FormControlError>
             </FormControl>
             <Button
               onPress={handleSubmit(onSubmit)}
