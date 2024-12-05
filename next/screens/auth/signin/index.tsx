@@ -41,7 +41,7 @@ import AuthLayout from "../layout";
 
 const signInSchema = z.object({
   email: z.string().min(1, "Email é obrigatório").email("Email inválido"),
-  password: z.string().min(1, "Senha é obrigatória"),
+  senha: z.string().min(1, "Senha é obrigatória"),
   rememberme: z.boolean().optional(),
 });
 
@@ -60,15 +60,18 @@ const SignInForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = async (data: SignInSchemaType) => {
-    const response = await userAuthentication(data.email, data.password);
+  const onSubmit = async (data: any) => {
+	
+    const response = await userAuthentication(data.email, data.senha);
 
-    if (response.success) {
+    if (response.success && response.data) {
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("userType", response.data.tipo);
       sessionStorage.setItem("atleticaId", response.data.atletica ? response.data.atletica.toString() : "");
       sessionStorage.setItem("usuarioId", response.data.usuarioId.toString());
       sessionStorage.setItem("usuarioNome", response.data.usuarioNome);
+			
+			router.push("/dashboard/");
 
       toast.show({
         placement: "bottom right",
@@ -78,8 +81,7 @@ const SignInForm = () => {
           </Toast>
         ),
       });
-      router.push("/dashboard");
-      reset();
+     
     } else {
       toast.show({
         placement: "bottom right",
@@ -143,11 +145,11 @@ const SignInForm = () => {
         </FormControl>
         <FormControl
           className="my-4"
-          isInvalid={!!errors.password}
+          isInvalid={!!errors.senha}
           isRequired={true}
         >
           <Controller
-            name="password"
+            name="senha"
             defaultValue=""
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -171,7 +173,7 @@ const SignInForm = () => {
           <FormControlError>
             <FormControlErrorIcon size="sm" as={AlertTriangle} />
             <FormControlErrorText>
-              {errors?.password?.message}
+              {errors?.senha?.message}
             </FormControlErrorText>
           </FormControlError>
         </FormControl>

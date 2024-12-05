@@ -79,7 +79,7 @@ export const WebSidebar = () => {
     <VStack className="w-48 h-full border-r border-border-300">
       {list
         .filter((item, index) => {
-          if (userType === "master" && (index === 2 || index === 3)) {
+          if (userType === "master" && (index === 1 || index === 2 || index === 3)) {
             return false;
           }
           return true;
@@ -103,9 +103,7 @@ export const WebSidebar = () => {
                 }`}
               />
               <Text className="ml-4 text-background-800 font-medium">
-                {userType === "master" && item.label === "Atléticas"
-                  ? "Gerenciar Atléticas"
-                  : item.label}
+            {item.label}
               </Text>
               {item.iconName === ShoppingCart && items > 0 && (
                 <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">

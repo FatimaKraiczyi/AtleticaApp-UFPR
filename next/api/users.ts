@@ -20,27 +20,9 @@ export const userAuthentication = async (
       senha,
     });
 
-    if (status === 200 && data?.token) {
-      const token = data.token;
-      const userType = data.tipo;
-      const atleticaId = data.atletica;
-      const usuarioId = data.usuarioId;
-      const usuarioNome = data.usuarioNome;
-
-      await setToken(token);
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("userType", userType);
-				sessionStorage.setItem("atleticaId", atleticaId.toString());
-        sessionStorage.setItem("x-access-token", token);
-        sessionStorage.setItem("usuarioId", usuarioId.toString());
-        sessionStorage.setItem("usuarioNome", usuarioNome);
-      }
-    }
-
     return { data, success: status === 200 };
   } catch (error) {
-    console.error("Erro na autenticação:", error);
-    return { ...objectCatch, error };
+    return { ...objectCatch };
   }
 };
 

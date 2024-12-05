@@ -81,7 +81,7 @@ export const MobileFooter = () => {
     >
       {bottomTabsList
         .filter((item, index) => {
-          if (userType === "master" && (index === 2 || index === 3)) {
+          if (userType === "master" && (index === 1 || index === 2 || index === 3)) {
             return false;
           }
           return true;
@@ -100,9 +100,7 @@ export const MobileFooter = () => {
               }`}
             />
             <Text className="text-xs text-center text-typography-600">
-              {userType === "master" && item.iconText === "Atléticas"
-                ? "Gerenciar Atléticas"
-                : item.iconText}
+             {item.iconText}
             </Text>
             {item.iconName === ShoppingCart && items > 0 && (
               <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
