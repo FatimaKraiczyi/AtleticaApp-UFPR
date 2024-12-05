@@ -31,17 +31,15 @@ const AllAtleticas = () => {
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const [selectedAtletica, setSelectedAtletica] = useState<Atletica | undefined>(
-    undefined
-  );
-  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedAtletica, setSelectedAtletica] = useState<
+    Atletica | undefined
+  >(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [atleticaToDeleteId, setAtleticaToDeleteId] = useState<
     number | undefined
   >(undefined);
-  const [atleticas, setAtleticas] = useState<Atletica[]>([]);
+  const [atleticas, setAtleticas] = useState<AtleticaResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const { setMembros } = useMembros();
   const { setAtleticaData } = useAtletica();
 
   const showActions =
@@ -63,17 +61,12 @@ const AllAtleticas = () => {
   }, []);
 
   const openModal = (atletica?: Atletica) => {
-    setSelectedAtletica(atletica);
+    setSelectedAtletica(atletica?.id ? atletica : undefined);
     setShowModal(true);
   };
 
-  const openViewModal = (atletica?: Atletica) => {
-    setSelectedAtletica(atletica);
-    setShowViewModal(true);
-  };
-
-  const handleEditAtletica = (atletica: Atletica) => {
-    openModal(atletica);
+  const handleEditAtletica = (atletica: AtleticaResponse) => {
+    openModal(atletica.atletica);
   };
 
   const handleOpenDeleteModal = (id: number) => {
@@ -81,19 +74,15 @@ const AllAtleticas = () => {
     setShowDeleteModal(true);
   };
 
-  const handleCardPress = async () => {
-    if (atleticaId) {
-      try {
-        const response = await getAtleticaById(atleticaId.toString());
-        if (response.success && response.data) {
-          setAtleticaData(response.data);
-          router.push("/dashboard/visualizar/perfil");
-        }
-      } catch (error) {
-        console.error("Erro:", error);
+  const handleCardPress = async (atletica: AtleticaResponse) => {
+    try {
+      const response = await getAtleticaById(atletica.atletica.id);
+      if (response.success && response.data) {
+        setAtleticaData(response.data);
+        router.push("/dashboard/visualizar/perfil");
       }
-    } else {
-      console.error("Erro: atleticaId é null");
+    } catch (error) {
+      console.error("Erro:", error);
     }
   };
 
@@ -118,48 +107,42 @@ const AllAtleticas = () => {
         {atleticas.length === 0 ? (
           renderNoItems()
         ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-            className="p-4"
+					<ScrollView
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ flexGrow: 1 }}
+					className="p-4"
           >
-            <Grid
-              className="gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-              _extra={{
-                className: "",
-              }}
-            >
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {atleticas.map((atletica) => (
-                <GridItem
-                  key={atletica.id}
-                  className="flex flex-col p-4 bg-white rounded-md shadow-md"
-                  _extra={{
-                    className: "",
-                  }}
-                >
-                  <Pressable onPress={() => openViewModal(atletica)}>
-                    <Box className="w-full overflow-hidden rounded-md h-48 relative group">
-                      <Image
-                        source={
-                          atletica.imagem ||
-                          require("@/assets/dashboard/image2.png")
-                        }
-                        alt={atletica.nome}
-                        size="full"
-                        className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
-                      />
-                    </Box>
-                  </Pressable>
-
-                  <VStack className="py-2">
-                    <HStack>
-                      <Text className="text-sm">Descrição: {""}</Text>
-                      <Text className="text-sm font-bold">
-                        {atletica.descricao}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                  {showActions ? (
+                <GridItem className="shadow-md rounded-lg">
+                  <Box className="bg-violet-600 p-4 md:h-[120px] rounded-t-lg">
+                    <Image
+                      source={
+                        atletica.atletica.imagem ||
+                        require("@/assets/dashboard/image2.png")
+                      }
+                      alt={atletica.atletica.imagem}
+                      className=" mx-auto 	rounded-full"
+                    />
+                  </Box>
+                  <Box className="p-4 md:h-[180px]">
+                    <Text className="text-lg font-semibold">
+                      {atletica.atletica.nome}
+                    </Text>
+                    <Text className="text-sm text-gray-500">
+                      {atletica.atletica.descricao}
+                    </Text>
+                    <Button
+                      className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
+                      variant="outline"
+                      onPress={() => handleCardPress(atletica)}
+                    >
+                      <ButtonText className="text-secondary-600 group-hover/button:text-white">
+                        Ver Mais
+                      </ButtonText>
+                    </Button>
+                  </Box>
+                  {showActions && (
                     <HStack className="w-full items-center justify-between mt-4">
                       <HStack className="items-center">
                         <Pressable onPress={() => handleEditAtletica(atletica)}>
@@ -167,24 +150,14 @@ const AllAtleticas = () => {
                         </Pressable>
                         <Pressable
                           onPress={() =>
-                            atletica.id !== undefined &&
-                            handleOpenDeleteModal(atletica.id)
+                            atletica.atletica.id !== undefined &&
+                            handleOpenDeleteModal(atletica.atletica.id)
                           }
                         >
                           <Trash className="text-typography-600" />
                         </Pressable>
                       </HStack>
                     </HStack>
-                  ) : (
-                    <Button
-                      className="mt-auto w-full py-2 hover:bg-primary-500 "
-                      variant="outline"
-                      onPress={() => handleCardPress()}
-                    >
-                      <ButtonText className="text-secondary-600 group-hover/button:text-white">
-                        Ver Mais
-                      </ButtonText>
-                    </Button>
                   )}
                 </GridItem>
               ))}

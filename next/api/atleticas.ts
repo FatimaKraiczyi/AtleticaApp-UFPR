@@ -58,7 +58,7 @@ export const deleteAtletica = async (
 };
 
 export const getAtleticaById = async (
-  id: string
+  id: number | string
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(`${getAtleticaByIdEndpoint}/${id}`);

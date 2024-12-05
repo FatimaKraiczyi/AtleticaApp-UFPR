@@ -79,17 +79,12 @@ const Main = () => {
         {assinaturas.length === 0 ? (
           renderNoAssinatura()
         ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-            className="p-4"
+					<ScrollView
+					showsVerticalScrollIndicator={false}
+					contentContainerStyle={{ flexGrow: 1 }}
+					className="p-4"
           >
-            <Grid
-              className="gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-              _extra={{
-                className: "",
-              }}
-            >
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {assinaturas.map((assinatura) => (
                 <GridItem
                   key={assinatura.id}

@@ -104,23 +104,15 @@ const MainContent = () => {
     <Box className="flex-1 ">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: isWeb ? 0 : 100,
-          flexGrow: 1,
-        }}
-        className="flex-1 mb-20 md:mb-2"
+        contentContainerStyle={{ flexGrow: 1 }}
+        className="p-4"
       >
         <VStack className="p-4  md:px-10 md:pt-6  w-full" space="2xl">
           <Heading size="2xl" className="font-roboto">
             {atleticaName}
           </Heading>
 
-          <Grid
-            className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-            _extra={{
-              className: "gap-5",
-            }}
-          >
+          <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {filteredCards.map((card, index) => (
               <GridItem
                 key={index}

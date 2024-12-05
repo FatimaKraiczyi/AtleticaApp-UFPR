@@ -155,11 +155,8 @@ const MainContent = () => {
     <Box className="flex-1 ">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: isWeb ? 0 : 100,
-          flexGrow: 1,
-        }}
-        className="flex-1 mb-20 md:mb-2"
+        contentContainerStyle={{ flexGrow: 1 }}
+        className="p-4"
       >
         <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
           {userType === "master" ? (
