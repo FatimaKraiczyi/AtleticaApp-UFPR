@@ -6,17 +6,14 @@ import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
-import { Edit, Trash, Eye } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import { HStack } from "@/components/ui/hstack";
 import { ModalMembros } from "./membro-modal";
 import { DeleteMembro } from "./delete-membro";
-import { Image } from "@/components/ui/image";
 import { getMembros } from "@/api/membros";
 import { Membro, MembrosResponse } from "@/interfaces/membros";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
-import { addCartProduct } from "@/api/carrinho";
-import { useCarrinho } from "@/hooks/CarrinhoContext";
 
 const AllMembros = () => {
   const atleticaId =
@@ -76,7 +73,7 @@ const AllMembros = () => {
 
   return (
     <Box className="flex-1">
-      <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
+      <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
@@ -98,6 +95,7 @@ const AllMembros = () => {
                 className: "",
               }}
             >
+              {" "}
               {membros.map((membro) => (
                 <GridItem
                   key={membro.email}
@@ -107,43 +105,45 @@ const AllMembros = () => {
                   }}
                 >
                   <VStack className="py-2">
-                    <HStack>
-                      <Text className="text-sm">Nome: {""}</Text>
-                      <Text className="text-sm font-bold">
-                        {membro.Usuario?.nome}
-                      </Text>
-                    </HStack>
-                    <Text className="font-semibold text-xl mt-4">
-                      {membro.email}
-                    </Text>
-                    <Text className="text-sm">
-                      {membro.administrador ? "Administrador" : "Membro"}
-                    </Text>
-                  </VStack>
-
-                  {showActions && (
-                    <HStack className="w-full items-center justify-between mt-4">
-                      <HStack className="items-center">
-                        <Pressable onPress={() => handleEditMembro()}>
-                          <Edit className="text-typography-600 mr-4" />
-                        </Pressable>
-                        <Pressable
-                          onPress={() =>
-                            membro.email !== undefined &&
-                            handleOpenDeleteModal(membro.email)
-                          }
-                        >
-                          <Trash className="text-typography-600" />
-                        </Pressable>
+                    <HStack space="xl" className="items-center justify-between">
+                      <HStack space="xl" className="items-center">
+                        <VStack>
+                          <Text className="font-bold text-typography-900 line-clamp-1">
+                            {membro.Usuario?.nome}
+                          </Text>
+                          <Text className="text-sm text-typography-400 line-clamp-1">
+                            {membro.Usuario?.email}
+                          </Text>
+                          <Text className="line-clamp-1 text-md">
+                            {membro.administrador === true && "Administrador"}
+                          </Text>
+                        </VStack>
                       </HStack>
+
+                      {showActions && (
+                        <HStack space="md">
+                          <Pressable onPress={() => handleEditMembro()}>
+                            <Edit className="text-typography-600" />
+                          </Pressable>
+                          <Pressable
+                            onPress={() =>
+                              membro.email !== undefined &&
+                              handleOpenDeleteModal(membro.email)
+                            }
+                          >
+                            <Trash className="text-typography-600" />
+                          </Pressable>
+                        </HStack>
+                      )}
                     </HStack>
-                  )}
+                  </VStack>
                 </GridItem>
               ))}
             </Grid>
           </ScrollView>
         )}
       </VStack>
+
       <ModalMembros
         showModal={showModal}
         setShowModal={setShowModal}
