@@ -21,7 +21,7 @@ const AllMembros = () => {
   const [loading, setLoading] = useState(true);
   const [membros, setMembros] = useState<MembrosResponse[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedMembro, setSelectedMembro] = useState<Membro | undefined>(
+  const [selectedMembro, setSelectedMembro] = useState<MembrosResponse | undefined>(
     undefined
   );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -49,12 +49,12 @@ const AllMembros = () => {
     fetchMembros();
   }, []);
 
-  const openModal = (membro?: Membro) => {
-    setSelectedMembro(membro);
-    setShowModal(true);
-  };
+	const openModal = (membro?: MembrosResponse) => {
+		setSelectedMembro(membro);
+		setShowModal(true);
+	};
 
-  const handleEditMembro = (membro?: Membro) => {
+  const handleEditMembro = (membro: MembrosResponse) => {
     openModal(membro);
   };
 
@@ -122,13 +122,13 @@ const AllMembros = () => {
 
                       {showActions && (
                         <HStack space="md">
-                          <Pressable onPress={() => handleEditMembro()}>
+                          <Pressable onPress={() => handleEditMembro(membro)}>
                             <Edit className="text-typography-600" />
                           </Pressable>
                           <Pressable
                             onPress={() =>
-                              membro.email !== undefined &&
-                              handleOpenDeleteModal(membro.email)
+                              
+                              handleOpenDeleteModal(membro.Usuario?.email ?? "")
                             }
                           >
                             <Trash className="text-typography-600" />

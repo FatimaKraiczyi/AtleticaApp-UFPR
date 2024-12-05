@@ -38,7 +38,7 @@ export const adicionarMembro = async (
 export const editarMembro = async (
   email: string,
   administrador: boolean
-): Promise<IResponse.Default<MembrosResponse>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.put(
       `${updateMembroAtleticaEndpoint}/${email}`,
@@ -46,7 +46,7 @@ export const editarMembro = async (
     );
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...(objectCatch as IResponse.Default<MembrosResponse>) };
+    return { ...objectCatch };
   }
 };
 

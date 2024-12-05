@@ -29,7 +29,7 @@ import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { adicionarMembro, editarMembro, getMembros } from "@/api/membros";
-import { MembrosResponse } from "@/interfaces/membros";
+import { Membro, MembrosResponse } from "@/interfaces/membros";
 import { Switch } from "@/components/ui/switch";
 
 const userSchema = z.object({
@@ -64,7 +64,6 @@ export const ModalMembros = ({
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      email: "",
       administrador: false,
     },
   });
@@ -73,7 +72,7 @@ export const ModalMembros = ({
     if (showModal) {
       resetForm();
       if (membroData) {
-        setValue("email", membroData.nome);
+        setValue("email", membroData.Usuario.email);
         setValue("administrador", membroData.administrador);
       }
     }
@@ -92,16 +91,15 @@ export const ModalMembros = ({
 
     try {
       if (membroData) {
-        const response = await editarMembro(membroData.email, {
-          administrador: membroData.administrador,
-        });
+        const response = await editarMembro(
+          membroPayload.email,
+          membroPayload.administrador
+        );
         if (response.success) {
           refreshMembros();
         }
       } else {
-        const response = await adicionarMembro({
-          ...membroPayload,
-        });
+        const response = await adicionarMembro(membroPayload as Membro);
         if (response.success) {
           refreshMembros();
         }
@@ -112,6 +110,7 @@ export const ModalMembros = ({
       console.error("Erro:", error);
     }
   };
+
   return (
     <Modal
       isOpen={showModal}
@@ -162,6 +161,7 @@ export const ModalMembros = ({
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
+                      editable={false}
                     />
                   </Input>
                 )}

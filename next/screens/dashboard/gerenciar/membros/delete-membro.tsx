@@ -29,18 +29,19 @@ export const DeleteMembro = ({
   email,
   refreshMembros,
 }: DeleteMembroProps) => {
+
   const handleDelete = async () => {
-    try {
-      if (email !== undefined) {
+    if (email) {
+      try {
         const response = await deletarMembro(email);
         if (response.success) {
-          setShowModal(false);
           refreshMembros();
         }
+      } catch (error) {
+        console.error("Erro ao excluir membro:", error);
       }
-    } catch (error) {
-      console.error("Erro ao deletar:", error);
     }
+    setShowModal(false);
   };
 
   return (

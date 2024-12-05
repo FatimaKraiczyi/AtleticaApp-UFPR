@@ -14,8 +14,6 @@ import {
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import {
@@ -39,9 +37,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
-import { createUser, userAuthentication } from "@/api/users";
+import { createUser } from "@/api/users";
 import AuthLayout from "../layout";
-import { CursoProps } from "@/interfaces/cursos";
 import { UserProps } from "@/interfaces/users";
 import { getCursos } from "@/api/cursos";
 import { createUserError } from "@/api/errors/usersErrors";
@@ -57,6 +54,7 @@ import {
   SelectPortal,
   SelectTrigger,
 } from "@/components/ui/select";
+import { CursoProps } from "@/interfaces/atleticas";
 
 const signUpSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),

@@ -54,7 +54,7 @@ export const EventsList = () => {
     setLoading(true);
 
     if (typeof window !== "undefined" && atleticaId && !atleticaName) {
-      const response = await getAtleticaById(Number(atleticaId));
+      const response = await getAtleticaById(atleticaId);
       if (response.success && response.data) {
         setAtleticaName(response.data.atletica.nome);
       }
