@@ -21,9 +21,9 @@ const AllMembros = () => {
   const [loading, setLoading] = useState(true);
   const [membros, setMembros] = useState<MembrosResponse[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedMembro, setSelectedMembro] = useState<MembrosResponse | undefined>(
-    undefined
-  );
+  const [selectedMembro, setSelectedMembro] = useState<
+    MembrosResponse | undefined
+  >(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [membroToDelete, setMembroToDelete] = useState<string | undefined>(
     undefined
@@ -49,10 +49,10 @@ const AllMembros = () => {
     fetchMembros();
   }, []);
 
-	const openModal = (membro?: MembrosResponse) => {
-		setSelectedMembro(membro);
-		setShowModal(true);
-	};
+  const openModal = (membro?: MembrosResponse) => {
+    setSelectedMembro(membro);
+    setShowModal(true);
+  };
 
   const handleEditMembro = (membro: MembrosResponse) => {
     openModal(membro);
@@ -85,9 +85,9 @@ const AllMembros = () => {
           renderNoItems()
         ) : (
           <ScrollView
-					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ flexGrow: 1 }}
-					className="p-4"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            className="p-4"
           >
             <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {membros.map((membro) => (
@@ -113,23 +113,21 @@ const AllMembros = () => {
                           </Text>
                         </VStack>
                       </HStack>
-
-                      {showActions && (
-                        <HStack space="md">
-                          <Pressable onPress={() => handleEditMembro(membro)}>
-                            <Edit className="text-typography-600" />
-                          </Pressable>
-                          <Pressable
-                            onPress={() =>
-                              
-                              handleOpenDeleteModal(membro.Usuario?.email ?? "")
-                            }
-                          >
-                            <Trash className="text-typography-600" />
-                          </Pressable>
-                        </HStack>
-                      )}
                     </HStack>
+                    {showActions && (
+                      <HStack space="md">
+                        <Pressable onPress={() => handleEditMembro(membro)}>
+                          <Edit className="text-typography-600" />
+                        </Pressable>
+                        <Pressable
+                          onPress={() =>
+                            handleOpenDeleteModal(membro.Usuario?.email ?? "")
+                          }
+                        >
+                          <Trash className="text-typography-600" />
+                        </Pressable>
+                      </HStack>
+                    )}
                   </VStack>
                 </GridItem>
               ))}

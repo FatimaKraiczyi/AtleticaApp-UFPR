@@ -66,8 +66,8 @@ const SignInForm = () => {
 
     if (response.success && response.data) {
       sessionStorage.setItem("token", response.data.token);
-      sessionStorage.setItem("userType", response.data.tipo);
-      sessionStorage.setItem("atleticaId", response.data.atletica ? response.data.atletica.toString() : "");
+      sessionStorage.setItem("tipo", response.data.tipo);
+      sessionStorage.setItem("atletica", response.data.atletica ? response.data.atletica.toString() : "");
       sessionStorage.setItem("usuarioId", response.data.usuarioId.toString());
       sessionStorage.setItem("usuarioNome", response.data.usuarioNome);
 			

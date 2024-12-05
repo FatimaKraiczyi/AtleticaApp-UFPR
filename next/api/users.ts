@@ -19,6 +19,9 @@ export const userAuthentication = async (
       email,
       senha,
     });
+    if (status === 200 && data?.token) {
+      await setToken(data.token);
+    }
 
     return { data, success: status === 200 };
   } catch (error) {

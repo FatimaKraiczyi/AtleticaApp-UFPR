@@ -136,7 +136,7 @@ const MainContent = () => {
                   </Text>
 
                   <Button
-                    className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
+                    className="md:mt-auto mt-4  w-full hover:bg-primary-500 py-2"
                     variant="outline"
                     onPress={() => handleCardPress(card.route)}
                   >

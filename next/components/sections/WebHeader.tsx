@@ -17,9 +17,9 @@ export const WebHeader = (props: HeaderProps) => {
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
-      sessionStorage.removeItem("userType");
+      sessionStorage.removeItem("tipo");
       sessionStorage.removeItem("atletica");
-      sessionStorage.removeItem("x-access-token");
+      sessionStorage.removeItem("token");
     }
     router.push("/auth/signin");
   };

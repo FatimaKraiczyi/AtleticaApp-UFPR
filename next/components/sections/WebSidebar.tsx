@@ -48,7 +48,7 @@ export const WebSidebar = () => {
 	useEffect(() => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
-      const userType = sessionStorage.getItem("userType");
+      const userType = sessionStorage.getItem("tipo");
       setUserType(userType);
 
       if (path.includes("dashboard")) {

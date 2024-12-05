@@ -1,7 +1,5 @@
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
-import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
-import { EditIcon, Icon, TrashIcon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Pressable } from "@/components/ui/pressable";
@@ -10,25 +8,17 @@ import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Image } from "@/components/ui/image";
 import useRouter from "@unitools/router";
-import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { Button, ButtonText } from "@/components/ui/button";
 import { ModalAtletica } from "./atletica-modal";
 import { DeleteAtletica } from "./delete-atletica";
 import { getAtletica, getAtleticaById } from "@/api/atleticas";
-import { getMembros } from "@/api/membros";
-import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { LoadingState } from "@/components/sections/LoadingState";
-import { MobileFooter } from "@/components/sections/MobileFooter";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { Atletica, AtleticaResponse } from "@/interfaces/atleticas";
 import { useAtletica } from "@/hooks/AtleticaContex";
-import { Heading } from "@/components/ui/heading";
-import { useMembros } from "@/hooks/MembrosContext";
 import { Edit, Trash } from "lucide-react-native";
 
 const AllAtleticas = () => {
-  const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [selectedAtletica, setSelectedAtletica] = useState<
@@ -107,15 +97,15 @@ const AllAtleticas = () => {
         {atleticas.length === 0 ? (
           renderNoItems()
         ) : (
-					<ScrollView
-					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ flexGrow: 1 }}
-					className="p-4"
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            className="p-4"
           >
             <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {atleticas.map((atletica) => (
                 <GridItem className="shadow-md rounded-lg">
-                  <Box className="bg-violet-600 p-4 md:h-[120px] rounded-t-lg">
+                  <Box className="bg-violet-600 p-5 rounded-t-lg">
                     <Image
                       source={
                         atletica.atletica.imagem ||
@@ -133,7 +123,7 @@ const AllAtleticas = () => {
                       {atletica.atletica.descricao}
                     </Text>
                     <Button
-                      className="md:mt-auto mt-4 hover:bg-primary-500 py-2"
+                      className="mt-auto w-full hover:bg-primary-500 "
                       variant="outline"
                       onPress={() => handleCardPress(atletica)}
                     >
@@ -142,21 +132,23 @@ const AllAtleticas = () => {
                       </ButtonText>
                     </Button>
                   </Box>
+
                   {showActions && (
-                    <HStack className="w-full items-center justify-between mt-4">
-                      <HStack className="items-center">
-                        <Pressable onPress={() => handleEditAtletica(atletica)}>
-                          <Edit className="text-typography-600 mr-4" />
-                        </Pressable>
-                        <Pressable
-                          onPress={() =>
-                            atletica.atletica.id !== undefined &&
-                            handleOpenDeleteModal(atletica.atletica.id)
-                          }
-                        >
-                          <Trash className="text-typography-600" />
-                        </Pressable>
-                      </HStack>
+                    <HStack
+                      space="md"
+                      className="items-center justify-center  p-4"
+                    >
+                      <Pressable onPress={() => handleEditAtletica(atletica)}>
+                        <Edit className="text-typography-600 " />
+                      </Pressable>
+                      <Pressable
+                        onPress={() =>
+                          atletica.atletica.id !== undefined &&
+                          handleOpenDeleteModal(atletica.atletica.id)
+                        }
+                      >
+                        <Trash className="text-typography-600" />
+                      </Pressable>
                     </HStack>
                   )}
                 </GridItem>
@@ -165,6 +157,7 @@ const AllAtleticas = () => {
           </ScrollView>
         )}
       </VStack>
+
       <ModalAtletica
         showModal={showModal}
         setShowModal={setShowModal}
