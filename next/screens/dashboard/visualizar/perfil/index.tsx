@@ -48,9 +48,9 @@ const NavBar = ({ tabs, activeTab, setActiveTab }: NavBarProps) => {
 
 export const MainContent = () => {
   const { atleticaData } = useAtletica();
-  const { nome, descricao, imagem, atividades } = atleticaData.atletica;
-  const cursos = atleticaData.cursos;
-  const atividadesArray = Array.isArray(atividades) ? atividades : [atividades];
+  const { atletica } = atleticaData || {};
+  const { nome, descricao, imagem } = atletica || {};
+  const cursos = atleticaData?.cursos || [];
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -62,13 +62,6 @@ export const MainContent = () => {
         return (
           <VStack space="sm">
             <Text className="text-gray-600">{descricao}</Text>
-            {atividadesArray.map((atividade, index) => (
-              atividade && (
-                <Text key={index} className="text-gray-700">
-                  {atividade.nome}
-                </Text>
-              )
-            ))}
           </VStack>
         );
       case 1:
@@ -98,7 +91,7 @@ export const MainContent = () => {
           <Image
             source={imagem || require("@/assets/dashboard/image2.png")}
             className="w-24 h-24 rounded-full"
-            alt="Atlética"
+            alt="Imagem da Atlética"
           />
 
           {/* Informações da Atlética */}
@@ -108,8 +101,8 @@ export const MainContent = () => {
 
             {/* Redes Sociais */}
             <HStack space="md" className="mt-2">
-              <Instagram color="#6B7280" size={20} />
-              <Twitter color="#6B7280" size={20} />
+              <Instagram color="#6B7280" size={20} aria-label="Instagram" />
+              <Twitter color="#6B7280" size={20} aria-label="Twitter" />
             </HStack>
           </VStack>
         </HStack>
@@ -126,7 +119,7 @@ export const MainContent = () => {
 export const VisualizarAtletica = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Perfil"  isSidebarVisible={true}>
+      <LayoutComponents title="Perfil" isSidebarVisible={true}>
         <MainContent />
         <MobileFooter />
       </LayoutComponents>
