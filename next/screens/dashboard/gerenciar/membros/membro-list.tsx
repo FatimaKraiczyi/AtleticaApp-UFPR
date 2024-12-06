@@ -115,7 +115,10 @@ const AllMembros = () => {
                       </HStack>
                     </HStack>
                     {showActions && (
-                      <HStack space="md">
+                      <HStack
+                        space="md"
+                        className="items-center justify-center mt-4"
+                      >
                         <Pressable onPress={() => handleEditMembro(membro)}>
                           <Edit className="text-typography-600" />
                         </Pressable>

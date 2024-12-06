@@ -136,7 +136,7 @@ const AllAtleticas = () => {
                   {showActions && (
                     <HStack
                       space="md"
-                      className="items-center justify-center  p-4"
+                      className="items-center justify-center mb-4"
                     >
                       <Pressable onPress={() => handleEditAtletica(atletica)}>
                         <Edit className="text-typography-600 " />
