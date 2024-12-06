@@ -31,12 +31,6 @@ const AllMembros = () => {
   );
   const { atleticaData } = useAtletica();
 
-  useEffect(() => {
-    if (atleticaData) {
-      fetchMembros(atleticaData.atletica.id.toString());
-    }
-  }, [atleticaId]);
-
   const showActions =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/membros";
@@ -55,11 +49,17 @@ const AllMembros = () => {
     }
   };
 
-  useEffect(() => {
-    if (atleticaId) {
-      fetchMembros(atleticaId);
-    }
-  }, [atleticaId]);
+	useEffect(() => {
+		if (atleticaId) {
+			fetchMembros(atleticaId);
+		}
+	}, [atleticaId]);
+	
+	useEffect(() => {
+		if (atleticaData?.atletica?.id) {
+			fetchMembros(atleticaData.atletica.id.toString());
+		}
+	}, [atleticaData?.atletica?.id]);
 
   const openModal = (membro?: MembrosResponse) => {
     setSelectedMembro(membro);
@@ -155,7 +155,7 @@ const AllMembros = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         refreshMembros={() => {
-          const id = (atleticaData.atletica.id ?? atleticaId).toString();
+          const id = atleticaData?.atletica?.id?.toString() || atleticaId;
           if (id) {
             fetchMembros(id);
           }
@@ -167,7 +167,7 @@ const AllMembros = () => {
         setShowModal={setShowDeleteModal}
         email={membroToDelete}
         refreshMembros={() => {
-          const id = (atleticaData.atletica.id ?? atleticaId).toString();
+          const id = atleticaData?.atletica?.id?.toString() || atleticaId;
           if (id) {
             fetchMembros(id);
           }
