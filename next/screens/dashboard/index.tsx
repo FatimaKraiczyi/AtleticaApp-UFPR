@@ -20,7 +20,7 @@ interface CardData {
   bannerUri: string;
   title: string;
   description: string;
-  userType?: string;
+  tipo?: string;
   route: string;
 }
 
@@ -29,39 +29,39 @@ const HeadingCards: CardData[] = [
     bannerUri: require("@/assets/dashboard/image2.png"),
     title: "Jogos",
     description: "Visualizar todos os jogos",
-    route: "/dashboard/jogos",
+    route: "/dashboard/visualizar/jogos",
   },
   {
     bannerUri: require("@/assets/dashboard/image.png"),
     title: "Eventos",
     description: "Visualizar todos os eventos",
-    route: "/dashboard/eventos",
+    route: "/dashboard/visualizar/eventos",
   },
   {
     bannerUri: require("@/assets/dashboard/image4.png"),
-    title: "Produtos",
+    title: "Loja",
     description: "Visualizar todos os produtos",
-    route: "/dashboard/produtos",
+    route: "/dashboard/visualizar/loja",
   },
   {
     bannerUri: require("@/assets/dashboard/image5.png"),
     title: "Planos de assinatura",
     description: "Visualizar todos os planos de assinatura",
-    route: "/dashboard/planos",
+    route: "/dashboard/visualizar/planos",
   },
   {
     bannerUri: require("@/assets/dashboard/image6.png"),
-    title: "Admin Atlética",
-    description: "Administrar sua atlética e seus membros",
-    userType: "ADMIN",
-    route: "/dashboard/admin",
+    title: "Gerenciar Atlética",
+    description: "Gerenciar sua atlética e seus membros",
+    tipo: "ADMIN",
+    route: "/dashboard/gerenciar",
   },
   {
     bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Gerenciar Atléticas",
     description: "Cadastrar e gerenciar as atléticas e seus membros",
-    userType: "master",
-    route: "/dashboard/atleticas",
+    tipo: "master",
+    route: "/dashboard/gerenciar/atleticas",
   },
 ];
 
@@ -100,7 +100,7 @@ const Card = ({
 
 const MainContent = () => {
   const router = useRouter();
-  const [userType, setUserType] = useState<string | null>(null);
+  const [tipo, setTipo] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { atleticaData, setAtleticaData } = useAtletica();
@@ -108,11 +108,11 @@ const MainContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (typeof window !== "undefined") {
-        const storedUserType = sessionStorage.getItem("userType");
+        const storedUserType = sessionStorage.getItem("tipo");
         const usuarioNome = sessionStorage.getItem("usuarioNome");
         const atleticaId = sessionStorage.getItem("atletica");
 
-        setUserType(storedUserType);
+        setTipo(storedUserType);
         if (usuarioNome) {
           const nomeArray = usuarioNome.split(" ");
           const nomeFormatado = `${nomeArray[0]} ${
@@ -121,7 +121,7 @@ const MainContent = () => {
           setUserName(nomeFormatado);
         }
         if (storedUserType === "ADMIN" && atleticaId) {
-          const response = await getAtleticaById(Number(atleticaId));
+          const response = await getAtleticaById(atleticaId);
           if (response.success && response.data) {
             setAtleticaData(response.data.atletica.nome);
           }
@@ -137,10 +137,10 @@ const MainContent = () => {
     [0, 1, 2, 3].includes(index)
   );
   const adminCards = HeadingCards.filter(
-    (card, index) => index === 4 && userType === "ADMIN"
+    (card, index) => index === 4 && tipo === "ADMIN"
   );
   const masterCards = HeadingCards.filter(
-    (card, index) => index === 5 && userType === "master"
+    (card, index) => index === 5 && tipo === "master"
   );
 
   const handleCardPress = (route: string) => {
@@ -155,17 +155,14 @@ const MainContent = () => {
     <Box className="flex-1 ">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: isWeb ? 0 : 100,
-          flexGrow: 1,
-        }}
-        className="flex-1 mb-20 md:mb-2"
+        contentContainerStyle={{ flexGrow: 1 }}
+        className="p-4"
       >
         <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
-          {userType === "master" ? (
+          {tipo === "master" ? (
             <>
               <Heading size="2xl" className="font-roboto font-bold">
-                Administrador: Master
+                Gerenciar Atléticas
               </Heading>
               <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 {masterCards.map((card, index) => (
@@ -187,7 +184,7 @@ const MainContent = () => {
               {adminCards.length > 0 && (
                 <>
                   <Heading size="xl" className="font-roboto font-bold mt-10">
-                    Administrador: {String(atleticaData)}
+                    Gerenciar: {String(atleticaData)}
                   </Heading>
                   <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                     {adminCards.map((card, index) => (

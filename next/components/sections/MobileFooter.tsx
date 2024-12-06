@@ -44,16 +44,16 @@ export const MobileFooter = () => {
 	useEffect(() => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
-      const userType = sessionStorage.getItem("userType");
+      const userType = sessionStorage.getItem("tipo");
       setUserType(userType);
 
-      if (path.includes("dashboard-layout")) {
+      if (path.includes("dashboard")) {
         setSelectedIndex(0);
-      } else if (path.includes("atleticas")) {
+      } else if (path.includes("visualizar/atleticas")) {
         setSelectedIndex(1);
-      } else if (path.includes("carrinho")) {
+      } else if (path.includes("visualizar/carrinho")) {
         setSelectedIndex(2);
-      } else if (path.includes("assinatura")) {
+      } else if (path.includes("visualizar/assinatura")) {
         setSelectedIndex(3);
       }
     }
@@ -63,11 +63,11 @@ export const MobileFooter = () => {
     if (index === 0) {
       router.push("/dashboard/");
     } else if (index === 1) {
-      router.push("/dashboard/atleticas");
+      router.push("/dashboard/visualizar/atleticas");
     } else if (index === 2) {
-      router.push("/dashboard/carrinho");
+      router.push("/dashboard/visualizar/carrinho");
     } else if (index === 3) {
-      router.push("/dashboard/assinatura");
+      router.push("/dashboard/visualizar/assinatura");
     }
   };
 
@@ -81,7 +81,7 @@ export const MobileFooter = () => {
     >
       {bottomTabsList
         .filter((item, index) => {
-          if (userType === "master" && (index === 2 || index === 3)) {
+          if (userType === "master" && (index === 1 || index === 2 || index === 3)) {
             return false;
           }
           return true;
@@ -100,9 +100,7 @@ export const MobileFooter = () => {
               }`}
             />
             <Text className="text-xs text-center text-typography-600">
-              {userType === "master" && item.iconText === "Atléticas"
-                ? "Gerenciar Atléticas"
-                : item.iconText}
+             {item.iconText}
             </Text>
             {item.iconName === ShoppingCart && items > 0 && (
               <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">

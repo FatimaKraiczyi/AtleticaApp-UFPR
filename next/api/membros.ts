@@ -10,17 +10,14 @@ import {
 
 export const getMembros = async (
   atleticaId: string
-): Promise<IResponse.Default<MembrosResponse[]>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(
       `${getMembroAtleticaEndpoint}/${atleticaId}`
     );
-    return {
-      data: Array.isArray(data) ? data : [data],
-      success: status === 200,
-    };
+    return { data, success: status === 200 };
   } catch (error) {
-    return { ...arrayCatch };
+    return { ...objectCatch };
   }
 };
 
@@ -34,14 +31,14 @@ export const adicionarMembro = async (
     );
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch as IResponse.Default<MembrosResponse> };
+    return { ...(objectCatch as IResponse.Default<MembrosResponse>) };
   }
 };
 
 export const editarMembro = async (
   email: string,
   administrador: boolean
-): Promise<IResponse.Default<MembrosResponse>> => {
+): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.put(
       `${updateMembroAtleticaEndpoint}/${email}`,
@@ -49,7 +46,7 @@ export const editarMembro = async (
     );
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch as IResponse.Default<MembrosResponse> };
+    return { ...objectCatch };
   }
 };
 
