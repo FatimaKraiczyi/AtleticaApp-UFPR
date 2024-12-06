@@ -9,7 +9,7 @@ import {
 } from "./routes/membros";
 
 export const getMembros = async (
-  atleticaId: string
+  atleticaId: string | number
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(

@@ -10,7 +10,7 @@ export interface AtividadesProps {
 }
 
 export interface Atletica {
-  id: number;
+  id: number | string;
   nome: string;
   descricao: string;
   imagem?: string | null;

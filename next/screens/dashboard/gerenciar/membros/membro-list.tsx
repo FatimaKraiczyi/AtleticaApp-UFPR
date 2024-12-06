@@ -11,9 +11,10 @@ import { HStack } from "@/components/ui/hstack";
 import { ModalMembros } from "./membro-modal";
 import { DeleteMembro } from "./delete-membro";
 import { getMembros } from "@/api/membros";
-import { Membro, MembrosResponse } from "@/interfaces/membros";
+import { MembrosResponse } from "@/interfaces/membros";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { useAtletica } from "@/hooks/AtleticaContex";
 
 const AllMembros = () => {
   const atleticaId =
@@ -28,26 +29,37 @@ const AllMembros = () => {
   const [membroToDelete, setMembroToDelete] = useState<string | undefined>(
     undefined
   );
+  const { atleticaData } = useAtletica();
+
+  useEffect(() => {
+    if (atleticaData) {
+      fetchMembros(atleticaData.atletica.id.toString());
+    }
+  }, [atleticaId]);
 
   const showActions =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/membros";
 
-  const fetchMembros = async () => {
+  const fetchMembros = async (id: string) => {
     setLoading(true);
-
-    if (atleticaId) {
-      const response = await getMembros(atleticaId);
+    try {
+      const response = await getMembros(id);
       if (response.success && response.data) {
         setMembros(response.data);
       }
+    } catch (error) {
+      console.error("Erro ao buscar membros:", error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
-    fetchMembros();
-  }, []);
+    if (atleticaId) {
+      fetchMembros(atleticaId);
+    }
+  }, [atleticaId]);
 
   const openModal = (membro?: MembrosResponse) => {
     setSelectedMembro(membro);
@@ -115,7 +127,10 @@ const AllMembros = () => {
                       </HStack>
                     </HStack>
                     {showActions && (
-                      <HStack space="md">
+                      <HStack
+                        space="md"
+                        className="items-center justify-center mt-4"
+                      >
                         <Pressable onPress={() => handleEditMembro(membro)}>
                           <Edit className="text-typography-600" />
                         </Pressable>
@@ -139,14 +154,24 @@ const AllMembros = () => {
       <ModalMembros
         showModal={showModal}
         setShowModal={setShowModal}
-        refreshMembros={fetchMembros}
+        refreshMembros={() => {
+          const id = (atleticaData.atletica.id ?? atleticaId).toString();
+          if (id) {
+            fetchMembros(id);
+          }
+        }}
         membroData={selectedMembro}
       />
       <DeleteMembro
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         email={membroToDelete}
-        refreshMembros={fetchMembros}
+        refreshMembros={() => {
+          const id = (atleticaData.atletica.id ?? atleticaId).toString();
+          if (id) {
+            fetchMembros(id);
+          }
+        }}
       />
     </Box>
   );

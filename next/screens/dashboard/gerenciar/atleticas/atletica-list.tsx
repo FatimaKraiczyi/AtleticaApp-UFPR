@@ -76,6 +76,11 @@ const AllAtleticas = () => {
     }
   };
 
+	const handleMembrosClick = (atletica: AtleticaResponse) => {
+    setAtleticaData(atletica);
+    router.push("/dashboard/gerenciar/membros"); 
+  };
+
   if (loading) {
     return <LoadingState />;
   }
@@ -132,24 +137,37 @@ const AllAtleticas = () => {
                       </ButtonText>
                     </Button>
                   </Box>
-
                   {showActions && (
-                    <HStack
-                      space="md"
-                      className="items-center justify-center  p-4"
-                    >
-                      <Pressable onPress={() => handleEditAtletica(atletica)}>
-                        <Edit className="text-typography-600 " />
-                      </Pressable>
-                      <Pressable
+                    <Box className="px-4">
+                      <Button
+                        className="mb-4 w-full hover:bg-primary-500 "
+                        variant="outline"
                         onPress={() =>
-                          atletica.atletica.id !== undefined &&
-                          handleOpenDeleteModal(atletica.atletica.id)
+                          handleMembrosClick(atletica)
                         }
                       >
-                        <Trash className="text-typography-600" />
-                      </Pressable>
-                    </HStack>
+                        <ButtonText className="text-secondary-600 group-hover/button:text-white">
+                          Membros
+                        </ButtonText>
+                      </Button>
+
+                      <HStack
+                        space="md"
+                        className="items-center justify-center mb-4"
+                      >
+                        <Pressable onPress={() => handleEditAtletica(atletica)}>
+                          <Edit className="text-typography-600 " />
+                        </Pressable>
+                        <Pressable
+                          onPress={() =>
+                            atletica.atletica.id !== undefined &&
+                            handleOpenDeleteModal(Number(atletica.atletica.id))
+                          }
+                        >
+                          <Trash className="text-typography-600" />
+                        </Pressable>
+                      </HStack>
+                    </Box>
                   )}
                 </GridItem>
               ))}
