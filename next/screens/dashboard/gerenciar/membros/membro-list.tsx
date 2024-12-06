@@ -17,7 +17,7 @@ import { NoItemsFound } from "@/components/sections/NoItemsFound";
 
 const AllMembros = () => {
   const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const [loading, setLoading] = useState(true);
   const [membros, setMembros] = useState<MembrosResponse[]>([]);
   const [showModal, setShowModal] = useState(false);

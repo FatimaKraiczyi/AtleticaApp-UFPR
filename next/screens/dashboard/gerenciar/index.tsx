@@ -68,8 +68,8 @@ const MainContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (typeof window !== "undefined") {
-        const storedUserType = sessionStorage.getItem("userType");
-        const atleticaId = sessionStorage.getItem("atleticaId");
+        const storedUserType = sessionStorage.getItem("tipo");
+        const atleticaId = sessionStorage.getItem("atletica");
 
         setUserType(storedUserType);
         if (atleticaId && !atleticaName) {
