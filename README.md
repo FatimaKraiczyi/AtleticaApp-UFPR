@@ -21,8 +21,13 @@ cd AtleticaApp-UFPR
 
 ```bash
 cd next
-yarn install
+# Usando yarn
+yarn install 
 yarn dev
+
+# Ou usando npm
+npm install
+npm run dev
 ```
 
 
