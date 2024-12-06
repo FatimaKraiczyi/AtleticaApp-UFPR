@@ -17,7 +17,16 @@ cd AtleticaApp-UFPR
 
 ### Running the Application
 
-#### Expo
+#### Web
+
+```bash
+cd next
+yarn install
+yarn dev
+```
+
+
+#### Mobile (expo)
 
 ```bash
 cd expo-app
@@ -26,10 +35,3 @@ yarn expo start
 ```
 
 
-#### Next.js
-
-```bash
-cd next
-yarn install
-yarn dev
-```
