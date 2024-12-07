@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { AuthProvider } from "@/hooks/AuthProvider";
 import { CarrinhoProvider } from "@/hooks/CarrinhoContext";
 import { AtleticaProvider } from "@/hooks/AtleticaContex";
+import { MembrosProvider } from "@/hooks/MembroContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,9 +20,11 @@ export default function RootLayout({
       <body className={inter.className} style={{ display: "flex" }}>
 			<AuthProvider>
 				<AtleticaProvider>
+					<MembrosProvider>
 					<CarrinhoProvider>
           <Providers>{children}</Providers>
 					</CarrinhoProvider>
+					</MembrosProvider>
 				</AtleticaProvider>
 			</AuthProvider>
       </body>

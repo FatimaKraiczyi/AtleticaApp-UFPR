@@ -47,13 +47,15 @@ type userSchemaDetails = z.infer<typeof userSchema>;
 export const ModalMembros = ({
   showModal,
   setShowModal,
-  refreshMembros,
-  membroData,
+  editMembro,
+  membros,
+  setMembros,
 }: {
   showModal: boolean;
   setShowModal: any;
-  refreshMembros: () => void;
-  membroData?: any;
+  setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
+  membros: MembrosResponse[];
+  editMembro: MembrosResponse | null;
 }) => {
   const ref = useRef(null);
   const {
@@ -61,56 +63,58 @@ export const ModalMembros = ({
     formState: { errors },
     handleSubmit,
     reset,
-    setValue,
+		setValue,
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
-    defaultValues: {
-      administrador: false,
-    },
   });
   const { atleticaData } = useAtletica();
 	
   useEffect(() => {
     if (showModal) {
-      resetForm();
-      if (membroData) {
-        setValue("email", membroData.Usuario.email);
-        setValue("administrador", membroData.administrador);
+      if (editMembro) {
+        setValue("email", editMembro.Usuario?.email || "");
+        setValue("administrador", editMembro.administrador);
       }
     }
-  }, [showModal, membroData, setValue]);
+  }, [showModal, editMembro, setValue]);
 
   const resetForm = () => {
     reset();
   };
 
-  const onSubmit = async (data: any) => {
-    const membroPayload = {
-      email: data.email,
-      administrador: data.administrador,
-      atleticaId:
-        atleticaData?.atletica?.id ?? sessionStorage.getItem("atleticaId"),
-    };
-
+  const onSubmit = async (formData: userSchemaDetails) => {
     try {
-      if (membroData) {
+      if (editMembro && editMembro.Usuario?.email) {
         const response = await editarMembro(
-          membroPayload.email,
-          membroPayload.administrador,
+          editMembro.Usuario.email,
+          formData.administrador
         );
-        if (response.success) {
-          refreshMembros();
+				if (response.success) {
+          setMembros((prevMembros) =>
+            prevMembros.map((membro) =>
+              membro.Usuario?.email === editMembro.Usuario?.email
+                ? { ...membro, administrador: formData.administrador }
+                : membro
+            )
+          );
         }
       } else {
-        const response = await adicionarMembro(membroPayload as Membro);
+        const response = await adicionarMembro({
+          email: formData.email,
+          administrador: formData.administrador,
+          atleticaId: membros[0].atleticaId,
+        });
         if (response.success) {
-          refreshMembros();
+          const atleticaId = membros[0].atleticaId;
+          const response = await getMembros(atleticaId);
+          const updatedMembros: MembrosResponse[] = response.data;
+          setMembros(updatedMembros);
         }
       }
       setShowModal(false);
-      resetForm();
+      reset();
     } catch (error) {
-      console.error("Erro:", error);
+      console.error("Erro ao adicionar/editar membro:", error);
     }
   };
 
@@ -144,7 +148,7 @@ export const ModalMembros = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            {membroData ? "Editar Membro" : "Adicionar Membro"}
+            {editMembro ? "Editar Membro" : "Adicionar Membro"}
           </Heading>
         </Center>
         <ModalBody className="max-h-[70vh] overflow-y-auto">

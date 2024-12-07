@@ -15,33 +15,33 @@ import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { deletarMembro } from "@/api/membros";
+import { useMembros } from "@/hooks/MembroContext";
 
 interface DeleteMembroProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-  email?: string;
-  refreshMembros: () => void;
+  email: string;
 }
 
 export const DeleteMembro = ({
   showModal,
   setShowModal,
   email,
-  refreshMembros,
 }: DeleteMembroProps) => {
+  const { setMembros } = useMembros();
 
   const handleDelete = async () => {
-    if (email) {
-      try {
-        const response = await deletarMembro(email);
-        if (response.success) {
-          refreshMembros();
-        }
-      } catch (error) {
-        console.error("Erro ao excluir membro:", error);
+    try {
+      const response = await deletarMembro(email);
+      if (response.success) {
+        setMembros((prevMembros) =>
+          prevMembros.filter((membro) => membro.Usuario?.email !== email)
+        );
       }
+      setShowModal(false);
+    } catch (error) {
+      console.error("Erro ao deletar membro:", error);
     }
-    setShowModal(false);
   };
 
   return (
@@ -51,8 +51,8 @@ export const DeleteMembro = ({
         <Box className={"w-full h-[110px] "}>
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
-            alt="Imagem de fundo"
             size="full"
+            alt="Banner Image"
           />
         </Box>
         <ModalHeader className="absolute w-full flex justify-end">
