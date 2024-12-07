@@ -40,8 +40,12 @@ const AssinaturaSchema = z.object({
     return !isNaN(num) && num > 0;
   }, "Valor deve ser um número válido maior que 0"),
   descricao: z.array(
-    z.string().min(1, "Descrição dos benefícios são obrigatórios")
-  ),
+    z.object({
+      id: z.number(),
+      beneficioDescricao: z.string(),
+      beneficioValor: z.number(),
+    })
+  ).nonempty("Descrição é obrigatória"),
   duracao: z.union([z.string(), z.number()]).refine((val) => {
     const num = typeof val === "string" ? parseInt(val, 10) : val;
     return Number.isInteger(num) && num > 0;
@@ -70,7 +74,6 @@ export const ModalPlano = ({
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
   });
-  const [descricaoFields, setADescricaoFields] = useState<string[]>(["descricao"]);
 
   useEffect(() => {
     if (showModal) {
@@ -79,10 +82,7 @@ export const ModalPlano = ({
 
     if (planoData) {
       setValue("nome", planoData.nome);
-      setValue(
-        "descricao",
-        planoData.descricao?.map((beneficios: any) => beneficios) || []
-      );
+      setValue("descricao", planoData.descricao || []);
       setValue("valor", planoData.valor);
       setValue("duracao", planoData.duracao);
     }
@@ -95,7 +95,7 @@ export const ModalPlano = ({
   const onSubmit = async (data: AssianaturaSchemaDetails) => {
     const assinaturaPayload = {
       nome: data.nome,
-      descricao: data.descricao || [],
+      descricao: data.descricao.map((item) => item.beneficioDescricao),
       valor: Number(data.valor),
       duracao: Number(data.duracao),
       id: planoData?.id,
@@ -225,9 +225,15 @@ export const ModalPlano = ({
                     <InputField
                       placeholder="Descrição do Plano"
                       type="text"
-                      value={value.join(", ")}
+                      value={Array.isArray(value) ? value.map((item) => item.beneficioDescricao).join(", ") : ""}
                       onChangeText={(text) =>
-                        onChange(text.split(",").map((item) => item.trim()))
+                        onChange(
+                          text.split(",").map((item, index) => ({
+                            id: index,
+                            beneficioDescricao: item.trim(),
+                            beneficioValor: 0, // Ajuste conforme necessário
+                          }))
+                        )
                       }
                       onBlur={onBlur}
                     />

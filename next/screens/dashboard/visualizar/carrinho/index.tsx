@@ -10,44 +10,48 @@ import { SafeAreaView, ScrollView } from "react-native";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { MobileFooter } from "@/components/sections/MobileFooter";
-import { Produto } from "@/interfaces/produto";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { Trash } from "lucide-react-native";
-import { getCart, deleteCartProdut } from "@/api/carrinho";
-
-interface ProdutoCarrinho extends Produto {
-  produtoId: number;
-  carrinhoCompraId: number;
-  produtoNome: string;
-  produtoValor: number;
-  quantidade: number;
-}
+import { getCart, deleteCartProdut, addCartProduct } from "@/api/carrinho";
+import { useCarrinho } from "@/hooks/CarrinhoContext";
+import {
+  ProdutoCarrinho,
+  ProdutoCarrinhoResponse,
+  ProdutosCart,
+} from "@/interfaces/ProdutoCarrinho";
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);
-  const [produtosCarrinho, setProdutosCarrinho] = useState<ProdutoCarrinho[]>(
-    []
-  );
+  const [produtosCarrinho, setProdutosCarrinho] = useState<ProdutosCart[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const hasFetchedCart = useRef(false);
+  const { setItems } = useCarrinho();
 
-  const calcularSubtotal = (items: ProdutoCarrinho[]) => {
+  const calcularSubtotal = (items: ProdutosCart[]) => {
     const total = items.reduce(
-      (acc, item) => acc + item.quantidade * item.produtoValor,
+      (acc: number, item: ProdutosCart) =>
+        acc + item.quantidade * item.valorUnitario,
       0
     );
     setSubtotal(total);
   };
 
-  useEffect(() => {
-    if (hasFetchedCart.current) return;
+  const updateItemCount = (count: number) => {
+    setItems(count);
+  };
 
+  useEffect(() => {
     const fetchCartData = async () => {
       try {
         const response = await getCart();
-        if (response.success) {
-          setProdutosCarrinho(response.data);
-          calcularSubtotal(response.data);
+        if (response.success && response.data) {
+          setProdutosCarrinho(response.data.produtos);
+          calcularSubtotal(response.data.produtos);
+          const totalItems = response.data.produtos.reduce(
+            (acc: number, item: ProdutosCart) => acc + item.quantidade,
+            0
+          );
+          updateItemCount(totalItems);
         }
       } catch (error) {
         console.error("Erro ao buscar dados do carrinho:", error);
@@ -60,32 +64,46 @@ export const MainContent = () => {
     fetchCartData();
   }, []);
 
-  const atualizarQuantidade = (produtoId: number, incremento: boolean) => {
-    setProdutosCarrinho((prevProdutos) => {
-      const atualizados = prevProdutos.map((produto) =>
-        produto.produtoId === produtoId
-          ? {
-              ...produto,
-              quantidade: Math.max(
-                1,
-                produto.quantidade + (incremento ? 1 : -1)
-              ),
-            }
-          : produto
-      );
-      calcularSubtotal(atualizados);
-      return atualizados;
-    });
+  const atualizarQuantidade = async (
+    produtoId: number,
+    incremento: boolean
+  ) => {
+    try {
+      const produto = produtosCarrinho.find((p) => p.produtoId === produtoId);
+      if (produto) {
+        const novaQuantidade = Math.max(
+          1,
+          produto.quantidade + (incremento ? 1 : -1)
+        );
+        const response = await addCartProduct(produtoId, novaQuantidade);
+        if (response.success) {
+          setProdutosCarrinho((prevProdutos) => {
+            const atualizados = prevProdutos.map((produto) =>
+              produto.produtoId === produtoId
+                ? { ...produto, quantidade: novaQuantidade }
+                : produto
+            );
+            calcularSubtotal(atualizados);
+            return atualizados;
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar quantidade do produto:", error);
+    }
   };
 
   const removerProduto = async (produtoId: number) => {
     try {
       const response = await deleteCartProdut(produtoId);
       if (response.success) {
-        setProdutosCarrinho((prevProdutos) =>
-          prevProdutos.filter((produto) => produto.produtoId !== produtoId)
-        );
-        calcularSubtotal(produtosCarrinho);
+        setProdutosCarrinho((prevProdutos) => {
+          const atualizados = prevProdutos.filter(
+            (produto) => produto.produtoId !== produtoId
+          );
+          calcularSubtotal(atualizados);
+          return atualizados;
+        });
       }
     } catch (error) {
       console.error("Erro ao remover produto:", error);
@@ -117,24 +135,25 @@ export const MainContent = () => {
             {produtosCarrinho.map((produto) => (
               <HStack
                 key={produto.produtoId}
-                className="border-b  py-4  border-gray-200 flex flex-row md:flex-row gap-4"
+                className="border-b py-4 border-gray-200 flex flex-row md:flex-row gap-4"
               >
                 <HStack className="flex-1 gap-4">
                   <Image
                     source={
-                      produto.imagem || require("@/assets/dashboard/image2.png")
+                      produto.produto.imagem ||
+                      require("@/assets/dashboard/image2.png")
                     }
-                    alt={produto.produtoNome}
+                    alt={produto.produto.nome}
                     className="w-20 h-25 object-cover rounded"
                   />
                   <VStack className="flex-1">
-                    <Text className="font-bold">{produto.produtoNome}</Text>
+                    <Text className="font-bold">{produto.produto.nome}</Text>
                     <Text className="text-sm text-gray-500">Size: Medium</Text>
                     <Text className="text-sm text-gray-500">
                       Delivery by Mon 27
                     </Text>
                     <Text className="text-lg font-semibold text-green-500">
-                      R$ {produto.produtoValor.toFixed(2)}
+                      R$ {produto.valorUnitario.toFixed(2)}
                     </Text>
                   </VStack>
                 </HStack>

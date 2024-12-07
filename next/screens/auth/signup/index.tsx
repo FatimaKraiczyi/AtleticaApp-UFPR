@@ -222,7 +222,7 @@ const SignUpForm = () => {
       <FormControl className="my-2  md:my-2" isInvalid={!!errors.sobrenome}>
         <Controller
           name="sobrenome"
-          defaultValue=""
+          defaultValue=" "
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <Input>
@@ -232,7 +232,6 @@ const SignUpForm = () => {
                 onChangeText={onChange}
                 onBlur={onBlur}
                 onSubmitEditing={handleKeyPress}
-                returnKeyType="done"
                 className="text-sm"
               />
             </Input>
@@ -448,7 +447,6 @@ const SignUpForm = () => {
             value="Remember me"
             isChecked={value}
             onChange={onChange}
-            className="mt-5"
           >
             <CheckboxIndicator className="mr-2">
               <CheckboxIcon as={CheckIcon} />
@@ -459,13 +457,13 @@ const SignUpForm = () => {
           </Checkbox>
         )}
       />
-      <VStack className="w-full my-7" space="lg">
+      <VStack className="w-full" space="lg">
         <Button
           variant="solid"
           action="primary"
           size="lg"
+					className="mt-4"
           onPress={handleSubmit(onSubmit)}
-          className="mt-5"
         >
           <ButtonText>FINALIZAR</ButtonText>
         </Button>

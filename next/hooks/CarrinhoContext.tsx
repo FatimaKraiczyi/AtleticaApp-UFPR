@@ -2,7 +2,9 @@ import React, { createContext, useContext, useState } from "react";
 
 interface CarrinhoContextType {
   items: number;
+	setItems: React.Dispatch<React.SetStateAction<number>>;
   addItem: () => void;
+	updateItemCount: (count: number) => void;
 }
 
 const CarrinhoContext = createContext<CarrinhoContextType | undefined>(undefined);
@@ -14,8 +16,12 @@ export const CarrinhoProvider: React.FC<React.PropsWithChildren<{}>> = ({ childr
     setItems((prevItems) => prevItems + 1);
   };
 
+	const updateItemCount = (count: number) => {
+		setItems(count);
+	};
+	
   return (
-    <CarrinhoContext.Provider value={{ items, addItem }}>
+    <CarrinhoContext.Provider value={{ items, setItems,addItem, updateItemCount }}>
       {children}
     </CarrinhoContext.Provider>
   );

@@ -13,11 +13,11 @@ import { DeleteProduto } from "./delete-produto";
 import { ViewProduto } from "./view-produto";
 import { Image } from "@/components/ui/image";
 import { getProdutoById, getProdutos } from "@/api/produtos";
-import { Produto } from "@/interfaces/produto";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
+import { Produto } from "@/interfaces/ProdutoCarrinho";
 
 const AllProdutos = () => {
   const atleticaId =
@@ -34,7 +34,7 @@ const AllProdutos = () => {
     number | undefined
   >(undefined);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [quantidade, setQuantidade] = useState(1);
+  const [quantidade, setQuantidade] = useState<number>(1);
 
   const showActions =
     typeof window !== "undefined" &&
@@ -99,15 +99,15 @@ const AllProdutos = () => {
     setShowDeleteModal(true);
   };
 
-  const handleIncreaseQuantity = (produto: Produto) => {
+  const handleIncreaseQuantity = (produto: any) => {
     if (quantidade < produto.quantidade) {
-      setQuantidade(quantidade + 1);
+      setQuantidade((prev) => prev + 1);
     }
   };
 
   const handleDecreaseQuantity = () => {
     if (quantidade > 1) {
-      setQuantidade(quantidade - 1);
+      setQuantidade((prev) => prev - 1);
     }
   };
 
@@ -133,11 +133,11 @@ const AllProdutos = () => {
           renderNoItems()
         ) : (
           <ScrollView
-					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ flexGrow: 1 }}
-					className="p-4"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
               {produtos.map((produto) => (
                 <GridItem
                   key={produto.id}
@@ -147,29 +147,26 @@ const AllProdutos = () => {
                   }}
                 >
                   <Pressable onPress={() => openViewModal(produto)}>
-									<Box className="w-full overflow-hidden rounded-md h-48 relative group">
-									<Image
+                    <Box className="w-full overflow-hidden rounded-md h-48 relative group">
+                      <Image
                         source={
                           produto.imagem ||
                           require("@/assets/dashboard/image2.png")
                         }
                         alt={produto.nome}
                         size="full"
-												 className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                        className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                       />
-
                     </Box>
                   </Pressable>
 
                   <VStack className="py-2">
-									<HStack>
-                    <Text className="text-sm">
-                      Vendido por: {""}
-                    </Text>
-										<Text className="text-sm font-bold">
-                     {produto.atleticaNome}
-                    </Text>
-										</HStack>
+                    <HStack>
+                      <Text className="text-sm">Vendido por: {""}</Text>
+                      <Text className="text-sm font-bold">
+                        {produto.atletica.nome}
+                      </Text>
+                    </HStack>
                     <Text className="font-semibold text-xl mt-4">
                       {produto.nome}
                     </Text>
@@ -186,16 +183,17 @@ const AllProdutos = () => {
                     </Text>
                   </VStack>
                   <HStack space="md" className="items-center gap-2">
-                    <Button variant="link" onPress={handleDecreaseQuantity}>
-                      -
-                    </Button>
                     <Text>{quantidade}</Text>
                     <Button
                       variant="link"
-                      onPress={() => handleIncreaseQuantity}
+                      onPress={() => handleIncreaseQuantity(quantidade)}
                     >
                       +
                     </Button>
+                    <Button variant="link" onPress={handleDecreaseQuantity}>
+                      -
+                    </Button>
+
                     <Text className="text-sm">
                       Em estoque: {""}
                       {produto.quantidade}
@@ -205,7 +203,9 @@ const AllProdutos = () => {
                   {showActions ? (
                     <HStack className="w-full items-center justify-between mt-4">
                       <HStack className="items-center">
-                        <Pressable onPress={() => handleEditProduto(produto)}>
+                        <Pressable
+                          onPress={() => handleEditProduto(produto)}
+                        >
                           <Edit className="text-typography-600 mr-4" />
                         </Pressable>
                         <Pressable

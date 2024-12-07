@@ -22,5 +22,5 @@ export interface MembrosResponse {
 export interface Membro {
   email: string;
   administrador: boolean;
-  atleticaId: string;
+  atleticaId: string | number
 }
