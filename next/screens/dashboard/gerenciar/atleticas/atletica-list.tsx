@@ -64,7 +64,7 @@ const AllAtleticas = () => {
     setShowDeleteModal(true);
   };
 
-  const handleCardPress = async (atletica: AtleticaResponse) => {
+  const handleViewAtletica = async (atletica: AtleticaResponse) => {
     try {
       const response = await getAtleticaById(atletica.atletica.id);
       if (response.success && response.data) {
@@ -76,9 +76,12 @@ const AllAtleticas = () => {
     }
   };
 
-	const handleMembrosClick = (atletica: AtleticaResponse) => {
-    setAtleticaData(atletica);
-    router.push("/dashboard/gerenciar/membros"); 
+  const handleCardPress = async (atletica: AtleticaResponse) => {
+    const atleticaId = atletica.atletica.id.toString();
+
+    sessionStorage.setItem("atletica", atleticaId);
+
+    router.push("/dashboard/gerenciar/membros");
   };
 
   if (loading) {
@@ -130,7 +133,7 @@ const AllAtleticas = () => {
                     <Button
                       className="mt-auto w-full hover:bg-primary-500 "
                       variant="outline"
-                      onPress={() => handleCardPress(atletica)}
+                      onPress={() => handleViewAtletica(atletica)}
                     >
                       <ButtonText className="text-secondary-600 group-hover/button:text-white">
                         Ver Mais
@@ -142,9 +145,7 @@ const AllAtleticas = () => {
                       <Button
                         className="mb-4 w-full hover:bg-primary-500 "
                         variant="outline"
-                        onPress={() =>
-                          handleMembrosClick(atletica)
-                        }
+                        onPress={() => handleCardPress(atletica)}
                       >
                         <ButtonText className="text-secondary-600 group-hover/button:text-white">
                           Membros
