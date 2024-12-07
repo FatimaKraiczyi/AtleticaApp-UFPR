@@ -47,7 +47,7 @@ function Header() {
         />
       </Link>
       <Text className="color-typography-50 text-lg dark:color-typography-50">
-        Token de autenticação
+        Código de verificação
       </Text>
     </HStack>
   );
@@ -118,7 +118,7 @@ const TokenVerification = () => {
         placement: "bottom right",
         render: ({ id }) => (
           <Toast nativeID={id} variant="solid" action="error">
-            <ToastTitle>Token inválido</ToastTitle>
+            <ToastTitle>Código inválido</ToastTitle>
           </Toast>
         ),
       });
@@ -129,7 +129,7 @@ const TokenVerification = () => {
     return (
       <VStack space="md" className="items-start md:mt-4">
         <Heading className="text-xl text-center md:text-left md:text-2xl">
-          Insira o token de autenticação:
+          Insira o código de verificação:
         </Heading>
       </VStack>
     );
@@ -144,7 +144,7 @@ const TokenVerification = () => {
           placement: "bottom right",
           render: ({ id }) => (
             <Toast nativeID={id} variant="solid" action="success">
-              <ToastTitle>Token reenviado com sucesso</ToastTitle>
+              <ToastTitle>Código reenviado com sucesso</ToastTitle>
             </Toast>
           ),
         });
@@ -153,7 +153,7 @@ const TokenVerification = () => {
           placement: "bottom right",
           render: ({ id }) => (
             <Toast nativeID={id} variant="solid" action="error">
-              <ToastTitle>Ocorreu um erro ao reenviar o token</ToastTitle>
+              <ToastTitle>Ocorreu um erro ao reenviar o código</ToastTitle>
             </Toast>
           ),
         });
@@ -163,7 +163,7 @@ const TokenVerification = () => {
     return (
       <HStack space="xs" className=" mt-auto">
         <Text className="color-typography-800 dark:color-typography-400 text-sm">
-          Não recebeu o token?
+          Não recebeu o código?
         </Text>
         <Button
           className="items-start"
@@ -221,7 +221,7 @@ const TokenVerification = () => {
                 <Input>
                   <InputField
                     className="text-sm"
-                    placeholder="Token"
+                    placeholder="Código de verificação"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -247,7 +247,7 @@ const TokenVerification = () => {
             isFocusVisible={false}
             onPress={handleSubmit(onSubmit)}
           >
-            <ButtonText className="text-sm"> Validar Token</ButtonText>
+            <ButtonText className="text-sm"> Validar Código</ButtonText>
           </Button>
         </VStack>
         <AccountLink />

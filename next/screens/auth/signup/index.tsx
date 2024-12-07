@@ -5,7 +5,6 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import { LinkText } from "@/components/ui/link";
 import Link from "@unitools/link";
 import { Image } from "@/components/ui/image";
 import { Center } from "@/components/ui/center";
@@ -55,9 +54,12 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { CursoProps } from "@/interfaces/atleticas";
+import { TermosDeUso } from "@/hooks/TermosUso";
+import { PoliticaDePrivacidade } from "@/hooks/Privacidade";
 
 const signUpSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
+  sobrenome: z.string().optional(),
   password: z
     .string()
     .min(8, "A senha deve ter no mínimo 8 caracteres")
@@ -108,6 +110,7 @@ const SignUpForm = () => {
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
@@ -128,13 +131,18 @@ const SignUpForm = () => {
     fetchCursos();
   }, []);
 
+  useEffect(() => {
+    const rememberMe = localStorage.getItem("rememberme") === "true";
+    setValue("rememberme", rememberMe);
+  }, [setValue]);
+
   const onSubmit = async (data: SignUpSchemaType) => {
     if (data.password === data.confirmpassword) {
       const [day, month, year] = data.dataNascimento.split("/");
-      const formattedDate = `${day}-${month}-${year}`;
+      const formattedDate = `${month}-${day}-${year}`;
 
       const user: UserProps = {
-        nome: data.nome,
+        nome: `${data.nome} ${data.sobrenome || ""}`.trim(),
         senha: data.password,
         repSenha: data.confirmpassword,
         cursoId: data.curso,
@@ -166,6 +174,7 @@ const SignUpForm = () => {
           ),
         });
       }
+      localStorage.setItem("rememberme", data.rememberme ? "true" : "false");
     }
   };
 
@@ -182,34 +191,61 @@ const SignUpForm = () => {
 
   return (
     <>
-		<FormControl
+      <FormControl
         className="my-2  md:my-2"
-				isInvalid={!!errors.nome}
-          isRequired={true}
-        >
-          <Controller
-            name="nome"
-            defaultValue=""
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Input>
-                <InputField
-                  placeholder="Nome completo"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  onSubmitEditing={handleKeyPress}
-                  returnKeyType="done"
-                  className="text-sm"
-                />
-              </Input>
-            )}
-          />
-          <FormControlError>
-            <FormControlErrorIcon size="sm" as={AlertTriangle} />
-            <FormControlErrorText>{errors?.nome?.message}</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
+        isInvalid={!!errors.nome}
+        isRequired={true}
+      >
+        <Controller
+          name="nome"
+          defaultValue=""
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input>
+              <InputField
+                placeholder="Nome"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                onSubmitEditing={handleKeyPress}
+                returnKeyType="done"
+                className="text-sm"
+              />
+            </Input>
+          )}
+        />
+        <FormControlError>
+          <FormControlErrorIcon size="sm" as={AlertTriangle} />
+          <FormControlErrorText>{errors?.nome?.message}</FormControlErrorText>
+        </FormControlError>
+      </FormControl>
+      <FormControl className="my-2  md:my-2" isInvalid={!!errors.sobrenome}>
+        <Controller
+          name="sobrenome"
+          defaultValue=""
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <Input>
+              <InputField
+                placeholder="Sobrenome"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                onSubmitEditing={handleKeyPress}
+                returnKeyType="done"
+                className="text-sm"
+              />
+            </Input>
+          )}
+        />
+        <FormControlError>
+          <FormControlErrorIcon size="sm" as={AlertTriangle} />
+          <FormControlErrorText>
+            {errors?.sobrenome?.message}
+          </FormControlErrorText>
+        </FormControlError>
+      </FormControl>
+
       <FormControl
         className="my-2  md:my-2"
         isRequired={true}
@@ -418,14 +454,7 @@ const SignUpForm = () => {
               <CheckboxIcon as={CheckIcon} />
             </CheckboxIndicator>
             <CheckboxLabel className="text-sm">
-              I accept the{" "}
-              <Link href="#">
-                <LinkText className="mt-0.5 web:mt-0">Terms of Use</LinkText>
-              </Link>{" "}
-              &{" "}
-              <Link href="#">
-                <LinkText className="mt-0.5 web:mt-0">Privacy Policy</LinkText>
-              </Link>
+              Eu aceito os <TermosDeUso /> e <PoliticaDePrivacidade />
             </CheckboxLabel>
           </Checkbox>
         )}
