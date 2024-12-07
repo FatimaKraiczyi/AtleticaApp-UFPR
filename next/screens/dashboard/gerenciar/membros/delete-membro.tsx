@@ -6,9 +6,9 @@ import {
   ModalCloseButton,
   ModalBody,
 } from "@/components/ui/modal";
-import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
+import { Image } from "@/components/ui/image";
 import { Heading } from "@/components/ui/heading";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
@@ -16,26 +16,28 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { deletarMembro } from "@/api/membros";
 import { useMembros } from "@/hooks/MembroContext";
+import { MembrosResponse } from "@/interfaces/membros";
 
 interface DeleteMembroProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   email: string;
+	setMembros: React.Dispatch<React.SetStateAction<MembrosResponse[]>>;
 }
 
 export const DeleteMembro = ({
   showModal,
   setShowModal,
   email,
+	setMembros,
 }: DeleteMembroProps) => {
-  const { setMembros } = useMembros();
 
   const handleDelete = async () => {
     try {
       const response = await deletarMembro(email);
       if (response.success) {
         setMembros((prevMembros) =>
-          prevMembros.filter((membro) => membro.Usuario?.email !== email)
+          prevMembros.filter((membro) => membro.email !== email)
         );
       }
       setShowModal(false);

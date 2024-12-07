@@ -1,5 +1,5 @@
+import { Produto } from "@/interfaces/ProdutoCarrinho";
 import type { IResponse } from "../interfaces";
-import { Produto } from "../interfaces/produto";
 import { API, objectCatch } from "./api";
 import { addProduto, deleteProduto, editProduto, getAllProdutos, getProdutoByAtletica } from "./routes/produtos";
 

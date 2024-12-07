@@ -1,5 +1,5 @@
+import { CursoProps } from "@/interfaces/atleticas";
 import { IResponse } from "../interfaces";
-import { CursoProps } from "../interfaces/cursos";
 import { API, arrayCatch } from "./api";
 
 export const getCursos = async (): Promise<IResponse.Default<CursoProps[]>> => {

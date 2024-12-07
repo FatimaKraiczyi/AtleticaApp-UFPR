@@ -1,3 +1,9 @@
+
+export interface AssinaturaBeneficio {
+	id: number;
+	beneficioDescricao: string;
+	beneficioValor: number;
+}
 export interface Assinatura {
   id: number;
   usuarioId: number;
@@ -9,7 +15,7 @@ export interface Assinatura {
 	planoValor: number;
 	planoDuracao: number;
 	atleticaNome: string;
-	planoDescricao: string[];
+	planoDescricao: AssinaturaBeneficio[];
 }
 
 export interface AssinaturaProps {

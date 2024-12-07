@@ -110,10 +110,10 @@ const AllMembros = () => {
                       <HStack space="xl" className="items-center">
                         <VStack>
                           <Text className="font-bold text-typography-900 line-clamp-1">
-                            {membro.Usuario?.nome}
+                            {membro.Usuario?.nome ?? membro.nome}
                           </Text>
                           <Text className="text-sm text-typography-400 line-clamp-1">
-                            {membro.Usuario?.email}
+                            {membro.Usuario?.email ?? membro.email}
                           </Text>
                           <Text className="line-clamp-1 text-md">
                             {membro.administrador && "Administrador"}
@@ -131,7 +131,9 @@ const AllMembros = () => {
                         </Pressable>
                         <Pressable
                           onPress={() =>
-                            handleOpenDeleteModal(membro.Usuario?.email ?? "")
+                            handleOpenDeleteModal(
+                              (membro.email ?? membro.Usuario?.email)!
+                            )
                           }
                         >
                           <Trash className="text-typography-600" />
@@ -158,6 +160,7 @@ const AllMembros = () => {
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         email={membroEmailToDelete!}
+				setMembros={setMembros}
       />
     </Box>
   );

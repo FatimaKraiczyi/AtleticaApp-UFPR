@@ -79,10 +79,10 @@ const Main = () => {
         {assinaturas.length === 0 ? (
           renderNoAssinatura()
         ) : (
-					<ScrollView
-					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ flexGrow: 1 }}
-					className="p-4"
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            className="p-4"
           >
             <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {assinaturas.map((assinatura) => (
@@ -138,11 +138,16 @@ const Main = () => {
 
                         {expandedPlanos.has(assinatura.id) && (
                           <VStack space="lg" className="items-center">
-                            {assinatura.planoDescricao && (
-                                <Text className="text-gray-700 text-sm">
-                                  ✔️ {assinatura.planoDescricao}
+                            {assinatura.planoDescricao.map(
+                              (beneficio, index) => (
+                                <Text
+                                  key={index}
+                                  className="text-gray-700 text-sm"
+                                >
+                                  ✔️ {beneficio.beneficioDescricao}
                                 </Text>
-                              )}
+                              )
+                            )}
                           </VStack>
                         )}
                       </VStack>
@@ -152,7 +157,7 @@ const Main = () => {
                         className="w-full"
                         onPress={async () => {
                           const response = await pagamentoAssinatura(
-                            assinatura.id
+                            assinatura.planoId
                           );
                           if (response?.data?.url) {
                             window.location.href = response.data.url;

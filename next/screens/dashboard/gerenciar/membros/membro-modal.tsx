@@ -39,7 +39,7 @@ const userSchema = z.object({
     .min(1, "Email é obrigatório")
     .email("Email inválido")
     .regex(/@ufpr\.br$/, "O email deve ser do domínio @ufpr.br"),
-  administrador: z.boolean(),
+  administrador: z.boolean().optional(),
 });
 
 type userSchemaDetails = z.infer<typeof userSchema>;
@@ -63,16 +63,18 @@ export const ModalMembros = ({
     formState: { errors },
     handleSubmit,
     reset,
-		setValue,
+    setValue,
   } = useForm<userSchemaDetails>({
     resolver: zodResolver(userSchema),
   });
   const { atleticaData } = useAtletica();
-	
+  const atleticaId =
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
+
   useEffect(() => {
     if (showModal) {
       if (editMembro) {
-        setValue("email", editMembro.Usuario?.email || "");
+        setValue("email", editMembro.email || "");
         setValue("administrador", editMembro.administrador);
       }
     }
@@ -84,16 +86,16 @@ export const ModalMembros = ({
 
   const onSubmit = async (formData: userSchemaDetails) => {
     try {
-      if (editMembro && editMembro.Usuario?.email) {
+      if (editMembro && editMembro.email) {
         const response = await editarMembro(
-          editMembro.Usuario.email,
-          formData.administrador
+          editMembro.email,
+          formData.administrador ?? false
         );
-				if (response.success) {
+        if (response.success) {
           setMembros((prevMembros) =>
             prevMembros.map((membro) =>
-              membro.Usuario?.email === editMembro.Usuario?.email
-                ? { ...membro, administrador: formData.administrador }
+              membro.email === editMembro.email
+                ? { ...membro, administrador: formData.administrador ?? false }
                 : membro
             )
           );
@@ -101,14 +103,11 @@ export const ModalMembros = ({
       } else {
         const response = await adicionarMembro({
           email: formData.email,
-          administrador: formData.administrador,
-          atleticaId: membros[0].atleticaId,
+          administrador: formData.administrador ?? false,
+          atleticaId: atleticaId ?? '',
         });
-        if (response.success) {
-          const atleticaId = membros[0].atleticaId;
-          const response = await getMembros(atleticaId);
-          const updatedMembros: MembrosResponse[] = response.data;
-          setMembros(updatedMembros);
+        if (response.success && response.data) {
+          setMembros(response.data.novoMembro ? [...membros, response.data.novoMembro] : membros);
         }
       }
       setShowModal(false);
