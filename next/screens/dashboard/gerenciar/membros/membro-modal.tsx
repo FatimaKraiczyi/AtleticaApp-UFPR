@@ -31,6 +31,7 @@ import { Box } from "@/components/ui/box";
 import { adicionarMembro, editarMembro, getMembros } from "@/api/membros";
 import { Membro, MembrosResponse } from "@/interfaces/membros";
 import { Switch } from "@/components/ui/switch";
+import { useAtletica } from "@/hooks/AtleticaContex";
 
 const userSchema = z.object({
   email: z
@@ -67,7 +68,8 @@ export const ModalMembros = ({
       administrador: false,
     },
   });
-
+  const { atleticaData } = useAtletica();
+	
   useEffect(() => {
     if (showModal) {
       resetForm();
@@ -86,14 +88,15 @@ export const ModalMembros = ({
     const membroPayload = {
       email: data.email,
       administrador: data.administrador,
-      atleticaId: sessionStorage.getItem("atleticaId"),
+      atleticaId:
+        atleticaData?.atletica?.id ?? sessionStorage.getItem("atleticaId"),
     };
 
     try {
       if (membroData) {
         const response = await editarMembro(
           membroPayload.email,
-          membroPayload.administrador
+          membroPayload.administrador,
         );
         if (response.success) {
           refreshMembros();
