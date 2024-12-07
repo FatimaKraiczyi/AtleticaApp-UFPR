@@ -161,7 +161,6 @@ export const ModalMembros = ({
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      editable={false}
                     />
                   </Input>
                 )}
