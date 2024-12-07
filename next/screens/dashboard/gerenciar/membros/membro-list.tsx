@@ -14,66 +14,61 @@ import { getMembros } from "@/api/membros";
 import { MembrosResponse } from "@/interfaces/membros";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
-import { useAtletica } from "@/hooks/AtleticaContex";
+import { useMembros } from "@/hooks/MembroContext";
 
 const AllMembros = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const [loading, setLoading] = useState(true);
-  const [membros, setMembros] = useState<MembrosResponse[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedMembro, setSelectedMembro] = useState<
-    MembrosResponse | undefined
-  >(undefined);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [membroToDelete, setMembroToDelete] = useState<string | undefined>(
-    undefined
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [membroEdicao, setMembroEdicao] = useState<MembrosResponse | null>(
+    null
   );
-  const { atleticaData } = useAtletica();
+  const [membroEmailToDelete, setMembroEmailToDelete] = useState<string | null>(
+    null
+  );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { membros, setMembros } = useMembros();
+  const [hasFetched, setHasFetched] = useState(false);
 
   const showActions =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/membros";
 
-  const fetchMembros = async (id: string) => {
-    setLoading(true);
-    try {
-      const response = await getMembros(id);
-      if (response.success && response.data) {
-        setMembros(response.data);
-      }
-    } catch (error) {
-      console.error("Erro ao buscar membros:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-	useEffect(() => {
-		if (atleticaId) {
-			fetchMembros(atleticaId);
-		}
-	}, [atleticaId]);
-	
-	useEffect(() => {
-		if (atleticaData?.atletica?.id) {
-			fetchMembros(atleticaData.atletica.id.toString());
-		}
-	}, [atleticaData?.atletica?.id]);
-
-  const openModal = (membro?: MembrosResponse) => {
-    setSelectedMembro(membro);
-    setShowModal(true);
+  const handleCadastrarMembroPress = () => {
+    setMembroEdicao(null);
+    setIsModalVisible(true);
   };
 
   const handleEditMembro = (membro: MembrosResponse) => {
-    openModal(membro);
+    setMembroEdicao(membro);
+    setIsModalVisible(true);
   };
 
   const handleOpenDeleteModal = (email: string) => {
-    setMembroToDelete(email);
+    setMembroEmailToDelete(email);
     setShowDeleteModal(true);
   };
+
+  useEffect(() => {
+    if (hasFetched || !atleticaId) return;
+    const fetchMembros = async () => {
+      try {
+        const response = await getMembros(atleticaId);
+        if (response.success && response.data) {
+          setMembros(response.data);
+        } else {
+          console.error("Erro ao buscar membros");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar membros:", error);
+      } finally {
+        setLoading(false);
+        setHasFetched(true);
+      }
+    };
+    fetchMembros();
+  }, [atleticaId, hasFetched, setMembros]);
 
   if (loading) {
     return <LoadingState />;
@@ -88,7 +83,10 @@ const AllMembros = () => {
       <VStack className="p-4 pb-0 md:px-10 md:pt-6 w-full" space="2xl">
         {showActions && (
           <VStack space="lg" className="items-center">
-            <Button className="gap-3 relative" onPress={() => openModal()}>
+            <Button
+              className="gap-3 relative"
+              onPress={() => handleCadastrarMembroPress()}
+            >
               <ButtonText>Adicionar Membro</ButtonText>
             </Button>
           </VStack>
@@ -106,9 +104,6 @@ const AllMembros = () => {
                 <GridItem
                   key={membro.email}
                   className="flex flex-col p-4 bg-white rounded-md shadow-md"
-                  _extra={{
-                    className: "",
-                  }}
                 >
                   <VStack className="py-2">
                     <HStack space="xl" className="items-center justify-between">
@@ -121,7 +116,7 @@ const AllMembros = () => {
                             {membro.Usuario?.email}
                           </Text>
                           <Text className="line-clamp-1 text-md">
-                            {membro.administrador === true && "Administrador"}
+                            {membro.administrador && "Administrador"}
                           </Text>
                         </VStack>
                       </HStack>
@@ -152,26 +147,17 @@ const AllMembros = () => {
       </VStack>
 
       <ModalMembros
-        showModal={showModal}
-        setShowModal={setShowModal}
-        refreshMembros={() => {
-          const id = atleticaData?.atletica?.id?.toString() || atleticaId;
-          if (id) {
-            fetchMembros(id);
-          }
-        }}
-        membroData={selectedMembro}
+        showModal={isModalVisible}
+        setShowModal={setIsModalVisible}
+        setMembros={setMembros}
+        membros={membros}
+        editMembro={membroEdicao}
       />
+
       <DeleteMembro
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
-        email={membroToDelete}
-        refreshMembros={() => {
-          const id = atleticaData?.atletica?.id?.toString() || atleticaId;
-          if (id) {
-            fetchMembros(id);
-          }
-        }}
+        email={membroEmailToDelete!}
       />
     </Box>
   );

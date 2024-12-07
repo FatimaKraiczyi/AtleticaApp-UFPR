@@ -20,7 +20,6 @@ export interface MembrosResponse {
 }
 
 export interface Membro {
-	id: number;
   email: string;
   administrador: boolean;
   atleticaId: string;
