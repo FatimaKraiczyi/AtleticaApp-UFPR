@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-		"build": "next build",
-		"start": "next start",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "postinstall": "patch-package"
   },
@@ -65,6 +65,7 @@
     "react-native-svg": "^15.2.0",
     "react-native-web": "latest",
     "react-native-web-next-link": "^0.1.2",
+    "react-toastify": "^10.0.6",
     "tailwindcss": "3.4.3",
     "zod": "^3.23.8"
   },

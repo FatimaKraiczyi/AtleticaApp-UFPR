@@ -19,7 +19,6 @@ import { Center } from "@/components/ui/center";
 import { ChevronDown, ChevronUp } from "lucide-react-native";
 import { PlanoAssinatura } from "@/interfaces/planos";
 import { novaAssinatura } from "@/api/assinatura";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import useRouter from "@unitools/router";
 
 interface ViewPlanoProps {
@@ -34,10 +33,9 @@ export const ViewPlano = ({
   planosData,
 }: ViewPlanoProps) => {
   const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
-  const toast = useToast();
   const router = useRouter();
 
-	const toggleExpand = (id: number) => {
+  const toggleExpand = (id: number) => {
     setExpandedPlanos((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
@@ -55,26 +53,7 @@ export const ViewPlano = ({
     const response = await novaAssinatura(planosData.id);
 
     if (response.success) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} action="success">
-            <ToastTitle>Assinatura realizada com sucesso!</ToastTitle>
-          </Toast>
-        ),
-      });
       router.push("/dashboard/visualizar/assinatura");
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} action="error">
-            <ToastTitle>
-              Ocorreu um erro ao realizar a assinatura. Tente novamente.
-            </ToastTitle>
-          </Toast>
-        ),
-      });
     }
   };
 

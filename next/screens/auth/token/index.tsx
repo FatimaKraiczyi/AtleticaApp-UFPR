@@ -1,4 +1,3 @@
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import {
@@ -18,7 +17,7 @@ import { AlertTriangle } from "lucide-react-native";
 import useRouter from "@unitools/router";
 import AuthLayout from "../layout";
 import { Text } from "@/components/ui/text";
-import { validateUserToken } from "@/api/users";
+import { sendEmailRequest, validateUserToken } from "@/api/users";
 import { HStack } from "@/components/ui/hstack";
 import Link from "@unitools/link";
 import { Center } from "@/components/ui/center";
@@ -91,37 +90,16 @@ const TokenVerification = () => {
   } = useForm<ValidateTokenSchemaType>({
     resolver: zodResolver(ValidateTokenSchema),
   });
-  const toast = useToast();
   const router = useRouter();
   const { email } = useAuthContext();
 
   const onSubmit = async (data: ValidateTokenSchemaType) => {
     const response = await validateUserToken(data.code);
-    if (response.success) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="success">
-            <ToastTitle>Token válido</ToastTitle>
-          </Toast>
-        ),
-      });
-      reset();
-      if (response.data && response.data.acao === "cadastro") {
-        router.push("/auth/signup");
-      } else if (response.data && response.data.acao === "recSenha") {
-        router.push("/auth/create-password");
-      }
-			console.log(response.data);
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="error">
-            <ToastTitle>Código inválido</ToastTitle>
-          </Toast>
-        ),
-      });
+
+    if (response.success && response.data.acao === "cadastro") {
+      router.push("/auth/signup");
+    } else if (response.data && response.data.acao === "recSenha") {
+      router.push("/auth/create-password");
     }
   };
 
@@ -134,50 +112,6 @@ const TokenVerification = () => {
       </VStack>
     );
   }
-
-  const ResendLink = ({ email }: { email: string }) => {
-    const handleResend = async () => {
-      const response = await validateUserToken(email);
-
-      if (response.success) {
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => (
-            <Toast nativeID={id} variant="solid" action="success">
-              <ToastTitle>Código reenviado com sucesso</ToastTitle>
-            </Toast>
-          ),
-        });
-      } else {
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => (
-            <Toast nativeID={id} variant="solid" action="error">
-              <ToastTitle>Ocorreu um erro ao reenviar o código</ToastTitle>
-            </Toast>
-          ),
-        });
-      }
-    };
-
-    return (
-      <HStack space="xs" className=" mt-auto">
-        <Text className="color-typography-800 dark:color-typography-400 text-sm">
-          Não recebeu o código?
-        </Text>
-        <Button
-          className="items-start"
-          variant="link"
-          action="primary"
-          isDisabled={false}
-          isFocusVisible={false}
-          onPress={handleResend}
-        >
-          <ButtonText className="text-sm flex items-start">Reenviar</ButtonText>
-        </Button>
-      </HStack>
-    );
-  };
 
   const handleKeyPress = () => {
     Keyboard.dismiss();
@@ -238,7 +172,6 @@ const TokenVerification = () => {
             </FormControlError>
           </FormControl>
 
-          <ResendLink email={email} />
           <Button
             size="lg"
             variant="solid"
