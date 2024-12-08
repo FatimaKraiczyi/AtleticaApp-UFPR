@@ -72,9 +72,9 @@ const Main = () => {
     }
   };
 
-	const openViewModal = (id?: any) => {
+  const openViewModal = (id?: any) => {
     setPedidoSelecionado(id);
-		setShowModal(true);
+    setShowModal(true);
   };
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const Main = () => {
             {pedidos.map((pedido) => (
               <Box key={pedido.id} className="bg-gray-100 p-4 rounded-lg mb-4">
                 <Box className="flex justify-between">
-                  <Box className="grid grid-cols-5 gap-4">
+                  <Box className="grid grid-cols-5 gap-4 items-center">
                     <Box>
                       <Text className="font-medium">Data</Text>
                       <Text className="text-gray-500">{pedido.data}</Text>
@@ -120,7 +120,11 @@ const Main = () => {
                       <Text className="font-medium">Valor total</Text>
                       <Text className="text-gray-500">{pedido.valorTotal}</Text>
                     </Box>
-                    <Box className="flex items-center gap-2">
+                    <Box
+                      className={`flex items-end gap-2 ${
+                        pedido.status === "CONCLUIDO" ? "invisible" : ""
+                      }`}
+                    >
                       <Button
                         variant="solid"
                         className="bg-violet-500 text-white"
@@ -136,7 +140,7 @@ const Main = () => {
                         <ButtonText>Efetuar pagamento</ButtonText>
                       </Button>
                     </Box>
-                    <Box className="flex items-center gap-2">
+                    <Box className="flex items-end gap-2">
                       <Button
                         variant="outline"
                         onPress={() => visualizarPedido(pedido.id)}
@@ -163,30 +167,32 @@ const Main = () => {
                         <Text className="font-medium">Ações</Text>
                       </Box>
                     </Box>
-                    {pedidoSelecionado.produtos.map((produto: any, index: any) => (
-                      <Box
-                        key={index}
-                        className="grid grid-cols-4 gap-4 py-4 border-b"
-                      >
-                        <Box className="flex gap-2">
-                          <Text>{produto.nome}</Text>
+                    {pedidoSelecionado.produtos.map(
+                      (produto: any, index: any) => (
+                        <Box
+                          key={index}
+                          className="grid grid-cols-4 gap-4 py-4 border-b"
+                        >
+                          <Box className="flex gap-2">
+                            <Text>{produto.nome}</Text>
+                          </Box>
+                          <Box className="flex items-center gap-2">
+                            <Text>R$ {produto.valor}</Text>
+                          </Box>
+                          <Box className="flex items-center gap-2">
+                            <Text>{pedidoSelecionado.status}</Text>
+                          </Box>
+                          <Box className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              onPress={() => openViewModal(true)}
+                            >
+                              <ButtonText>Ver Produto</ButtonText>
+                            </Button>
+                          </Box>
                         </Box>
-                        <Box className="flex items-center gap-2">
-                          <Text>R$ {produto.valor}</Text>
-                        </Box>
-                        <Box className="flex items-center gap-2">
-                          <Text>{pedidoSelecionado.status}</Text>
-                        </Box>
-                        <Box className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            onPress={() => openViewModal(true)}
-                          >
-                            <ButtonText>Ver Produto</ButtonText>
-                          </Button>
-                        </Box>
-                      </Box>
-                    ))}
+                      )
+                    )}
                   </Box>
                 )}
               </Box>
@@ -209,7 +215,7 @@ const Main = () => {
         )}
       </VStack>
 
-			<ViewProduto
+      <ViewProduto
         showModal={showModal}
         setShowModal={setShowModal}
         produtoData={setPedidoSelecionado}
