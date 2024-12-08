@@ -32,7 +32,6 @@ import { TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { getCursos } from "@/api/cursos";
 import {
   Select,
   SelectBackdrop,
@@ -55,6 +54,7 @@ import {
   AvatarFallbackText,
   AvatarBadge,
 } from "@/components/ui/avatar";
+import { getCursos } from "@/api/cursos";
 
 const userSchema = z.object({
   nome: z
@@ -99,6 +99,14 @@ export const ModalAtletica = ({
     },
   });
 
+  const getImageUrl = (path: string | null) => {
+    if (!path) return null;
+    // Base URL para o servidor Express
+    const baseUrl = "http://localhost:3001/uploads/";
+    const fileName = path.split("\\").pop(); // Remove o caminho local, pegando apenas o nome do arquivo
+    return `${baseUrl}${fileName}`;
+  };
+
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["cursoIds"]);
   const [atividadeFields, setAtividadeFields] = useState<string[]>([
@@ -106,6 +114,8 @@ export const ModalAtletica = ({
   ]);
   const [atleticaImage, setAtleticaImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const { watch } = useForm();
+  const campoObservado = watch("cursoIds");
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -118,11 +128,19 @@ export const ModalAtletica = ({
   }, []);
 
   const addCursoField = () => {
-    setCursoFields([...cursoFields, `cursoIds${cursoFields.length}`]);
+    setCursoFields([...cursoFields, `cursoIds.${cursoFields.length}`]);
+    setValue("cursoIds", [...(watch("cursoIds") || []), ""]);
   };
 
   const removeCursoField = (index: number) => {
-    setCursoFields(cursoFields.filter((_, i) => i !== index));
+    const updatedFields = cursoFields.filter((_, i) => i !== index);
+    setCursoFields(updatedFields);
+
+    // Atualiza os valores de cursoIds, removendo o valor correspondente ao index
+    const updatedValues = (watch("cursoIds") || []).filter(
+      (_, i) => i !== index
+    );
+    setValue("cursoIds", updatedValues);
   };
 
   const addAtividadeField = () => {
@@ -139,24 +157,39 @@ export const ModalAtletica = ({
   useEffect(() => {
     if (showModal) {
       reset();
+
       if (atleticaData) {
         setValue("nome", atleticaData.nome);
         setValue("descricao", atleticaData.descricao);
+
+        // Preenche atividades
         setValue(
           "atividadesIds",
           atleticaData.atividades?.map((atividade: AtividadesProps) =>
-            String(atividade.id)
+            String(atividade)
           ) || []
         );
-        setValue(
-          "cursoIds",
-          atleticaData.cursos?.map((curso: CursoProps) => String(curso.id)) ||
-            []
+
+        // Preenche cursos
+        const cursosIds = atleticaData.cursos?.map((curso: CursoProps) =>
+          String(curso.id)
         );
-        setAtleticaImage(atleticaData.imagem || null);
+        setValue("cursoIds", cursosIds || []);
+        setCursoFields(
+          cursosIds?.map((_, index) => `cursoIds.${index}`) || ["cursoIds"]
+        );
+
+        setAtleticaImage(getImageUrl(atleticaData.imagem) || null);
+
+        // Preenche os campos de atividades
+        setAtividadeFields(
+          atleticaData.atividades?.map(
+            (_, index) => `atividadesIds.${index}`
+          ) || ["atividadesIds"]
+        );
       }
     }
-  }, [showModal, atleticaData, setValue]);
+  }, [showModal, atleticaData, setValue, reset]);
 
   const resetForm = () => {
     reset();
@@ -216,6 +249,8 @@ export const ModalAtletica = ({
       console.error("Erro:", error);
     }
   };
+
+  const storedUserType = sessionStorage.getItem("tipo");
 
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
@@ -300,6 +335,7 @@ export const ModalAtletica = ({
                     <InputField
                       placeholder="Descrição"
                       type="text"
+                      value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
                     />
@@ -322,8 +358,12 @@ export const ModalAtletica = ({
                   <Controller
                     name={`cursoIds.${index}`}
                     control={control}
-                    render={({ field: { onChange } }) => (
-                      <Select onValueChange={onChange} className="flex-1">
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        onValueChange={onChange}
+                        className="flex-1"
+                        selectedValue={value}
+                      >
                         <SelectTrigger variant="outline" size="md">
                           <SelectInput placeholder="Selecione um curso" />
                           <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -389,8 +429,12 @@ export const ModalAtletica = ({
                   <Controller
                     name={`atividadesIds.${index}`}
                     control={control}
-                    render={({ field: { onChange } }) => (
-                      <Select onValueChange={onChange} className="flex-1">
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        onValueChange={onChange}
+                        className="flex-1"
+                        selectedValue={value}
+                      >
                         <SelectTrigger variant="outline" size="md">
                           <SelectInput placeholder="Selecione uma atividade" />
                           <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -445,12 +489,14 @@ export const ModalAtletica = ({
               </FormControl>
             ))}
 
-            <Button
-              onPress={handleSubmit(onSubmit)}
-              className="flex-1 p-2 mt-8"
-            >
-              <ButtonText>Salvar</ButtonText>
-            </Button>
+            {storedUserType === "master" && (
+              <Button
+                onPress={handleSubmit(onSubmit)}
+                className="flex-1 p-2 mt-8"
+              >
+                <ButtonText>Salvar</ButtonText>
+              </Button>
+            )}
           </VStack>
         </ModalBody>
       </ModalContent>

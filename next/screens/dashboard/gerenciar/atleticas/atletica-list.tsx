@@ -129,8 +129,8 @@ const AllAtleticas = () => {
                   key={atletica.atletica.id}
                   className="shadow-md rounded-lg"
                 >
-                  <Box className="bg-violet-600 p-5 rounded-t-lg">
-                    <Avatar size="xl" className="align-center">
+                  <Box className="bg-violet-600 p-5 rounded-t-lg align-center">
+                    <Avatar size="xl">
                       {atletica.atletica.imagem ? (
                         <AvatarImage
                           source={{
@@ -139,7 +139,6 @@ const AllAtleticas = () => {
                               undefined,
                           }}
                           alt="Imagem da atlética"
-                          className="justify-center align-center"
                         />
                       ) : (
                         <AvatarImage

@@ -32,7 +32,7 @@ export const createAtletica = async (
 export const updateAtletica = async (
   id: number,
   atletica: any
-): Promise<IResponse.Default<AtleticaResponse>> => {
+): Promise<IResponse.Default<Atletica>> => {
   try {
     const { data, status } = await API.put(
       `${updateAtleticaEndpoint}/${id}`,
@@ -40,7 +40,7 @@ export const updateAtletica = async (
     );
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch as IResponse.Default<AtleticaResponse> };
+    return { ...objectCatch as IResponse.Default<Atletica> };
   }
 };
 
