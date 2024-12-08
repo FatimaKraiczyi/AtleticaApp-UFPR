@@ -4,7 +4,7 @@ export interface Produto {
 	nome: string;	
 	atleticaNome: string;
 	imagem: string;
-	valor: number;
+	valor: any;
 	descricao: string;
 	atleticaId: number;
 }

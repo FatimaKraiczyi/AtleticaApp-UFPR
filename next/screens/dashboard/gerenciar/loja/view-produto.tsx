@@ -16,7 +16,6 @@ import { Text } from "@/components/ui/text";
 import { useState } from "react";
 import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
-import { Produto } from "@/interfaces/produto";
 import { addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
 
@@ -44,13 +43,13 @@ export const ViewProduto = ({
     console.log("Produto comprado:", produtoData);
   };
 
-  const handleIncreaseQuantity = (produto: Produto) => {
+  const handleIncreaseQuantity = (produto: any) => {
     if (quantidade < produto.quantidade) {
       setQuantidade(quantidade + 1);
     }
   };
 
-	const handleAddToCart = async (produto: Produto) => {
+	const handleAddToCart = async (produto: any) => {
     try {
       const response = await addCartProduct(produto.id, quantidade);
       if (response.success) {
@@ -122,7 +121,7 @@ export const ViewProduto = ({
             </HStack>
 
             <Text className=" font-semibold  text-md text-typography-900">
-              R$ {produtoData.valor.toFixed(2)}
+              R$ {produtoData.valor}
             </Text>
 						</VStack>
             <HStack space="md" className="items-center gap-2">
