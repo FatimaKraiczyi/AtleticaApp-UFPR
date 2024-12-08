@@ -164,7 +164,7 @@ const AllProdutos = () => {
                     <HStack>
                       <Text className="text-sm">Vendido por: {""}</Text>
                       <Text className="text-sm font-bold">
-                        {produto.atletica.nome}
+                        {produto.atleticaNome}
                       </Text>
                     </HStack>
                     <Text className="font-semibold text-xl mt-4">

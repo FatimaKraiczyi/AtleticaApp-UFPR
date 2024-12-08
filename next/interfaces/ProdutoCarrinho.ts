@@ -1,15 +1,12 @@
 export interface Produto {
 	id: number;
 	quantidade?: number;
-	nome: string;
+	nome: string;	
+	atleticaNome: string;
+	imagem: string;
 	valor: number;
 	descricao: string;
 	atleticaId: number;
-	atletica: {
-		id: number;
-		nome: string;
-	};
-	imagem: string;
 }
 
 export interface ProdutoCart {

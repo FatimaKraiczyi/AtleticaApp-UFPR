@@ -1,10 +1,9 @@
 import axios from "axios";
 import { Platform } from "react-native";
-import { toast } from "react-toastify"; // Use para mostrar o toast
+import { toast } from "react-toastify";
 import type { IResponse } from "../interfaces";
 import { getToken } from "./token";
 
-// Configuração da API
 const API = axios.create();
 
 API.interceptors.request.use(
