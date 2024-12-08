@@ -19,6 +19,7 @@ import {
   ProdutoCarrinhoResponse,
   ProdutosCart,
 } from "@/interfaces/ProdutoCarrinho";
+import { novoPedido } from "@/api/pedidos";
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);
@@ -206,7 +207,17 @@ export const MainContent = () => {
               space="xs"
               className="md:mt-40 mt-auto items-right justify-end"
             >
-              <Button className="bg-purple-500 text-white py-3 rounded-md">
+              <Button
+                className="bg-purple-500 text-white py-3 rounded-md"
+                onPress={async () => {
+                  const response = await novoPedido();
+                  if (response.success) {
+                    setProdutosCarrinho([]);
+                    setSubtotal(0);
+                    updateItemCount(0); 
+                  } 
+                }}
+              >
                 Fazer pedido
               </Button>
             </HStack>

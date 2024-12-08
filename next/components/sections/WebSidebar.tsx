@@ -7,6 +7,7 @@ import {
   UserRound,
   ShoppingCart,
   Search,
+  Package,
 } from "lucide-react-native";
 import { Text } from "@/components/ui/text";
 import type { LucideIcon } from "lucide-react-native";
@@ -37,6 +38,10 @@ const list: Icons[] = [
     iconName: UserRound,
     label: "Assinaturas",
   },
+  {
+    iconName: Package,
+    label: "Pedidos",
+  },
 ];
 
 export const WebSidebar = () => {
@@ -45,7 +50,7 @@ export const WebSidebar = () => {
   const { items } = useCarrinho();
   const [userType, setUserType] = useState<string | null>(null);
 
-	useEffect(() => {
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const path = window.location.pathname;
       const userType = sessionStorage.getItem("tipo");
@@ -59,6 +64,8 @@ export const WebSidebar = () => {
         setSelectedIndex(2);
       } else if (path.includes("assinatura")) {
         setSelectedIndex(3);
+      } else if (path.includes("pedidos")) {
+        setSelectedIndex(4);
       }
     }
   }, []);
@@ -72,6 +79,8 @@ export const WebSidebar = () => {
       router.push("/dashboard/visualizar/carrinho");
     } else if (index === 3) {
       router.push("/dashboard/visualizar/assinatura");
+    } else if (index === 4) {
+      router.push("/dashboard/visualizar/pedidos");
     }
   };
 
@@ -103,7 +112,7 @@ export const WebSidebar = () => {
                 }`}
               />
               <Text className="ml-4 text-background-800 font-medium">
-            {item.label}
+                {item.label}
               </Text>
               {item.iconName === ShoppingCart && items > 0 && (
                 <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
