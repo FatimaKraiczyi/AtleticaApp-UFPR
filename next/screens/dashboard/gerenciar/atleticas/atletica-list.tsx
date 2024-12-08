@@ -17,7 +17,19 @@ import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { Atletica, AtleticaResponse } from "@/interfaces/atleticas";
 import { useAtletica } from "@/hooks/AtleticaContex";
 import { Edit, Trash } from "lucide-react-native";
-import { Avatar, AvatarImage, AvatarFallbackText } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallbackText,
+} from "@/components/ui/avatar";
+
+const getImageUrl = (path: string | null) => {
+  if (!path) return null;
+  // Base URL para o servidor Express
+  const baseUrl = "http://localhost:3001/uploads/";
+  const fileName = path.split("\\").pop(); // Remove o caminho local, pegando apenas o nome do arquivo
+  return `${baseUrl}${fileName}`;
+};
 
 const AllAtleticas = () => {
   const router = useRouter();
@@ -113,17 +125,30 @@ const AllAtleticas = () => {
           >
             <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {atleticas.map((atletica) => (
-                <GridItem className="shadow-md rounded-lg">
+                <GridItem
+                  key={atletica.atletica.id}
+                  className="shadow-md rounded-lg"
+                >
                   <Box className="bg-violet-600 p-5 rounded-t-lg">
-									<Avatar size="xl" className="align-center">
-                  
-                    <AvatarImage
-                      source={{ uri: atletica.atletica.imagem || undefined }}
-                      alt="Imagem da atlética"
-											className="justify-center align-center"
-                    />
-                 
-                </Avatar>
+                    <Avatar size="xl" className="align-center">
+                      {atletica.atletica.imagem ? (
+                        <AvatarImage
+                          source={{
+                            uri:
+                              getImageUrl(atletica.atletica.imagem) ||
+                              undefined,
+                          }}
+                          alt="Imagem da atlética"
+                          className="justify-center align-center"
+                        />
+                      ) : (
+                        <AvatarImage
+                          source={{
+                            uri: "https://img.freepik.com/vetores-premium/icone-de-moldura-de-foto-foto-vazia-em-branco-vetor-em-fundo-transparente-isolado-eps-10_399089-1290.jpg",
+                          }}
+                        />
+                      )}
+                    </Avatar>
                   </Box>
                   <Box className="p-4 md:h-[180px]">
                     <Text className="text-lg font-semibold">

@@ -53,6 +53,7 @@ import {
   Avatar,
   AvatarImage,
   AvatarFallbackText,
+  AvatarBadge,
 } from "@/components/ui/avatar";
 
 const userSchema = z.object({
@@ -183,36 +184,38 @@ export const ModalAtletica = ({
     };
   };
 
-	const onSubmit = async (data: any) => {
-		const formData = new FormData();
-		formData.append("nome", data.nome);
-		formData.append("descricao", data.descricao);
-		data.atividadesIds.forEach((id: string) => formData.append("atividades[]", id));
-		data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
-	
-		if (atleticaImage) {
-			const imageFile = selectedFile || data.imagem;
-			formData.append("imagem", imageFile);
-		}
-	
-		try {
-			let response;
-			if (atleticaData) {
-				formData.append("id", atleticaData.id);
-				response = await updateAtletica(atleticaData.id, formData); 
-			} else {
-				response = await createAtletica(formData); 
-			}
-	
-			if (response.success) {
-				refreshAtleticas();
-			}
-			setShowModal(false);
-			reset();
-		} catch (error) {
-			console.error("Erro:", error);
-		}
-	};
+  const onSubmit = async (data: any) => {
+    const formData = new FormData();
+    formData.append("nome", data.nome);
+    formData.append("descricao", data.descricao);
+    data.atividadesIds.forEach((id: string) =>
+      formData.append("atividades[]", id)
+    );
+    data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
+
+    if (atleticaImage) {
+      const imageFile = selectedFile || data.imagem;
+      formData.append("imagem", imageFile);
+    }
+
+    try {
+      let response;
+      if (atleticaData) {
+        formData.append("id", atleticaData.id);
+        response = await updateAtletica(atleticaData.id, formData);
+      } else {
+        response = await createAtletica(formData);
+      }
+
+      if (response.success) {
+        refreshAtleticas();
+      }
+      setShowModal(false);
+      reset();
+    } catch (error) {
+      console.error("Erro:", error);
+    }
+  };
 
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
@@ -250,7 +253,11 @@ export const ModalAtletica = ({
                       alt="Imagem da atlética"
                     />
                   ) : (
-                    <AvatarFallbackText>NA</AvatarFallbackText>
+                    <AvatarImage
+                      source={{
+                        uri: "https://img.freepik.com/vetores-premium/icone-de-moldura-de-foto-foto-vazia-em-branco-vetor-em-fundo-transparente-isolado-eps-10_399089-1290.jpg",
+                      }}
+                    />
                   )}
                 </Avatar>
               </Box>
