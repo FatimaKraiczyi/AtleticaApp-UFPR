@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Box } from "@/components/ui/box";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
@@ -56,44 +55,26 @@ const SignInForm = () => {
   } = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
   });
-  const toast = useToast();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: any) => {
-	
     const response = await userAuthentication(data.email, data.senha);
 
     if (response.success && response.data) {
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("tipo", response.data.tipo);
-      sessionStorage.setItem("atletica", response.data.atletica ? response.data.atletica.toString() : "");
+      sessionStorage.setItem(
+        "atletica",
+        response.data.atletica ? response.data.atletica.toString() : ""
+      );
       sessionStorage.setItem("usuarioId", response.data.usuarioId.toString());
       sessionStorage.setItem("usuarioNome", response.data.usuarioNome);
-			
-			router.push("/dashboard/");
 
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="success">
-            <ToastTitle>Logado com sucesso!</ToastTitle>
-          </Toast>
-        ),
-      });
-     
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="error">
-            <ToastTitle>Email ou senha incorretos!</ToastTitle>
-          </Toast>
-        ),
-      });
+      router.push("/dashboard/");
     }
   };
-
+	
   const handleKeyPress = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();

@@ -159,7 +159,7 @@ const Main = () => {
                           const response = await pagamentoAssinatura(
                             assinatura.planoId
                           );
-                          if (response?.data?.url) {
+                          if (response.success && response?.data) {
                             window.location.href = response.data.url;
                           } else {
                             alert("Erro ao iniciar pagamento.");

@@ -8,19 +8,12 @@ import {
   ModalBody,
 } from "@/components/ui/modal";
 import { Image } from "@/components/ui/image";
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Heading } from "@/components/ui/heading";
-import { VStack } from "@/components/ui/vstack";
-import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
-import { ChevronDown, ChevronUp } from "lucide-react-native";
-import { PlanoAssinatura } from "@/interfaces/planos";
-import { novaAssinatura } from "@/api/assinatura";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
-import useRouter from "@unitools/router";
 import { LinkText } from "@/components/ui/link";
 
 export const PoliticaDePrivacidade = () => {

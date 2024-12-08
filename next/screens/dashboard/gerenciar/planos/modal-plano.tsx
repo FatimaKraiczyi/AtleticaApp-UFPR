@@ -231,7 +231,7 @@ export const ModalPlano = ({
                           text.split(",").map((item, index) => ({
                             id: index,
                             beneficioDescricao: item.trim(),
-                            beneficioValor: 0, // Ajuste conforme necessário
+                            beneficioValor: 0,
                           }))
                         )
                       }

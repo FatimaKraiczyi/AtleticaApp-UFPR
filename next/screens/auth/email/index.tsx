@@ -1,5 +1,4 @@
 import { Box } from "@/components/ui/box";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
@@ -44,32 +43,14 @@ const EmailForm = () => {
   } = useForm<EmailSchemaType>({
     resolver: zodResolver(EmailSchema),
   });
-  const toast = useToast();
   const router = useRouter();
 
   const onSubmit = async (data: EmailSchemaType) => {
     const response = await sendEmailRequest(data.email, "cadastro");
 
     if (response.success) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="success">
-            <ToastTitle>Sucesso</ToastTitle>
-          </Toast>
-        ),
-      });
       reset();
       router.push("/auth/token");
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="error">
-            <ToastTitle>Erro ao enviar código de verficação</ToastTitle>
-          </Toast>
-        ),
-      });
     }
   };
 

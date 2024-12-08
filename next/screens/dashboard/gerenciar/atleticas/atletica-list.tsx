@@ -6,7 +6,6 @@ import { Pressable } from "@/components/ui/pressable";
 import { useState, useEffect } from "react";
 import { ScrollView } from "@/components/ui/scroll-view";
 import { Grid, GridItem } from "@/components/ui/grid";
-import { Image } from "@/components/ui/image";
 import useRouter from "@unitools/router";
 import { Button, ButtonText } from "@/components/ui/button";
 import { ModalAtletica } from "./atletica-modal";
@@ -20,7 +19,6 @@ import { Edit, Trash } from "lucide-react-native";
 import {
   Avatar,
   AvatarImage,
-  AvatarFallbackText,
 } from "@/components/ui/avatar";
 
 const getImageUrl = (path: string | null) => {

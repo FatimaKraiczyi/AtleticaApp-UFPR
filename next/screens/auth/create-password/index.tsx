@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { Heading } from "@/components/ui/heading";
 import {
   FormControl,
@@ -72,7 +71,6 @@ const CreatePasswordForm = () => {
     resolver: zodResolver(createPasswordSchema),
   });
 
-  const toast = useToast();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -90,40 +88,11 @@ const CreatePasswordForm = () => {
   };
 
   const onSubmit = async (data: CreatePasswordSchemaType) => {
-    if (data.password !== data.confirmpassword) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="warning">
-            <ToastTitle>Senhas não correspondem</ToastTitle>
-          </Toast>
-        ),
-      });
-      return;
-    }
-
     const response = await newPassword(data.password, data.confirmpassword);
 
     if (response.success) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="success">
-            <ToastTitle>Senha criada com sucesso</ToastTitle>
-          </Toast>
-        ),
-      });
       reset();
       router.push("/auth/signin");
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="error">
-            <ToastTitle>Erro ao criar senha</ToastTitle>
-          </Toast>
-        ),
-      });
     }
   };
 
@@ -196,104 +165,102 @@ const CreatePasswordForm = () => {
             dark:bg-background-50  md:pt-8 md:px-8"
       >
         <ScreenText />
-          <FormControl
-            className="my-2  md:my-2"
-            isInvalid={!!errors.password}
-            isRequired={true}
-          >
-            <Controller
-              defaultValue=""
-              name="password"
-              control={control}
-              rules={{
-                validate: async (value) => {
-                  try {
-                    await createPasswordSchema.parseAsync({
-                      password: value,
-                    });
-                    return true;
-                  } catch (error: any) {
-                    return error.message;
-                  }
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input>
-                  <InputField
-                    placeholder="Senha"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
-                    type={showPassword ? "text" : "password"}
-                    className="text-sm"
-                  />
-                  <InputSlot onPress={handleState} className="mr-2">
-                    <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
-                  </InputSlot>
-                </Input>
-              )}
-            />
-            <FormControlError>
-              <FormControlErrorIcon size="sm" as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.password?.message}
-              </FormControlErrorText>
-            </FormControlError>
-          </FormControl>
-          <FormControl
-            className="my-2  md:my-2"
-            isInvalid={!!errors.confirmpassword}
-            isRequired={true}
-          >
-            <Controller
-              defaultValue=""
-              name="confirmpassword"
-              control={control}
-              rules={{
-                validate: async (value) => {
-                  try {
-                    await createPasswordSchema.parseAsync({
-                      confirmpassword: value,
-                    });
-                    return true;
-                  } catch (error: any) {
-                    return error.message;
-                  }
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input>
-                  <InputField
-                    placeholder="Confirmar Senha"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    onSubmitEditing={handleKeyPress}
-                    returnKeyType="done"
-                    type={showConfirmPassword ? "text" : "password"}
-                    className="text-sm"
-                  />
-                  <InputSlot
-                    onPress={handleConfirmPasswordState}
-                    className="mr-2"
-                  >
-                    <InputIcon
-                      as={showConfirmPassword ? EyeIcon : EyeOffIcon}
-                    />
-                  </InputSlot>
-                </Input>
-              )}
-            />
+        <FormControl
+          className="my-2  md:my-2"
+          isInvalid={!!errors.password}
+          isRequired={true}
+        >
+          <Controller
+            defaultValue=""
+            name="password"
+            control={control}
+            rules={{
+              validate: async (value) => {
+                try {
+                  await createPasswordSchema.parseAsync({
+                    password: value,
+                  });
+                  return true;
+                } catch (error: any) {
+                  return error.message;
+                }
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Senha"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  onSubmitEditing={handleKeyPress}
+                  returnKeyType="done"
+                  type={showPassword ? "text" : "password"}
+                  className="text-sm"
+                />
+                <InputSlot onPress={handleState} className="mr-2">
+                  <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
+                </InputSlot>
+              </Input>
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon size="sm" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.password?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+        <FormControl
+          className="my-2  md:my-2"
+          isInvalid={!!errors.confirmpassword}
+          isRequired={true}
+        >
+          <Controller
+            defaultValue=""
+            name="confirmpassword"
+            control={control}
+            rules={{
+              validate: async (value) => {
+                try {
+                  await createPasswordSchema.parseAsync({
+                    confirmpassword: value,
+                  });
+                  return true;
+                } catch (error: any) {
+                  return error.message;
+                }
+              },
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input>
+                <InputField
+                  placeholder="Confirmar Senha"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  onSubmitEditing={handleKeyPress}
+                  returnKeyType="done"
+                  type={showConfirmPassword ? "text" : "password"}
+                  className="text-sm"
+                />
+                <InputSlot
+                  onPress={handleConfirmPasswordState}
+                  className="mr-2"
+                >
+                  <InputIcon as={showConfirmPassword ? EyeIcon : EyeOffIcon} />
+                </InputSlot>
+              </Input>
+            )}
+          />
 
-            <FormControlError>
-              <FormControlErrorIcon size="md" as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.confirmpassword?.message}
-              </FormControlErrorText>
-            </FormControlError>
-          </FormControl>
+          <FormControlError>
+            <FormControlErrorIcon size="md" as={AlertTriangle} />
+            <FormControlErrorText>
+              {errors?.confirmpassword?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
         <HStack className="md:mt-40 mt-auto w-full" space="lg">
           <Button
             size="lg"

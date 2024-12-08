@@ -8,7 +8,6 @@ import { Image } from "@/components/ui/image";
 import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { Input, InputField } from "@/components/ui/input";
-import { Toast, useToast, ToastTitle } from "@/components/ui/toast";
 import {
   FormControl,
   FormControlError,
@@ -24,13 +23,12 @@ import useRouter from "@unitools/router";
 import AuthLayout from "../layout";
 import { sendEmailRequest } from "@/api/users";
 import Link from "@unitools/link";
-import { Divider } from "@/components/ui/divider";
 import { LinkText } from "@/components/ui/link";
 import { Keyboard } from "react-native";
 import { useAuthContext } from "@/hooks/AuthProvider";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, "Email é obrigatório").email()
+  email: z.string().min(1, "Email é obrigatório").email(),
 });
 
 export type forgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
@@ -104,35 +102,15 @@ const ForgotPasswordForm = () => {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const toast = useToast();
   const router = useRouter();
 
   const onSubmit = async (data: forgotPasswordSchemaType) => {
     setEmail(data.email);
 
-    const response = await sendEmailRequest(data.email,"recSenha" );
+    const response = await sendEmailRequest(data.email, "recSenha");
     if (response.success) {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="success">
-            <ToastTitle>
-              Token de autenticação enviado com sucesso ao seu email
-            </ToastTitle>
-          </Toast>
-        ),
-      });
       reset();
       router.push("/auth/token");
-    } else {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} variant="solid" action="error">
-            <ToastTitle>Email não cadastrado</ToastTitle>
-          </Toast>
-        ),
-      });
     }
   };
 

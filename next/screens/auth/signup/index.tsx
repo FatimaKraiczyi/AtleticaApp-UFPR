@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Box } from "@/components/ui/box";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
@@ -115,7 +114,6 @@ const SignUpForm = () => {
   } = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
   });
-  const toast = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
@@ -153,27 +151,10 @@ const SignUpForm = () => {
       const response = await createUser(user);
 
       if (response.success) {
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => (
-            <Toast nativeID={id} action="success">
-              <ToastTitle>Usuário cadastrado com sucesso!</ToastTitle>
-            </Toast>
-          ),
-        });
+        
         router.push("/auth/signin");
         reset();
-      } else {
-        const { errorMessage } = createUserError(response);
-        toast.show({
-          placement: "bottom right",
-          render: ({ id }) => (
-            <Toast nativeID={id} action="error">
-              <ToastTitle>{errorMessage}</ToastTitle>
-            </Toast>
-          ),
-        });
-      }
+      } 
       localStorage.setItem("rememberme", data.rememberme ? "true" : "false");
     }
   };
