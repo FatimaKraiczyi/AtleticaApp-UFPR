@@ -17,6 +17,7 @@ import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { Atletica, AtleticaResponse } from "@/interfaces/atleticas";
 import { useAtletica } from "@/hooks/AtleticaContex";
 import { Edit, Trash } from "lucide-react-native";
+import { Avatar, AvatarImage, AvatarFallbackText } from "@/components/ui/avatar";
 
 const AllAtleticas = () => {
   const router = useRouter();
@@ -114,14 +115,15 @@ const AllAtleticas = () => {
               {atleticas.map((atletica) => (
                 <GridItem className="shadow-md rounded-lg">
                   <Box className="bg-violet-600 p-5 rounded-t-lg">
-                    <Image
-                      source={
-                        atletica.atletica.imagem ||
-                        require("@/assets/dashboard/image2.png")
-                      }
-                      alt={atletica.atletica.imagem}
-                      className=" mx-auto 	rounded-full"
+									<Avatar size="xl" className="align-center">
+                  
+                    <AvatarImage
+                      source={{ uri: atletica.atletica.imagem || undefined }}
+                      alt="Imagem da atlética"
+											className="justify-center align-center"
                     />
+                 
+                </Avatar>
                   </Box>
                   <Box className="p-4 md:h-[180px]">
                     <Text className="text-lg font-semibold">

@@ -26,7 +26,7 @@ import {
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TouchableOpacity } from "react-native";
 import { z } from "zod";
@@ -49,12 +49,17 @@ import { AtividadesProps, Atletica, CursoProps } from "@/interfaces/atleticas";
 import { createAtletica, updateAtletica } from "@/api/atleticas";
 import { Image } from "@/components/ui/image";
 import atividadesEsportivas from "@/mock/atividades_esportivas";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallbackText,
+} from "@/components/ui/avatar";
 
 const userSchema = z.object({
   nome: z
     .string()
     .min(1, "Nome é obrigatório")
-    .max(50, "O nome deve ter menos de 10 caracteres"),
+    .max(50, "O nome deve ter menos de 20 caracteres"),
   cursoIds: z.array(z.string()).min(1, "Curso é obrigatório"),
   imagem: z.string().optional(),
   descricao: z.string().min(1, "Descrição é obrigatória"),
@@ -62,6 +67,7 @@ const userSchema = z.object({
     z.string().min(1, "Atividades esportivas são obrigatórias")
   ),
 });
+
 type userSchemaDetails = z.infer<typeof userSchema>;
 
 export const ModalAtletica = ({
@@ -75,7 +81,6 @@ export const ModalAtletica = ({
   refreshAtleticas: () => void;
   atleticaData?: any;
 }) => {
-  const ref = useRef(null);
   const {
     control,
     formState: { errors },
@@ -99,6 +104,7 @@ export const ModalAtletica = ({
     "atividadesIds",
   ]);
   const [atleticaImage, setAtleticaImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -106,9 +112,9 @@ export const ModalAtletica = ({
       if (response.success) {
         setCursos(response.data);
       }
-		};
-      fetchCursos();
-    }, []);
+    };
+    fetchCursos();
+  }, []);
 
   const addCursoField = () => {
     setCursoFields([...cursoFields, `cursoIds${cursoFields.length}`]);
@@ -131,23 +137,23 @@ export const ModalAtletica = ({
 
   useEffect(() => {
     if (showModal) {
-      resetForm();
-    }
-
-    if (atleticaData) {
-      setValue("nome", atleticaData.nome);
-      setValue("descricao", atleticaData.descricao);
-      setValue(
-        "atividadesIds",
-        atleticaData.atividades?.map((atividade: AtividadesProps) =>
-          String(atividade.id)
-        ) || []
-      );
-      setValue(
-        "cursoIds",
-        atleticaData.cursos?.map((curso: CursoProps) => String(curso.id)) || []
-      );
-      setAtleticaImage(atleticaData.imagem || null);
+      reset();
+      if (atleticaData) {
+        setValue("nome", atleticaData.nome);
+        setValue("descricao", atleticaData.descricao);
+        setValue(
+          "atividadesIds",
+          atleticaData.atividades?.map((atividade: AtividadesProps) =>
+            String(atividade.id)
+          ) || []
+        );
+        setValue(
+          "cursoIds",
+          atleticaData.cursos?.map((curso: CursoProps) => String(curso.id)) ||
+            []
+        );
+        setAtleticaImage(atleticaData.imagem || null);
+      }
     }
   }, [showModal, atleticaData, setValue]);
 
@@ -158,67 +164,61 @@ export const ModalAtletica = ({
     setAtleticaImage(null);
   };
 
-  const onSubmit = async (data: any) => {
-    const atleticaPayload = {
-      nome: data.nome,
-      descricao: data.descricao,
-      atividades: (data.atividadesIds ?? []).filter((id: any) => id !== ""),
-      imagem: atleticaImage,
-      cursoIds: (data.cursoIds ?? []).filter((id: any) => id !== ""),
-    };
+  const pickImage = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.click();
 
-    try {
-      if (atleticaData) {
-        const response = await updateAtletica(atleticaData.id, {
-          ...atleticaPayload,
-          id: atleticaData.id,
-        });
-        if (response.success) {
-          refreshAtleticas();
-        }
-      } else {
-        const response = await createAtletica({
-          ...atleticaPayload,
-          id: Date.now(),
-        });
-        if (response.success) {
-          refreshAtleticas();
-        }
+    fileInput.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) {
+        setSelectedFile(file); // Armazena o arquivo selecionado
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAtleticaImage(reader.result as string); // Armazena a imagem em base64
+        };
+        reader.readAsDataURL(file);
       }
-      setShowModal(false);
-      resetForm();
-    } catch (error) {
-      console.error("Erro:", error);
-    }
+    };
   };
 
-  const pickImage = async () => {
-    /*  let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const { uri } = result.assets[0];
-      setAtleticaImage(uri);
-    } */
-  };
+	const onSubmit = async (data: any) => {
+		const formData = new FormData();
+		formData.append("nome", data.nome);
+		formData.append("descricao", data.descricao);
+		data.atividadesIds.forEach((id: string) => formData.append("atividades[]", id));
+		data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
+	
+		if (atleticaImage) {
+			const imageFile = selectedFile || data.imagem;
+			formData.append("imagem", imageFile);
+		}
+	
+		try {
+			let response;
+			if (atleticaData) {
+				formData.append("id", atleticaData.id);
+				response = await updateAtletica(atleticaData.id, formData); 
+			} else {
+				response = await createAtletica(formData); 
+			}
+	
+			if (response.success) {
+				refreshAtleticas();
+			}
+			setShowModal(false);
+			reset();
+		} catch (error) {
+			console.error("Erro:", error);
+		}
+	};
 
   return (
-    <Modal
-      isOpen={showModal}
-      onClose={() => {
-        setShowModal(false);
-        resetForm();
-      }}
-      finalFocusRef={ref}
-      size="lg"
-    >
+    <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
       <ModalBackdrop />
       <ModalContent>
-        <Box className={"w-full h-[110px] "}>
+        <Box className="w-full h-[110px]">
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
             alt="Imagem de fundo"
@@ -243,16 +243,16 @@ export const ModalAtletica = ({
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
               <Box>
-                <Image
-                  size="xl"
-                  class="rounded-full"
-                  source={
-                    atleticaImage
-                      ? { uri: atleticaImage }
-                      : require("@/assets/dashboard/image2.png")
-                  }
-                  alt={"Imagem da atletica"}
-                />
+                <Avatar size="xl">
+                  {atleticaImage ? (
+                    <AvatarImage
+                      source={{ uri: atleticaImage }}
+                      alt="Imagem da atlética"
+                    />
+                  ) : (
+                    <AvatarFallbackText>NA</AvatarFallbackText>
+                  )}
+                </Avatar>
               </Box>
             </TouchableOpacity>
           </Center>
@@ -264,14 +264,12 @@ export const ModalAtletica = ({
               <Controller
                 name="nome"
                 control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
                       placeholder="Nome da Atlética"
-                      type="text"
                       value={value}
                       onChangeText={onChange}
-                      onBlur={onBlur}
                     />
                   </Input>
                 )}

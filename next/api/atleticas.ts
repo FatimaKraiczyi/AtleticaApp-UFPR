@@ -19,7 +19,7 @@ export const getAtletica = async (): Promise<IResponse.Default<any>> => {
 };
 
 export const createAtletica = async (
-  atletica: Atletica
+  atletica: any
 ): Promise<IResponse.Default<Atletica>> => {
   try {
     const { data, status } = await API.post(createAtleticaEndpoint, atletica);
@@ -31,7 +31,7 @@ export const createAtletica = async (
 
 export const updateAtletica = async (
   id: number,
-  atletica: Atletica
+  atletica: any
 ): Promise<IResponse.Default<AtleticaResponse>> => {
   try {
     const { data, status } = await API.put(
