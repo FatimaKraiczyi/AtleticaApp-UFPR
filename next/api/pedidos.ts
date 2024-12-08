@@ -3,9 +3,11 @@ import { API, objectCatch } from "./api";
 import {
   getAllPedidos,
   getPedidoById,
+  pagamentoPedido,
   postPedido,
   putPedido,
 } from "./routes/pedidos";
+import { PedidoId } from "@/interfaces/pedido";
 
 export const pedidoUsuario = async (): Promise<IResponse.Default<any>> => {
   try {
@@ -18,12 +20,12 @@ export const pedidoUsuario = async (): Promise<IResponse.Default<any>> => {
 
 export const visualizarPedidoId = async (
   id: number
-): Promise<IResponse.Default<any>> => {
+): Promise<IResponse.Default<PedidoId>> => {
   try {
     const { data, status } = await API.get(`${getPedidoById}/${id}`);
     return { data, success: status === 200 };
   } catch (error) {
-    return { ...objectCatch };
+    return { ...objectCatch, data: {} as PedidoId };
   }
 };
 
@@ -53,7 +55,7 @@ export const pagamentoPedidoId = async (
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(
-      `${pagamentoPedidoId}/${pedidoId}`
+      `${pagamentoPedido}/${pedidoId}`
     );
     return { data, success: status === 200 };
   } catch (error) {

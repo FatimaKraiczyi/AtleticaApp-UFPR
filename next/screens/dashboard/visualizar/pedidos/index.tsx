@@ -1,37 +1,49 @@
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { MobileFooter } from "@/components/sections/MobileFooter";
-import { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import {
+  AwaitedReactNode,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useEffect,
+  useState,
+} from "react";
 import { Box } from "@/components/ui/box";
-import { Grid, GridItem } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
-import { VStack } from "@/components/ui/vstack";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
-import { pagamentoPedidoId, pedidoUsuario } from "@/api/pedidos";
-import { ChevronDown, ChevronUp } from "lucide-react-native";
+import {
+  pagamentoPedidoId,
+  pedidoUsuario,
+  visualizarPedidoId,
+} from "@/api/pedidos";
+import { Modal } from "@/components/ui/modal";
+import { VStack } from "@/components/ui/vstack";
+import { ScrollView } from "react-native";
+import { ViewProduto } from "../../gerenciar/loja/view-produto";
 
 const Main = () => {
   const [loading, setLoading] = useState(true);
+  const [expand, setExpand] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [pedidos, setPedidos] = useState<any[]>([]);
-  const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
+  const [pedidoSelecionado, setPedidoSelecionado] = useState<any | null>(null);
+
   const usuarioId =
     typeof window !== "undefined" ? sessionStorage.getItem("usuarioId") : null;
 
-  const fetchPedido = async () => {
+  const fetchPedidos = async () => {
     if (!usuarioId) return;
 
     setLoading(true);
     try {
       const response = await pedidoUsuario();
-      if (response.success) {
-        const pedidosUsuario = response.data.pedidos.filter(
-          (pedido: any) =>
-            pedido.usuarioId === parseInt(usuarioId, 10)
-        );
-        setPedidos(pedidosUsuario);
+      if (response.success && response.data) {
+        setPedidos(response.data);
       } else {
         setPedidos([]);
       }
@@ -43,32 +55,42 @@ const Main = () => {
     }
   };
 
+  const visualizarPedido = async (pedidoId: number) => {
+    setLoading(true);
+    try {
+      const response = await visualizarPedidoId(pedidoId);
+      if (response.success && response.data) {
+        setPedidoSelecionado(response.data);
+        setExpand(true);
+      } else {
+        alert("Erro ao visualizar pedido.");
+      }
+    } catch (error) {
+      console.error("Erro ao visualizar pedido:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+	const openViewModal = (id?: any) => {
+    setPedidoSelecionado(id);
+		setShowModal(true);
+  };
+
   useEffect(() => {
     if (usuarioId) {
-      fetchPedido();
+      fetchPedidos();
     } else {
       setLoading(false);
     }
   }, [usuarioId]);
-
-  const toggleExpand = (id: number) => {
-    setExpandedPlanos((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
-  };
 
   if (loading) {
     return <LoadingState />;
   }
 
   const renderNoPedido = () => (
-    <NoItemsFound message="Nenhuma pedido encontrada." />
+    <NoItemsFound message="Nenhum pedido encontrado." />
   );
 
   return (
@@ -82,50 +104,28 @@ const Main = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {pedidos.map((pedido) => (
-                <GridItem
-                  key={pedido.id}
-                  className="flex-1 p-6 rounded-md shadow-lg bg-white"
-                  _extra={{
-                    className: "",
-                  }}
-                >
-                  <VStack className="items-center">
-                    <Text className="text-gray-700 font-semibold text-sm uppercase">
-                      {pedido.atleticaNome}
-                    </Text>
-                    <Text className="text-gray-500 font-semibold text-2xl uppercase">
-                      {pedido.planoNome}
-                    </Text>
-                    <Text className="font-bold text-xl mt-2">
-                      R$ {pedido.planoValor.toFixed(2)}
-                    </Text>
-                    <Text className="text-gray-500 text-sm mb-4">
-                      /{" "}
-                      {pedido.planoDuracao === 30
-                        ? "mês"
-                        : `${pedido.planoDuracao} meses`}
-                    </Text>
-                    <Text className="text-sm text-gray-600 mt-2">
-                      Início:{" "}
-                      {new Date(pedido.dataInicio).toLocaleDateString()}
-                    </Text>
-                    <Text className="text-sm text-gray-600">
-                      Fim: {new Date(pedido.dataFim).toLocaleDateString()}
-                    </Text>
-                    <Text className="font-bold text-xl mt-2  mb-4">
-                      Status: {pedido.statusPedido}
-                    </Text>
-                  </VStack>
-                  
+            {pedidos.map((pedido) => (
+              <Box key={pedido.id} className="bg-gray-100 p-4 rounded-lg mb-4">
+                <Box className="flex justify-between">
+                  <Box className="grid grid-cols-5 gap-4">
+                    <Box>
+                      <Text className="font-medium">Data</Text>
+                      <Text className="text-gray-500">{pedido.data}</Text>
+                    </Box>
+                    <Box>
+                      <Text className="font-medium">Número do pedido</Text>
+                      <Text className="text-gray-500"># {pedido.id}</Text>
+                    </Box>
+                    <Box>
+                      <Text className="font-medium">Valor total</Text>
+                      <Text className="text-gray-500">{pedido.valorTotal}</Text>
+                    </Box>
+                    <Box className="flex items-center gap-2">
                       <Button
                         variant="solid"
-                        className="w-full"
+                        className="bg-violet-500 text-white"
                         onPress={async () => {
-                          const response = await pagamentoPedidoId(
-                            pedido.pedidoId
-                          );
+                          const response = await pagamentoPedidoId(pedido.id);
                           if (response.success && response?.data) {
                             window.location.href = response.data.url;
                           } else {
@@ -135,13 +135,85 @@ const Main = () => {
                       >
                         <ButtonText>Efetuar pagamento</ButtonText>
                       </Button>
-                   
-                </GridItem>
-              ))}
-            </Grid>
+                    </Box>
+                    <Box className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        onPress={() => visualizarPedido(pedido.id)}
+                      >
+                        <ButtonText>Ver Pedido</ButtonText>
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+
+                {pedidoSelecionado && pedidoSelecionado.id === pedido.id && (
+                  <Box className="bg-white flex border rounded-lg p-4 mt-4">
+                    <Box className="grid grid-cols-4 py-4 border-b">
+                      <Box className="flex gap-2">
+                        <Text className="font-medium">Produto</Text>
+                      </Box>
+                      <Box className="flex items-center gap-2">
+                        <Text className="font-medium">Valor</Text>
+                      </Box>
+                      <Box className="flex items-center gap-2">
+                        <Text className="font-medium">Status</Text>
+                      </Box>
+                      <Box className="flex items-center gap-2">
+                        <Text className="font-medium">Ações</Text>
+                      </Box>
+                    </Box>
+                    {pedidoSelecionado.produtos.map((produto: any, index: any) => (
+                      <Box
+                        key={index}
+                        className="grid grid-cols-4 gap-4 py-4 border-b"
+                      >
+                        <Box className="flex gap-2">
+                          <Text>{produto.nome}</Text>
+                        </Box>
+                        <Box className="flex items-center gap-2">
+                          <Text>R$ {produto.valor}</Text>
+                        </Box>
+                        <Box className="flex items-center gap-2">
+                          <Text>{pedidoSelecionado.status}</Text>
+                        </Box>
+                        <Box className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            onPress={() => openViewModal(true)}
+                          >
+                            <ButtonText>Ver Produto</ButtonText>
+                          </Button>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            ))}
+
+            {showModal && (
+              <Modal onClose={() => setShowModal(false)}>
+                <Box className="p-4">
+                  <Text className="text-xl font-bold">Detalhes do Produto</Text>
+                  <Text className="mt-4">
+                    Informações adicionais sobre o produto selecionado.
+                  </Text>
+                  <Button className="mt-4" onPress={() => setShowModal(false)}>
+                    <ButtonText>Fechar</ButtonText>
+                  </Button>
+                </Box>
+              </Modal>
+            )}
           </ScrollView>
         )}
       </VStack>
+
+			<ViewProduto
+        showModal={showModal}
+        setShowModal={setShowModal}
+        produtoData={setPedidoSelecionado}
+      />
     </Box>
   );
 };
@@ -149,7 +221,7 @@ const Main = () => {
 export const Pedidos = () => {
   return (
     <SafeAreaView className="h-full w-full">
-      <LayoutComponents title="Meu Pedidos" isSidebarVisible={true}>
+      <LayoutComponents title="Meus Pedidos" isSidebarVisible={true}>
         <Main />
       </LayoutComponents>
       <MobileFooter />

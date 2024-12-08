@@ -56,16 +56,16 @@ export const WebSidebar = () => {
       const userType = sessionStorage.getItem("tipo");
       setUserType(userType);
 
-      if (path.includes("dashboard")) {
-        setSelectedIndex(0);
-      } else if (path.includes("atleticas")) {
+      if (path.includes("dashboard/visualizar/atleticas")) {
         setSelectedIndex(1);
-      } else if (path.includes("carrinho")) {
+      } else if (path.includes("dashboard/visualizar/carrinho")) {
         setSelectedIndex(2);
-      } else if (path.includes("assinatura")) {
+      } else if (path.includes("dashboard/visualizar/assinatura")) {
         setSelectedIndex(3);
-      } else if (path.includes("pedidos")) {
+      } else if (path.includes("dashboard/visualizar/pedidos")) {
         setSelectedIndex(4);
+      } else {
+        setSelectedIndex(0);
       }
     }
   }, []);
@@ -82,6 +82,10 @@ export const WebSidebar = () => {
     } else if (index === 4) {
       router.push("/dashboard/visualizar/pedidos");
     }
+  };
+
+  const getBackgroundClass = (index: number) => {
+    return index === selectedIndex ? "bg-violet-200" : "";
   };
 
   return (
@@ -101,24 +105,24 @@ export const WebSidebar = () => {
         >
             <HStack
               className={`items-center px-4 py-3 h-12 w-full ${
-                index === selectedIndex ? "bg-background-200" : ""
+                getBackgroundClass(index)
               }`}
-              style={{ justifyContent: "flex-start" }}
+              style={{ justifyContent: "flex-start", position: "relative" }}
             >
-              <Icon
-                as={item.iconName}
-                className={`w-6 h-6 stroke-background-800 ${
-                  index === selectedIndex ? "fill-background-800 stroke-background-800" : "fill-none"
-                }`}
-              />
+              <Box className="relative">
+                <Icon
+                  as={item.iconName}
+                  className="w-6 h-6 stroke-background-800 fill-none"
+                />
+                {item.iconName === ShoppingCart && items > 0 && (
+                  <Box className="absolute -top-2 -right-2  bg-violet-600 rounded-full w-6 h-6 flex items-center justify-center">
+                    <Text className="text-xs text-white">{items}</Text>
+                  </Box>
+                )}
+              </Box>
               <Text className="ml-4 text-background-800 font-medium">
                 {item.label}
               </Text>
-              {item.iconName === ShoppingCart && items > 0 && (
-                <Box className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
-                  <Text className="text-xs">{items}</Text>
-                </Box>
-              )}
             </HStack>
           </Pressable>
         ))}
