@@ -17,6 +17,18 @@ import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { Atletica, AtleticaResponse } from "@/interfaces/atleticas";
 import { useAtletica } from "@/hooks/AtleticaContex";
 import { Edit, Trash } from "lucide-react-native";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallbackText,
+} from "@/components/ui/avatar";
+
+const getImageUrl = (path: string | null) => {
+  if (!path) return null;
+  const baseUrl = "http://localhost:3001/uploads/";
+  const fileName = path.split("\\").pop();
+  return `${baseUrl}${fileName}`;
+};
 
 const AllAtleticas = () => {
   const router = useRouter();
@@ -55,8 +67,8 @@ const AllAtleticas = () => {
     setShowModal(true);
   };
 
-  const handleEditAtletica = (atletica: AtleticaResponse) => {
-    openModal(atletica.atletica);
+  const handleEditAtletica = (atletica: Atletica) => {
+    openModal(atletica);
   };
 
   const handleOpenDeleteModal = (id: number) => {
@@ -112,16 +124,29 @@ const AllAtleticas = () => {
           >
             <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {atleticas.map((atletica) => (
-                <GridItem className="shadow-md rounded-lg">
-                  <Box className="bg-violet-600 p-5 rounded-t-lg">
-                    <Image
-                      source={
-                        atletica.atletica.imagem ||
-                        require("@/assets/dashboard/image2.png")
-                      }
-                      alt={atletica.atletica.imagem}
-                      className=" mx-auto 	rounded-full"
-                    />
+                <GridItem
+                  key={atletica.atletica.id}
+                  className="shadow-md rounded-lg"
+                >
+                  <Box className="bg-violet-600 p-5 rounded-t-lg items-center">
+                    <Avatar size="xl">
+                      {atletica.atletica.imagem ? (
+                        <AvatarImage
+                          source={{
+                            uri:
+                              getImageUrl(atletica.atletica.imagem) ||
+                              undefined,
+                          }}
+                          alt="Imagem da atlética"
+                        />
+                      ) : (
+                        <AvatarImage
+                          source={{
+                            uri: "https://img.freepik.com/vetores-premium/icone-de-moldura-de-foto-foto-vazia-em-branco-vetor-em-fundo-transparente-isolado-eps-10_399089-1290.jpg",
+                          }}
+                        />
+                      )}
+                    </Avatar>
                   </Box>
                   <Box className="p-4 md:h-[180px]">
                     <Text className="text-lg font-semibold">
@@ -156,7 +181,9 @@ const AllAtleticas = () => {
                         space="md"
                         className="items-center justify-center mb-4"
                       >
-                        <Pressable onPress={() => handleEditAtletica(atletica)}>
+                        <Pressable
+                          onPress={() => handleEditAtletica(atletica.atletica)}
+                        >
                           <Edit className="text-typography-600 " />
                         </Pressable>
                         <Pressable

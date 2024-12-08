@@ -15,10 +15,9 @@ export interface Atletica {
   descricao: string;
   imagem?: string | null;
   atividades?: AtividadesProps[];
-  cursos?: CursoProps[];
+	cursos: CursoProps[];
 }
 
 export interface AtleticaResponse {
   atletica: Atletica;
-  cursos: CursoProps[];
 }

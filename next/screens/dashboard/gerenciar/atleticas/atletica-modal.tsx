@@ -8,7 +8,12 @@ import {
   FormControlErrorText,
 } from "@/components/ui/form-control";
 import { CloseIcon, Icon, EditIcon } from "@/components/ui/icon";
-import { AlertTriangle, ChevronDownIcon, PlusIcon, XIcon } from "lucide-react-native";
+import {
+  AlertTriangle,
+  ChevronDownIcon,
+  PlusIcon,
+  XIcon,
+} from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -21,13 +26,12 @@ import {
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
-import { getCursos } from "@/api/cursos";
 import {
   Select,
   SelectBackdrop,
@@ -44,13 +48,19 @@ import { AtividadesProps, Atletica, CursoProps } from "@/interfaces/atleticas";
 import { createAtletica, updateAtletica } from "@/api/atleticas";
 import { Image } from "@/components/ui/image";
 import atividadesEsportivas from "@/mock/atividades_esportivas";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallbackText,
+  AvatarBadge,
+} from "@/components/ui/avatar";
+import { getCursos } from "@/api/cursos";
 
 const userSchema = z.object({
   nome: z
     .string()
     .min(1, "Nome é obrigatório")
-    .max(50, "O nome deve ter menos de 10 caracteres"),
-  departamento: z.string().min(1, "Departamento é obrigatório"),
+    .max(50, "O nome deve ter menos de 20 caracteres"),
   cursoIds: z.array(z.string()).min(1, "Curso é obrigatório"),
   imagem: z.string().optional(),
   descricao: z.string().min(1, "Descrição é obrigatória"),
@@ -58,6 +68,7 @@ const userSchema = z.object({
     z.string().min(1, "Atividades esportivas são obrigatórias")
   ),
 });
+
 type userSchemaDetails = z.infer<typeof userSchema>;
 
 export const ModalAtletica = ({
@@ -71,7 +82,6 @@ export const ModalAtletica = ({
   refreshAtleticas: () => void;
   atleticaData?: any;
 }) => {
-  const ref = useRef(null);
   const {
     control,
     formState: { errors },
@@ -83,56 +93,46 @@ export const ModalAtletica = ({
     defaultValues: {
       nome: "",
       descricao: "",
-      departamento: "",
       imagem: "",
       cursoIds: [],
       atividadesIds: [],
     },
   });
 
+  const getImageUrl = (path: string | null) => {
+    if (!path) return undefined;
+    const baseUrl = "http://localhost:3001/uploads/";
+    const fileName = path.split("\\").pop();
+    return `${baseUrl}${fileName}`;
+  };
+
   const [cursos, setCursos] = useState<CursoProps[]>([]);
   const [cursoFields, setCursoFields] = useState<string[]>(["cursoIds"]);
   const [atividadeFields, setAtividadeFields] = useState<string[]>([
     "atividadesIds",
   ]);
-  const [departamentos, setDepartamentos] = useState<string[]>([]);
-  const [departamentoSelecionado, setDepartamentoSelecionado] = useState<
-    string | null
-  >(null);
-  const [cursosFiltrados, setCursosFiltrados] = useState<CursoProps[]>([]);
   const [atleticaImage, setAtleticaImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const { watch } = useForm();
 
   useEffect(() => {
     const fetchCursos = async () => {
       const response = await getCursos();
       if (response.success) {
         setCursos(response.data);
-        const uniqueDepartamentos = Array.from(
-          new Set(response.data.map((curso) => curso.departamento))
-        );
-        setDepartamentos(uniqueDepartamentos);
       }
     };
     fetchCursos();
   }, []);
 
-  useEffect(() => {
-    if (departamentoSelecionado) {
-      const filtrados = cursos.filter(
-        (curso) => curso.departamento === departamentoSelecionado
-      );
-      setCursosFiltrados(filtrados);
-    } else {
-      setCursosFiltrados([]);
-    }
-  }, [departamentoSelecionado, cursos]);
-
   const addCursoField = () => {
-    setCursoFields([...cursoFields, `cursoIds${cursoFields.length}`]);
+    setCursoFields([...cursoFields, `cursoIds.${cursoFields.length}`]);
+    setValue("cursoIds", [...(watch("cursoIds") || []), ""]);
   };
 
   const removeCursoField = (index: number) => {
-    setCursoFields(cursoFields.filter((_, i) => i !== index));
+    const updatedFields = cursoFields.filter((_, i) => i !== index);
+    setCursoFields(updatedFields);
   };
 
   const addAtividadeField = () => {
@@ -146,96 +146,115 @@ export const ModalAtletica = ({
     setAtividadeFields(atividadeFields.filter((_, i) => i !== index));
   };
 
-  useEffect(() => {
-    if (showModal) {
-      resetForm();
-    }
-
-    if (atleticaData) {
-      setValue("nome", atleticaData.nome);
-      setValue("descricao", atleticaData.descricao);
-      setValue(
-        "atividadesIds",
-        atleticaData.atividades?.map((atividade: AtividadesProps) =>
-          String(atividade.id)
-        ) || []
-      );
-      setValue(
-        "cursoIds",
-        atleticaData.cursos?.map((curso: CursoProps) => String(curso.id)) || []
-      );
-      setAtleticaImage(atleticaData.imagem || null);
-    }
-  }, [showModal, atleticaData, setValue]);
-
   const resetForm = () => {
-    reset();
+    reset({
+      nome: "",
+      descricao: "",
+      imagem: "",
+      cursoIds: [],
+      atividadesIds: [],
+    });
     setCursoFields(["cursoIds"]);
     setAtividadeFields(["atividadesIds"]);
-    setAtleticaImage(null);
   };
 
-  const onSubmit = async (data: any) => {
-    const atleticaPayload = {
-      nome: data.nome,
-      descricao: data.descricao,
-      atividades: (data.atividadesIds ?? []).filter((id: any) => id !== ""),
-      imagem: atleticaImage,
-      cursoIds: (data.cursoIds ?? []).filter((id: any) => id !== ""),
-    };
+	useEffect(() => {
+		if (showModal) {
+			resetForm();
+			if (atleticaData) {
+				setValue("nome", atleticaData.nome);
+				setValue("descricao", atleticaData.descricao);
+				setValue(
+					"atividadesIds",
+					atleticaData.atividades?.map((atividade: AtividadesProps) =>
+						String(atividade)
+					) || []
+				);
+				const cursosIds = atleticaData.cursos?.map((curso: CursoProps) =>
+					String(curso.id)
+				);
+				setValue("cursoIds", cursosIds || []);
+				setCursoFields(
+					cursosIds?.map((_: any, index: any) => `cursoIds.${index}`) || ["cursoIds"]
+				);
+				const imageUrl = getImageUrl(atleticaData.imagem);
+				setValue("imagem", imageUrl);
+        setAtleticaImage(imageUrl || null);
+	
+				setAtividadeFields(
+					atleticaData.atividades?.map(
+						(_: any, index: any) => `atividadesIds.${index}`
+					) || ["atividadesIds"]
+				);
+	
+				setCursoFields(
+					atleticaData.cursos?.map((_: any, index: any) => `cursoIds.${index}`) || [
+						"cursoIds",
+					]
+				);
+			}
+		}
+	}, [showModal, atleticaData, setValue, reset]);
 
-    try {
-      if (atleticaData) {
-        const response = await updateAtletica(atleticaData.id, {
-          ...atleticaPayload,
-          id: atleticaData.id,
-        });
-        if (response.success) {
-          refreshAtleticas();
-        }
-      } else {
-        const response = await createAtletica({
-          ...atleticaPayload,
-          id: Date.now(),
-        });
-        if (response.success) {
-          refreshAtleticas();
-        }
+  const pickImage = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.click();
+
+    fileInput.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) {
+        setSelectedFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAtleticaImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
       }
-      setShowModal(false);
-      resetForm();
-    } catch (error) {
-      console.error("Erro:", error);
+    };
+  };
+
+ const onSubmit = async (data: any) => {
+  const formData = new FormData();
+  formData.append("nome", data.nome);
+  formData.append("descricao", data.descricao);
+  data.atividadesIds.forEach((id: string) =>
+    formData.append("atividades[]", id)
+  );
+  data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
+  
+  if (selectedFile) {
+    formData.append("imagem", selectedFile);
+  } else if (atleticaImage) {
+    formData.append("imagem", atleticaImage);
+  }
+
+  try {
+    let response;
+    if (atleticaData) {
+      response = await updateAtletica(atleticaData.id, formData);
+    } else {
+      response = await createAtletica(formData);
     }
-  };
 
-  const pickImage = async () => {
-    /*  let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    if (response.success && response.data) {
+      refreshAtleticas();
+      resetForm();
+      setShowModal(false);
+    }
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+  }
+};
 
-    if (!result.canceled) {
-      const { uri } = result.assets[0];
-      setAtleticaImage(uri);
-    } */
-  };
+  const storedUserType = sessionStorage.getItem("tipo");
 
   return (
-    <Modal
-      isOpen={showModal}
-      onClose={() => {
-        setShowModal(false);
-        resetForm();
-      }}
-      finalFocusRef={ref}
-      size="lg"
-    >
+    <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
       <ModalBackdrop />
       <ModalContent>
-        <Box className={"w-full h-[110px] "}>
+        <Box className="w-full h-[110px]">
           <Image
             source={require("@/assets/profile-screens/profile/image2.png")}
             alt="Imagem de fundo"
@@ -260,16 +279,20 @@ export const ModalAtletica = ({
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
               <Box>
-                <Image
-                  size="xl"
-                  class="rounded-full"
-                  source={
-                    atleticaImage
-                      ? { uri: atleticaImage }
-                      : require("@/assets/dashboard/image2.png")
-                  }
-                  alt={"Imagem da atletica"}
-                />
+                <Avatar size="xl">
+                  {atleticaImage ? (
+                    <AvatarImage
+                      source={{ uri: atleticaImage }}
+                      alt="Imagem da atlética"
+                    />
+                  ) : (
+                    <AvatarImage
+                      source={{
+                        uri: "https://img.freepik.com/vetores-premium/icone-de-moldura-de-foto-foto-vazia-em-branco-vetor-em-fundo-transparente-isolado-eps-10_399089-1290.jpg",
+                      }}
+                    />
+                  )}
+                </Avatar>
               </Box>
             </TouchableOpacity>
           </Center>
@@ -281,14 +304,12 @@ export const ModalAtletica = ({
               <Controller
                 name="nome"
                 control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
                       placeholder="Nome da Atlética"
-                      type="text"
                       value={value}
                       onChangeText={onChange}
-                      onBlur={onBlur}
                     />
                   </Input>
                 )}
@@ -312,6 +333,7 @@ export const ModalAtletica = ({
                     <InputField
                       placeholder="Descrição"
                       type="text"
+                      value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
                     />
@@ -325,52 +347,6 @@ export const ModalAtletica = ({
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-            <FormControl isInvalid={!!errors.departamento}>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>Departamento</FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                name="departamento"
-                control={control}
-                render={({ field: { onChange } }) => (
-                  <Select
-                    onValueChange={(value) => {
-                      onChange(value);
-                      setDepartamentoSelecionado(value);
-                    }}
-                    className="flex-1"
-                  >
-                    <SelectTrigger variant="outline" size="md">
-                      <SelectInput placeholder="Selecione um departamento" />
-                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
-                    </SelectTrigger>
-                    <SelectPortal>
-                      <SelectBackdrop />
-                      <SelectContent>
-                        <SelectDragIndicatorWrapper>
-                          <SelectDragIndicator />
-                        </SelectDragIndicatorWrapper>
-                        {departamentos.map((departamento) => (
-                          <SelectItem
-                            key={departamento}
-                            value={departamento}
-                            label={departamento}
-                          >
-                            {departamento}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </SelectPortal>
-                  </Select>
-                )}
-              />
-              <FormControlError>
-                <FormControlErrorIcon size="md" as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.departamento?.message}
-                </FormControlErrorText>
-              </FormControlError>
-            </FormControl>
             {cursoFields.map((field, index) => (
               <FormControl key={field} isInvalid={!!errors.cursoIds}>
                 <FormControlLabel className="mb-2 flex items-center">
@@ -380,11 +356,11 @@ export const ModalAtletica = ({
                   <Controller
                     name={`cursoIds.${index}`}
                     control={control}
-                    render={({ field: { onChange } }) => (
+                    render={({ field: { onChange, value } }) => (
                       <Select
                         onValueChange={onChange}
-                        isDisabled={!departamentoSelecionado}
                         className="flex-1"
+                        selectedValue={value}
                       >
                         <SelectTrigger variant="outline" size="md">
                           <SelectInput placeholder="Selecione um curso" />
@@ -396,13 +372,13 @@ export const ModalAtletica = ({
                             <SelectDragIndicatorWrapper>
                               <SelectDragIndicator />
                             </SelectDragIndicatorWrapper>
-                            {cursosFiltrados.map((curso) => (
+                            {cursos.map((curso) => (
                               <SelectItem
                                 key={curso.id}
                                 value={String(curso.id)}
-                                label={curso.nome}
+                                label={curso.nome + " - " + curso.departamento}
                               >
-                                {curso.nome}
+                                {curso.nome + " - " + curso.departamento}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -416,7 +392,6 @@ export const ModalAtletica = ({
                       className="ml-2 p-1"
                       variant="outline"
                       size="sm"
-                      disabled={!departamentoSelecionado}
                     >
                       <Icon as={PlusIcon} size="sm" />
                     </Button>
@@ -452,8 +427,12 @@ export const ModalAtletica = ({
                   <Controller
                     name={`atividadesIds.${index}`}
                     control={control}
-                    render={({ field: { onChange } }) => (
-                      <Select onValueChange={onChange} className="flex-1">
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        onValueChange={onChange}
+                        className="flex-1"
+                        selectedValue={value}
+                      >
                         <SelectTrigger variant="outline" size="md">
                           <SelectInput placeholder="Selecione uma atividade" />
                           <SelectIcon className="mr-3" as={ChevronDownIcon} />
@@ -508,12 +487,14 @@ export const ModalAtletica = ({
               </FormControl>
             ))}
 
-            <Button
-              onPress={handleSubmit(onSubmit)}
-              className="flex-1 p-2 mt-8"
-            >
-              <ButtonText>Salvar</ButtonText>
-            </Button>
+            {storedUserType === "master" && (
+              <Button
+                onPress={handleSubmit(onSubmit)}
+                className="flex-1 p-2 mt-8"
+              >
+                <ButtonText>Salvar</ButtonText>
+              </Button>
+            )}
           </VStack>
         </ModalBody>
       </ModalContent>
