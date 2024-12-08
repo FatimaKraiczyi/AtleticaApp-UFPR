@@ -56,16 +56,16 @@ export const WebSidebar = () => {
       const userType = sessionStorage.getItem("tipo");
       setUserType(userType);
 
-      if (path.includes("dashboard")) {
-        setSelectedIndex(0);
-      } else if (path.includes("atleticas")) {
+      if (path.includes("dashboard/visualizar/atleticas")) {
         setSelectedIndex(1);
-      } else if (path.includes("carrinho")) {
+      } else if (path.includes("dashboard/visualizar/carrinho")) {
         setSelectedIndex(2);
-      } else if (path.includes("assinatura")) {
+      } else if (path.includes("dashboard/visualizar/assinatura")) {
         setSelectedIndex(3);
-      } else if (path.includes("pedidos")) {
+      } else if (path.includes("dashboard/visualizar/pedidos")) {
         setSelectedIndex(4);
+      } else {
+        setSelectedIndex(0);
       }
     }
   }, []);
@@ -82,6 +82,10 @@ export const WebSidebar = () => {
     } else if (index === 4) {
       router.push("/dashboard/visualizar/pedidos");
     }
+  };
+
+  const getBackgroundClass = (index: number) => {
+    return index === selectedIndex ? "bg-violet-200" : "";
   };
 
   return (
@@ -101,7 +105,7 @@ export const WebSidebar = () => {
         >
             <HStack
               className={`items-center px-4 py-3 h-12 w-full ${
-                index === selectedIndex ? "bg-background-200" : ""
+                getBackgroundClass(index)
               }`}
               style={{ justifyContent: "flex-start" }}
             >
