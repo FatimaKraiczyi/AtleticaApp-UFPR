@@ -100,10 +100,9 @@ export const ModalAtletica = ({
   });
 
   const getImageUrl = (path: string | null) => {
-    if (!path) return null;
-    // Base URL para o servidor Express
+    if (!path) return undefined;
     const baseUrl = "http://localhost:3001/uploads/";
-    const fileName = path.split("\\").pop(); // Remove o caminho local, pegando apenas o nome do arquivo
+    const fileName = path.split("\\").pop();
     return `${baseUrl}${fileName}`;
   };
 
@@ -115,7 +114,6 @@ export const ModalAtletica = ({
   const [atleticaImage, setAtleticaImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { watch } = useForm();
-  const campoObservado = watch("cursoIds");
 
   useEffect(() => {
     const fetchCursos = async () => {
@@ -135,12 +133,6 @@ export const ModalAtletica = ({
   const removeCursoField = (index: number) => {
     const updatedFields = cursoFields.filter((_, i) => i !== index);
     setCursoFields(updatedFields);
-
-    // Atualiza os valores de cursoIds, removendo o valor correspondente ao index
-    const updatedValues = (watch("cursoIds") || []).filter(
-      (_, i) => i !== index
-    );
-    setValue("cursoIds", updatedValues);
   };
 
   const addAtividadeField = () => {
@@ -154,49 +146,55 @@ export const ModalAtletica = ({
     setAtividadeFields(atividadeFields.filter((_, i) => i !== index));
   };
 
-  useEffect(() => {
-    if (showModal) {
-      reset();
-
-      if (atleticaData) {
-        setValue("nome", atleticaData.nome);
-        setValue("descricao", atleticaData.descricao);
-
-        // Preenche atividades
-        setValue(
-          "atividadesIds",
-          atleticaData.atividades?.map((atividade: AtividadesProps) =>
-            String(atividade)
-          ) || []
-        );
-
-        // Preenche cursos
-        const cursosIds = atleticaData.cursos?.map((curso: CursoProps) =>
-          String(curso.id)
-        );
-        setValue("cursoIds", cursosIds || []);
-        setCursoFields(
-          cursosIds?.map((_, index) => `cursoIds.${index}`) || ["cursoIds"]
-        );
-
-        setAtleticaImage(getImageUrl(atleticaData.imagem) || null);
-
-        // Preenche os campos de atividades
-        setAtividadeFields(
-          atleticaData.atividades?.map(
-            (_, index) => `atividadesIds.${index}`
-          ) || ["atividadesIds"]
-        );
-      }
-    }
-  }, [showModal, atleticaData, setValue, reset]);
-
   const resetForm = () => {
-    reset();
+    reset({
+      nome: "",
+      descricao: "",
+      imagem: "",
+      cursoIds: [],
+      atividadesIds: [],
+    });
     setCursoFields(["cursoIds"]);
     setAtividadeFields(["atividadesIds"]);
-    setAtleticaImage(null);
   };
+
+	useEffect(() => {
+		if (showModal) {
+			resetForm();
+			if (atleticaData) {
+				setValue("nome", atleticaData.nome);
+				setValue("descricao", atleticaData.descricao);
+				setValue(
+					"atividadesIds",
+					atleticaData.atividades?.map((atividade: AtividadesProps) =>
+						String(atividade)
+					) || []
+				);
+				const cursosIds = atleticaData.cursos?.map((curso: CursoProps) =>
+					String(curso.id)
+				);
+				setValue("cursoIds", cursosIds || []);
+				setCursoFields(
+					cursosIds?.map((_: any, index: any) => `cursoIds.${index}`) || ["cursoIds"]
+				);
+				const imageUrl = getImageUrl(atleticaData.imagem);
+				setValue("imagem", imageUrl);
+        setAtleticaImage(imageUrl || null);
+	
+				setAtividadeFields(
+					atleticaData.atividades?.map(
+						(_: any, index: any) => `atividadesIds.${index}`
+					) || ["atividadesIds"]
+				);
+	
+				setCursoFields(
+					atleticaData.cursos?.map((_: any, index: any) => `cursoIds.${index}`) || [
+						"cursoIds",
+					]
+				);
+			}
+		}
+	}, [showModal, atleticaData, setValue, reset]);
 
   const pickImage = () => {
     const fileInput = document.createElement("input");
@@ -207,48 +205,48 @@ export const ModalAtletica = ({
     fileInput.onchange = (e: any) => {
       const file = e.target.files[0];
       if (file) {
-        setSelectedFile(file); // Armazena o arquivo selecionado
+        setSelectedFile(file);
         const reader = new FileReader();
         reader.onloadend = () => {
-          setAtleticaImage(reader.result as string); // Armazena a imagem em base64
+          setAtleticaImage(reader.result as string);
         };
         reader.readAsDataURL(file);
       }
     };
   };
 
-  const onSubmit = async (data: any) => {
-    const formData = new FormData();
-    formData.append("nome", data.nome);
-    formData.append("descricao", data.descricao);
-    data.atividadesIds.forEach((id: string) =>
-      formData.append("atividades[]", id)
-    );
-    data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
+ const onSubmit = async (data: any) => {
+  const formData = new FormData();
+  formData.append("nome", data.nome);
+  formData.append("descricao", data.descricao);
+  data.atividadesIds.forEach((id: string) =>
+    formData.append("atividades[]", id)
+  );
+  data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
+  
+  if (selectedFile) {
+    formData.append("imagem", selectedFile);
+  } else if (atleticaImage) {
+    formData.append("imagem", atleticaImage);
+  }
 
-    if (atleticaImage) {
-      const imageFile = selectedFile || data.imagem;
-      formData.append("imagem", imageFile);
+  try {
+    let response;
+    if (atleticaData) {
+      response = await updateAtletica(atleticaData.id, formData);
+    } else {
+      response = await createAtletica(formData);
     }
 
-    try {
-      let response;
-      if (atleticaData) {
-        formData.append("id", atleticaData.id);
-        response = await updateAtletica(atleticaData.id, formData);
-      } else {
-        response = await createAtletica(formData);
-      }
-
-      if (response.success) {
-        refreshAtleticas();
-      }
+    if (response.success && response.data) {
+      refreshAtleticas();
+      resetForm();
       setShowModal(false);
-      reset();
-    } catch (error) {
-      console.error("Erro:", error);
     }
-  };
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+  }
+};
 
   const storedUserType = sessionStorage.getItem("tipo");
 

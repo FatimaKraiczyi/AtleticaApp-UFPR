@@ -25,9 +25,8 @@ import {
 
 const getImageUrl = (path: string | null) => {
   if (!path) return null;
-  // Base URL para o servidor Express
   const baseUrl = "http://localhost:3001/uploads/";
-  const fileName = path.split("\\").pop(); // Remove o caminho local, pegando apenas o nome do arquivo
+  const fileName = path.split("\\").pop();
   return `${baseUrl}${fileName}`;
 };
 
@@ -68,8 +67,8 @@ const AllAtleticas = () => {
     setShowModal(true);
   };
 
-  const handleEditAtletica = (atletica: AtleticaResponse) => {
-    openModal(atletica.atletica);
+  const handleEditAtletica = (atletica: Atletica) => {
+    openModal(atletica);
   };
 
   const handleOpenDeleteModal = (id: number) => {
@@ -129,7 +128,7 @@ const AllAtleticas = () => {
                   key={atletica.atletica.id}
                   className="shadow-md rounded-lg"
                 >
-                  <Box className="bg-violet-600 p-5 rounded-t-lg align-center">
+                  <Box className="bg-violet-600 p-5 rounded-t-lg items-center">
                     <Avatar size="xl">
                       {atletica.atletica.imagem ? (
                         <AvatarImage
@@ -182,7 +181,9 @@ const AllAtleticas = () => {
                         space="md"
                         className="items-center justify-center mb-4"
                       >
-                        <Pressable onPress={() => handleEditAtletica(atletica)}>
+                        <Pressable
+                          onPress={() => handleEditAtletica(atletica.atletica)}
+                        >
                           <Edit className="text-typography-600 " />
                         </Pressable>
                         <Pressable
