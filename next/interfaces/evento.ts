@@ -11,3 +11,7 @@ export interface Evento {
   modalidade?: "FESTA" | "JOGO";
   atleticaId: number;
 }
+
+export interface EventoResponse {
+	evento: Evento;
+}
