@@ -205,10 +205,10 @@ export const MainContent = () => {
             </VStack>
             <HStack
               space="xs"
-              className="md:mt-40 mt-auto items-right justify-end"
+              className="md:mt-4 mt-auto pt-4 items-right justify-end"
             >
               <Button
-                className="bg-purple-500 text-white py-3 rounded-md"
+                className="bg-purple-500  text-white py-3 rounded-md"
                 onPress={async () => {
                   const response = await novoPedido();
                   if (response.success) {
