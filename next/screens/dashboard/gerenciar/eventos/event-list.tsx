@@ -11,11 +11,12 @@ import { Trash } from "lucide-react";
 import { HStack } from "@/components/ui/hstack";
 import { ModalEvento } from "./event-modal";
 import { DeleteEvento } from "./delete-evento";
-import { Evento } from "@/interfaces/evento";
+import { Evento, EventoResponse } from "@/interfaces/evento";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { getAllEventosAPI } from "@/api/evento";
 import { getAtleticaById } from "@/api/atleticas";
+import { ViewJogo } from "../jogos/view-jogo";
 
 interface Plataformas {
   [key: string]: any;
@@ -31,15 +32,19 @@ const plataformasTyped: Plataformas = plataformas;
 
 export const EventsList = () => {
   const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const [loading, setLoading] = useState(true);
-  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [eventos, setEventos] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventoToDeleteId, setEventoToDeleteId] = useState<number | undefined>(
     undefined
   );
   const [atleticaName, setAtleticaName] = useState<string | null>(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedEvento, setSelectedEvento] = useState<Evento | undefined>(
+    undefined
+  );
 
   const pathname =
     typeof window !== "undefined" ? window.location.pathname : "";
@@ -48,36 +53,40 @@ export const EventsList = () => {
 
   const showActions =
     typeof window !== "undefined" &&
-    ["/dashboard/gerenciar/eventos", "/dashboard/gerenciar/jogos"].includes(pathname);
+    ["/dashboard/gerenciar/eventos", "/dashboard/gerenciar/jogos"].includes(
+      pathname
+    );
 
   const fetchEventos = async () => {
     setLoading(true);
 
-    if (typeof window !== "undefined" && atleticaId && !atleticaName) {
-      const response = await getAtleticaById(atleticaId);
+    try {
+      const response = await getAllEventosAPI();
+      console.log("Resposta da API:", response); // Verifique se a resposta está correta
+
       if (response.success && response.data) {
-        setAtleticaName(response.data.atletica.nome);
+        const eventosFiltrados = response.data.filter((evento: any) =>
+          showActions
+            ? evento.modalidade === modalidade &&
+              evento.atleticaId.toString() === atleticaId
+            : evento.modalidade === modalidade
+        );
+
+        setEventos(eventosFiltrados);
+      } else {
+        console.log("Nenhum evento encontrado");
+        setEventos([]); // Caso não haja eventos, defina a lista como vazia
       }
+    } catch (error) {
+      console.error("Erro ao buscar eventos:", error);
+    } finally {
+      setLoading(false); // Sempre execute isso ao final
     }
-
-    const response = await getAllEventosAPI();
-    if (response.success && response.data) {
-      const eventosFiltrados = response.data.filter((evento: Evento) =>
-        showActions
-          ? evento.modalidade === modalidade &&
-            evento.atleticaId.toString() === atleticaId
-          : evento.modalidade === modalidade
-      );
-
-      setEventos(eventosFiltrados);
-    }
-
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchEventos();
-  }, [showActions, modalidade]);
+  }, []);
 
   if (loading) {
     return <LoadingState />;
@@ -97,6 +106,12 @@ export const EventsList = () => {
       } encontrado.`}
     />
   );
+
+  const openViewModal = (evento?: Evento) => {
+    console.log("Evento selecionado:", evento); // Verifique o evento que está sendo passado
+    setSelectedEvento(evento);
+    setShowViewModal(true);
+  };
 
   const getPlatformImage = (url: string) => {
     const domain = new URL(url).hostname.replace("www.", "");
@@ -124,9 +139,9 @@ export const EventsList = () => {
           renderNoItems()
         ) : (
           <ScrollView
-					showsVerticalScrollIndicator={false}
-					contentContainerStyle={{ flexGrow: 1 }}
-					className="p-4"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            className="p-4"
           >
             <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5">
               {eventos.map((evento) => {
@@ -202,15 +217,18 @@ export const EventsList = () => {
                         variant="solid"
                         className="w-full"
                         onPress={() => {
-                          if (evento.linkPlataformaIngressos) {
-                            window.open(
-                              evento.linkPlataformaIngressos,
-                              "_blank"
-                            );
+                          console.log(
+                            "Modalidade do evento:",
+                            evento.modalidade
+                          ); // Verifique a modalidade
+                          if (evento.modalidade === "JOGO") {
+                            openViewModal(evento);
+                          } else if (evento.linkPlataformaIngressos) {
+                            window.open(evento.linkPlataformaIngressos);
                           }
                         }}
                       >
-                        <ButtonText>Visualizar Evento</ButtonText>
+                        <ButtonText>Ver mais</ButtonText>
                       </Button>
 
                       {showActions && (
@@ -233,12 +251,24 @@ export const EventsList = () => {
           </ScrollView>
         )}
       </VStack>
+
+      {/* Modal Evento */}
       <ModalEvento
         showModal={showModal}
         setShowModal={setShowModal}
         refreshEventos={fetchEventos}
-				eventoData={eventos}
       />
+
+{showViewModal && (
+  <ViewJogo
+    showModal={showViewModal}
+    setShowModal={setShowViewModal}
+    eventoData={selectedEvento}
+  />
+)}
+
+
+      {/* Delete Modal */}
       <DeleteEvento
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
