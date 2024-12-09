@@ -46,14 +46,14 @@ export const getEventosByUserAPI = async (): Promise<
 };
 
 // Adicionar um evento
-export const putEventoAPI = async (
-  evento: Evento
+export const addEventoAPI = async (
+  newEvento: any
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(addEvento, evento);
+    const { data, status } = await API.post(addEvento,newEvento);
     return { data, success: status === 201 };
   } catch (error) {
-    return { ...objectCatch as IResponse.Default<Evento> };
+    return { ...objectCatch  };
   }
 };
 

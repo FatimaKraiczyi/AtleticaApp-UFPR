@@ -1,11 +1,11 @@
 export interface Evento {
-  id?: number;
+	id?: number;
   data: string;
   hora: string;
   endereco: string;
   descricao: string;
   linkPlataformaIngressos?: string;
-  qtdeVaga?: number;
+  qtdeVagas?: number;
   ingresso?: number;
   statusEvento?: "CANCELADO" | "EM_ANDAMENTO" | "CONCLUIDO";
   modalidade?: "FESTA" | "JOGO";

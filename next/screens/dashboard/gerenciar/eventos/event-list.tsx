@@ -113,7 +113,7 @@ export const EventsList = () => {
       <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
         {showActions && (
           <VStack space="lg" className="items-center">
-            <Button className="gap-3 relative" onPress={openModal}>
+            <Button className="gap-3 relative" onPress={() => openModal()}>
               <ButtonText>
                 Adicionar {modalidade === "JOGO" ? "Jogo" : "Evento"}
               </ButtonText>
@@ -128,7 +128,7 @@ export const EventsList = () => {
 					contentContainerStyle={{ flexGrow: 1 }}
 					className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5">
               {eventos.map((evento) => {
                 const eventoData = evento.data;
                 const [ano, mes, dia] = eventoData.split("-");
@@ -156,7 +156,7 @@ export const EventsList = () => {
                           }
                           size="full"
                           alt="Imagem do evento"
-                          className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                          className="rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
                         />
                       </Box>
                     </Pressable>
@@ -237,6 +237,7 @@ export const EventsList = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         refreshEventos={fetchEventos}
+				eventoData={eventos}
       />
       <DeleteEvento
         showModal={showDeleteModal}
