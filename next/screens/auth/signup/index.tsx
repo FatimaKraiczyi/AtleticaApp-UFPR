@@ -39,7 +39,6 @@ import { createUser } from "@/api/users";
 import AuthLayout from "../layout";
 import { UserProps } from "@/interfaces/users";
 import { getCursos } from "@/api/cursos";
-import { createUserError } from "@/api/errors/usersErrors";
 import {
   Select,
   SelectBackdrop,
