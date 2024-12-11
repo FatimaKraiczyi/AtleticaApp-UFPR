@@ -24,7 +24,6 @@ interface Plataformas {
 const plataformas = {
   sympla:
     "https://blog.sympla.com.br/wp-content/uploads/2022/09/banner-sympla-1.jpg",
-  eventbrite: "https://cdn.worldvectorlogo.com/logos/eventbrite-1.svg",
 };
 
 const plataformasTyped: Plataformas = plataformas;
@@ -44,33 +43,31 @@ export const EventsList = () => {
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/eventos";
 
-		const fetchEventos = async () => {
-			setLoading(true);
-		
-			try {
-				const response = await getAllEventosAPI();
-				console.log("Resposta da API:", response);
-		
-				if (response.success && response.data) {
-					const eventosFiltrados = response.data.filter((evento: any) =>
-						showActions
-							? evento.modalidade === "FESTA" &&
-								evento.atleticaId.toString() === atleticaId
-							: evento.modalidade === "FESTA"
-					);
-		
-					setEventos(eventosFiltrados);
-				} else {
-					console.log("Nenhum evento encontrado");
-					setEventos([]);
-				}
-			} catch (error) {
-				console.error("Erro ao buscar eventos:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
-		
+  const fetchEventos = async () => {
+    setLoading(true);
+
+    try {
+      const response = await getAllEventosAPI();
+
+      if (response.success && response.data) {
+        const eventosFiltrados = response.data.filter((evento: any) =>
+          showActions
+            ? evento.modalidade === "FESTA" &&
+              evento.atleticaId.toString() === atleticaId
+            : evento.modalidade === "FESTA"
+        );
+
+        setEventos(eventosFiltrados);
+      } else {
+        console.log("Nenhum evento encontrado");
+        setEventos([]);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar eventos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchEventos();
@@ -119,7 +116,7 @@ export const EventsList = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5">
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {eventos.map((evento) => {
                 const eventoData = evento.data;
                 const [ano, mes, dia] = eventoData.split("-");
@@ -127,76 +124,74 @@ export const EventsList = () => {
                 const diaNumerico = parseInt(dia, 10);
 
                 return (
-                  <GridItem
+                  <Box
                     key={evento.id}
-                    className="flex flex-col p-4 bg-white rounded-md shadow-md"
+                    className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden"
                   >
                     <Pressable
                       onPress={() => {
                         if (evento.linkPlataformaIngressos) {
-                          window.open(evento.linkPlataformaIngressos, "_blank");
+                          window.open(evento.linkPlataformaIngressos);
                         }
                       }}
                     >
-                      <Box className="w-full overflow-hidden rounded-md h-48 relative group">
+                      <Box className="w-full h-36 bg-violet-600 flex items-center justify-center">
                         <Image
                           source={
                             evento.linkPlataformaIngressos
                               ? getPlatformImage(evento.linkPlataformaIngressos)
                               : ""
                           }
-                          size="full"
+                          size="sm"
                           alt="Imagem do evento"
-                          className="rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                          className="w-20 h-20 rounded-full object-cover"
                         />
                       </Box>
                     </Pressable>
 
                     <GridItem
                       key={evento.id}
-                      className="flex flex-row items-center pt-4 space-x-4"
+                      className="flex flex-row items-center  p-4 space-x-4"
                     >
-                      <Box className="flex flex-col items-center justify-center bg-primary-100 rounded-lg px-6 py-2">
-                        <Text className="text-primary-500 font-bold text-sm">
-                          {mesAbreviado}
-                        </Text>
-                        <Text className="text-primary-900 font-extrabold text-2xl">
-                          {diaNumerico}
-                        </Text>
-                      </Box>
+                      <VStack>
+                        <Box className="flex flex-col items-center justify-center bg-primary-100 rounded-lg px-6 py-2">
+                          <Text className="text-primary-500 font-bold text-sm">
+                            {mesAbreviado}
+                          </Text>
+                          <Text className="text-primary-900 font-extrabold text-2xl">
+                            {diaNumerico}
+                          </Text>
+                        </Box>
 
-                      <VStack className="flex-1">
-                        <HStack>
-                          <Text className="text-sm text-gray-600">
-                            Evento realizado por: {""}
+                        <Text className="text-sm text-gray-600 text-center pt-2 sm:text-left">
+                          Local: {evento.endereco}
+                        </Text>
+                      </VStack>
+
+                      <VStack>
+                        <Box className="flex flex-col items-center justify-center px-6 py-2">
+                          <Text className="text-sm text-center text-gray-600">
+                            Evento realizado por:{" "}
                           </Text>
                           <Text className="text-sm text-gray-600 font-semibold">
                             {evento.atleticaName}
                           </Text>
-                        </HStack>
-                        <Text className="text-lg font-bold text-gray-900">
-                          {evento.descricao}
-                        </Text>
-                        <HStack>
-                          <Text className="text-sm text-gray-600">
-                            Local: {""}
+                          <Text className="text-lg font-bold text-center text-gray-900 truncate">
+                            {evento.titulo}
                           </Text>
-                          <Text className="text-sm text-gray-600 font-semibold">
-                            {evento.endereco}
+
+                          <Text className="text-sm text-gray-600">Valor:</Text>
+                          <Text className="text-sm font-semibold text-gray-900">
+                            {evento.valor}
                           </Text>
-                        </HStack>
+                        </Box>
                       </VStack>
                     </GridItem>
-
-                    <VStack className="items-center pt-4">
+                    <VStack className="items-center p-4">
                       <Button
-                        variant="solid"
+                        variant="outline"
                         className="w-full"
                         onPress={() => {
-                          console.log(
-                            "Modalidade do evento:",
-                            evento.modalidade
-                          );
                           if (evento.linkPlataformaIngressos) {
                             window.open(evento.linkPlataformaIngressos);
                           }
@@ -218,7 +213,7 @@ export const EventsList = () => {
                         </HStack>
                       )}
                     </VStack>
-                  </GridItem>
+                  </Box>
                 );
               })}
             </Grid>
@@ -226,7 +221,6 @@ export const EventsList = () => {
         )}
       </VStack>
 
-      {/* Modal Evento */}
       <ModalEvento
         showModal={showModal}
         setShowModal={setShowModal}

@@ -112,7 +112,7 @@ const MainContent = () => {
             {atleticaName}
           </Heading>
 
-          <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
             {filteredCards.map((card, index) => (
               <GridItem
                 key={index}
