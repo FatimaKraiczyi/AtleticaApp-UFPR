@@ -21,7 +21,7 @@ import { Produto } from "@/interfaces/ProdutoCarrinho";
 
 const AllProdutos = () => {
   const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const { addItem } = useCarrinho();
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -203,9 +203,7 @@ const AllProdutos = () => {
                   {showActions ? (
                     <HStack className="w-full items-center justify-between mt-4">
                       <HStack className="items-center">
-                        <Pressable
-                          onPress={() => handleEditProduto(produto)}
-                        >
+                        <Pressable onPress={() => handleEditProduto(produto)}>
                           <Edit className="text-typography-600 mr-4" />
                         </Pressable>
                         <Pressable

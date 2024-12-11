@@ -5,7 +5,8 @@ import {
   inscricaoEvento,
   deleteEvento,
   cancelarInscricao,
-	getAllEventos,
+  getAllEventos,
+  listarInscritos,
 } from "./routes/evento";
 
 import type { IResponse } from "../interfaces";
@@ -34,9 +35,7 @@ export const getEventoByIdAPI = async (
 };
 
 // Obter eventos do usuário logado
-export const getEventosByUserAPI = async (): Promise<
-  IResponse.Default<any>
-> => {
+export const getEventosByUserAPI = async (): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(getEventByUser);
     return { data, success: status === 200 };
@@ -50,10 +49,10 @@ export const addEventoAPI = async (
   newEvento: any
 ): Promise<IResponse.Default<any>> => {
   try {
-    const { data, status } = await API.post(addEvento,newEvento);
+    const { data, status } = await API.post(addEvento, newEvento);
     return { data, success: status === 201 };
   } catch (error) {
-    return { ...objectCatch  };
+    return { ...objectCatch };
   }
 };
 
@@ -87,6 +86,18 @@ export const cancelarInscricaoAPI = async (
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.delete(`${cancelarInscricao}/${id}`);
+    return { data, success: status === 200 };
+  } catch (error) {
+    return { ...objectCatch };
+  }
+};
+
+// Listar inscritos em um evento
+export const listarInscritosAPI = async (
+  id: number
+): Promise<IResponse.Default<any>> => {
+  try {
+    const { data, status } = await API.get(`${listarInscritos}/${id}`);
     return { data, success: status === 200 };
   } catch (error) {
     return { ...objectCatch };

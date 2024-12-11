@@ -16,7 +16,6 @@ import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { getAllEventosAPI } from "@/api/evento";
 import { getAtleticaById } from "@/api/atleticas";
-import { ViewJogo } from "../jogos/view-jogo";
 
 interface Plataformas {
   [key: string]: any;
@@ -35,54 +34,43 @@ export const EventsList = () => {
     typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const [loading, setLoading] = useState(true);
   const [eventos, setEventos] = useState<any[]>([]);
-  const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventoToDeleteId, setEventoToDeleteId] = useState<number | undefined>(
     undefined
   );
-  const [atleticaName, setAtleticaName] = useState<string | null>(null);
-  const [showViewModal, setShowViewModal] = useState(false);
-  const [selectedEvento, setSelectedEvento] = useState<Evento | undefined>(
-    undefined
-  );
-
-  const pathname =
-    typeof window !== "undefined" ? window.location.pathname : "";
-
-  const modalidade = pathname.includes("eventos") ? "FESTA" : "JOGO";
+  const [showModal, setShowModal] = useState(false);
 
   const showActions =
     typeof window !== "undefined" &&
-    ["/dashboard/gerenciar/eventos", "/dashboard/gerenciar/jogos"].includes(
-      pathname
-    );
+    window.location.pathname === "/dashboard/gerenciar/eventos";
 
-  const fetchEventos = async () => {
-    setLoading(true);
-
-    try {
-      const response = await getAllEventosAPI();
-      console.log("Resposta da API:", response); // Verifique se a resposta está correta
-
-      if (response.success && response.data) {
-        const eventosFiltrados = response.data.filter((evento: any) =>
-          showActions
-            ? evento.modalidade === modalidade &&
-              evento.atleticaId.toString() === atleticaId
-            : evento.modalidade === modalidade
-        );
-
-        setEventos(eventosFiltrados);
-      } else {
-        console.log("Nenhum evento encontrado");
-        setEventos([]); // Caso não haja eventos, defina a lista como vazia
-      }
-    } catch (error) {
-      console.error("Erro ao buscar eventos:", error);
-    } finally {
-      setLoading(false); // Sempre execute isso ao final
-    }
-  };
+		const fetchEventos = async () => {
+			setLoading(true);
+		
+			try {
+				const response = await getAllEventosAPI();
+				console.log("Resposta da API:", response);
+		
+				if (response.success && response.data) {
+					const eventosFiltrados = response.data.filter((evento: any) =>
+						showActions
+							? evento.modalidade === "FESTA" &&
+								evento.atleticaId.toString() === atleticaId
+							: evento.modalidade === "FESTA"
+					);
+		
+					setEventos(eventosFiltrados);
+				} else {
+					console.log("Nenhum evento encontrado");
+					setEventos([]);
+				}
+			} catch (error) {
+				console.error("Erro ao buscar eventos:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		
 
   useEffect(() => {
     fetchEventos();
@@ -100,18 +88,8 @@ export const EventsList = () => {
   };
 
   const renderNoItems = () => (
-    <NoItemsFound
-      message={`Nenhum ${
-        modalidade === "JOGO" ? "jogo" : "evento"
-      } encontrado.`}
-    />
+    <NoItemsFound message={`Nenhum evento encontrado`} />
   );
-
-  const openViewModal = (evento?: Evento) => {
-    console.log("Evento selecionado:", evento); // Verifique o evento que está sendo passado
-    setSelectedEvento(evento);
-    setShowViewModal(true);
-  };
 
   const getPlatformImage = (url: string) => {
     const domain = new URL(url).hostname.replace("www.", "");
@@ -129,9 +107,7 @@ export const EventsList = () => {
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
-              <ButtonText>
-                Adicionar {modalidade === "JOGO" ? "Jogo" : "Evento"}
-              </ButtonText>
+              <ButtonText>Adicionar Evento</ButtonText>
             </Button>
           </VStack>
         )}
@@ -195,7 +171,7 @@ export const EventsList = () => {
                             Evento realizado por: {""}
                           </Text>
                           <Text className="text-sm text-gray-600 font-semibold">
-                            {atleticaName}
+                            {evento.atleticaName}
                           </Text>
                         </HStack>
                         <Text className="text-lg font-bold text-gray-900">
@@ -220,10 +196,8 @@ export const EventsList = () => {
                           console.log(
                             "Modalidade do evento:",
                             evento.modalidade
-                          ); // Verifique a modalidade
-                          if (evento.modalidade === "JOGO") {
-                            openViewModal(evento);
-                          } else if (evento.linkPlataformaIngressos) {
+                          );
+                          if (evento.linkPlataformaIngressos) {
                             window.open(evento.linkPlataformaIngressos);
                           }
                         }}
@@ -259,16 +233,6 @@ export const EventsList = () => {
         refreshEventos={fetchEventos}
       />
 
-{showViewModal && (
-  <ViewJogo
-    showModal={showViewModal}
-    setShowModal={setShowViewModal}
-    eventoData={selectedEvento}
-  />
-)}
-
-
-      {/* Delete Modal */}
       <DeleteEvento
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}

@@ -26,9 +26,9 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Box } from "@/components/ui/box";
 import { Image } from "@/components/ui/image";
-import { putEventoAPI } from "@/api/evento";
 import { Evento } from "@/interfaces/evento";
 import { Center } from "@/components/ui/center";
+import { addEventoAPI } from "@/api/evento";
 
 const eventoSchema = z.object({
   data: z
@@ -38,12 +38,6 @@ const eventoSchema = z.object({
   hora: z.string().min(4, "Hora é obrigatória"),
   endereco: z.string().min(1, "Endereço é obrigatório"),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  linkPlataformaIngressos: z.string().url("URL inválida"),
-  statusEvento: z.enum(["CANCELADO", "EM_ANDAMENTO", "CONCLUIDO"]),
-  modalidade: z.enum(["FESTA", "JOGO"]),
-  atleticaId: z.number().int(),
-  qtdeVagas: z.number().int(),
-  ingresso: z.number().int(),
 });
 type EventoFormData = z.infer<typeof eventoSchema>;
 
@@ -63,16 +57,14 @@ export const ModalEvento = ({
   const currentPath =
     typeof window !== "undefined" ? window.location.pathname : "";
   const isEventoRoute = currentPath === "/dashboard/gerenciar/eventos";
-  const isJogosRoute = currentPath === "/dashboard/gerenciar/jogos";
 
-  // Define os valores padrão para modalidade e statusEvento
   const defaultValues: Partial<EventoFormData> = {
-    modalidade: isEventoRoute ? "FESTA" : isJogosRoute ? "JOGO" : "FESTA", // Default para FESTA
+    modalidade: "FESTA",
     statusEvento: "EM_ANDAMENTO",
     atleticaId: atleticaId ? parseInt(atleticaId) : undefined,
     qtdeVagas: 1,
     ingresso: 0,
-    linkPlataformaIngressos: "https://default.url",
+    linkPlataformaIngressos: "",
   };
 
   const {
@@ -93,7 +85,7 @@ export const ModalEvento = ({
         hora: `${data.hora}:00`,
       };
 
-      const response = await putEventoAPI(formattedData);
+      const response = await addEventoAPI(formattedData);
       if (response.success) {
         refreshEventos();
         setShowModal(false);

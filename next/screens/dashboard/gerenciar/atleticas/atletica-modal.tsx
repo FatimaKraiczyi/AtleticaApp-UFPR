@@ -215,38 +215,44 @@ export const ModalAtletica = ({
     };
   };
 
- const onSubmit = async (data: any) => {
-  const formData = new FormData();
-  formData.append("nome", data.nome);
-  formData.append("descricao", data.descricao);
-  data.atividadesIds.forEach((id: string) =>
-    formData.append("atividades[]", id)
-  );
-  data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
-  
-  if (selectedFile) {
-    formData.append("imagem", selectedFile);
-  } else if (atleticaImage) {
-    formData.append("imagem", atleticaImage);
-  }
-
-  try {
-    let response;
-    if (atleticaData) {
-      response = await updateAtletica(atleticaData.id, formData);
-    } else {
-      response = await createAtletica(formData);
-    }
-
-    if (response.success && response.data) {
-      refreshAtleticas();
-      resetForm();
-      setShowModal(false);
-    }
-  } catch (error) {
-    console.error("Erro ao salvar:", error);
-  }
-};
+	const onSubmit = async (data: any) => {
+		const formData = new FormData();
+		formData.append("nome", data.nome);
+		formData.append("descricao", data.descricao);
+	
+		data.atividadesIds.forEach((id: string) =>
+			formData.append("atividades[]", id)
+		);
+	
+		const validCursoIds = data.cursoIds
+			.filter((id: string) => id !== "") 
+			.map((id: string) => Number(id)); 
+	
+		validCursoIds.forEach((id: number) => formData.append("cursoIds[]", id.toString()));
+	
+		if (selectedFile) {
+			formData.append("imagem", selectedFile);
+		} else if (atleticaImage) {
+			formData.append("imagem", atleticaImage);
+		}
+	
+		try {
+			let response;
+			if (atleticaData) {
+				response = await updateAtletica(atleticaData.id, formData);
+			} else {
+				response = await createAtletica(formData);
+			}
+	
+			if (response.success && response.data) {
+				refreshAtleticas();
+				resetForm();
+				setShowModal(false);
+			}
+		} catch (error) {
+			console.error("Erro ao salvar:", error);
+		}
+	};
 
   const storedUserType = sessionStorage.getItem("tipo");
 
