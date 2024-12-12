@@ -8,7 +8,7 @@ import {
   FormControlErrorText,
 } from "@/components/ui/form-control";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import { AlertTriangle } from "lucide-react-native";
+import { AlertTriangle, ChevronDownIcon } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import {
   Modal,
@@ -27,6 +27,19 @@ import { Box } from "@/components/ui/box";
 import { Image } from "@/components/ui/image";
 import { Center } from "@/components/ui/center";
 import { addEventoAPI } from "@/api/evento";
+import {
+  Select,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectItem,
+  SelectPortal,
+  SelectTrigger,
+} from "@/components/ui/select";
+import atividadesEsportivas from "@/mock/atividades_esportivas";
 
 const eventoSchema = z.object({
   data: z
@@ -37,19 +50,13 @@ const eventoSchema = z.object({
     .string()
     .min(4, "Hora é obrigatória")
     .regex(/^\d{2}:\d{2}$/, "Formato de hora inválido"),
-  endereco: z.string().min(1, "Endereço é obrigatório"),
   titulo: z.string().min(1, "Título é obrigatório"),
+  endereco: z.string().min(1, "Endereço é obrigatório"),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  modalidade: z.string().min(1, "Modalidade é obrigatória"),
-  statusEvento: z.string().min(1, "Status do evento é obrigatório"),
-	qtdeVagas: z.number().min(1, "Quantidade de vagas é obrigatória"),
+  qtdeVagas: z.number().min(1, "Quantidade de vagas é obrigatória"),
 });
 
 type EventoFormData = z.infer<typeof eventoSchema>;
-
-const defaultValues: Partial<EventoFormData> = {
-  statusEvento: "EM_ANDAMENTO",
-};
 
 export const ModalJogo = ({
   showModal,
@@ -67,7 +74,6 @@ export const ModalJogo = ({
     reset,
   } = useForm<EventoFormData>({
     resolver: zodResolver(eventoSchema),
-    defaultValues,
   });
 
   const atleticaId =
@@ -76,24 +82,23 @@ export const ModalJogo = ({
     typeof window !== "undefined"
       ? sessionStorage.getItem("atleticaNome")
       : null;
-  const currentPath =
-    typeof window !== "undefined" ? window.location.pathname : "";
 
   const onSubmit = async (data: EventoFormData) => {
     try {
       const formattedData = {
         ...data,
         data: data.data.split("/").reverse().join("-"),
-        hora: `${data.hora}:00`,
+        hora: data.hora,
         atleticaId: Number(atleticaId),
         atleticaName: atleticaNome,
-				modalidade: "JOGO",
+        modalidade: "JOGO",
+        statusEvento: "EM_ANDAMENTO",
       };
-
       const response = await addEventoAPI(formattedData);
       if (response.success) {
         refreshEventos();
         setShowModal(false);
+        reset();
       }
     } catch (error) {
       console.error("Erro ao salvar evento:", error);
@@ -105,7 +110,7 @@ export const ModalJogo = ({
       isOpen={showModal}
       onClose={() => {
         setShowModal(false);
-        reset(defaultValues);
+        reset();
       }}
       size="lg"
     >
@@ -136,19 +141,40 @@ export const ModalJogo = ({
           <VStack space="xl">
             <FormControl>
               <FormControlLabel>
-                <FormControlLabelText>Título</FormControlLabelText>
+                <FormControlLabelText>Atividade</FormControlLabelText>
               </FormControlLabel>
               <Controller
-                control={control}
                 name="titulo"
+                control={control}
                 render={({ field: { onChange, value } }) => (
-                  <Input>
-                    <InputField
-                      placeholder="Título do evento"
-                      value={value}
-                      onChangeText={onChange}
-                    />
-                  </Input>
+                  <Select
+                    onValueChange={onChange}
+                    className="flex-1"
+                    selectedValue={value}
+                  >
+                    <SelectTrigger variant="outline" size="md">
+                      <SelectInput placeholder="Atividade" />
+                      <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    </SelectTrigger>
+
+                    <SelectPortal>
+                      <SelectBackdrop />
+                      <SelectContent>
+                        <SelectDragIndicatorWrapper>
+                          <SelectDragIndicator />
+                        </SelectDragIndicatorWrapper>
+                        {atividadesEsportivas.map((atividade) => (
+                          <SelectItem
+                            key={atividade.nome}
+                            value={atividade.nome}
+                            label={atividade.nome}
+                          >
+                            {atividade.nome}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </SelectPortal>
+                  </Select>
                 )}
               />
               <FormControlError>
@@ -263,7 +289,7 @@ export const ModalJogo = ({
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Local do evento"
+                      placeholder="Local"
                       value={value}
                       onChangeText={onChange}
                     />
@@ -298,9 +324,7 @@ export const ModalJogo = ({
                 )}
               />
               {errors.qtdeVagas && (
-                <FormControlError>
-                  {errors.qtdeVagas.message}
-                </FormControlError>
+                <FormControlError>{errors.qtdeVagas.message}</FormControlError>
               )}
             </FormControl>
 

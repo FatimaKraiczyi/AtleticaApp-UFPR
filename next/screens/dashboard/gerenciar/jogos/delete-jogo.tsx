@@ -65,7 +65,7 @@ export const DeleteJogo = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            Deletar Evento
+            Deletar Jogo
           </Heading>
         </Center>
         <ModalBody>
