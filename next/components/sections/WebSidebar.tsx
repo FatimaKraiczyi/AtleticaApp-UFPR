@@ -38,10 +38,6 @@ const list: Icons[] = [
     iconName: UserRound,
     label: "Assinaturas",
   },
-  {
-    iconName: Package,
-    label: "Pedidos",
-  },
 ];
 
 export const WebSidebar = () => {
@@ -62,8 +58,6 @@ export const WebSidebar = () => {
         setSelectedIndex(2);
       } else if (path.includes("dashboard/visualizar/assinatura")) {
         setSelectedIndex(3);
-      } else if (path.includes("dashboard/visualizar/pedidos")) {
-        setSelectedIndex(4);
       } else {
         setSelectedIndex(0);
       }
@@ -79,8 +73,6 @@ export const WebSidebar = () => {
       router.push("/dashboard/visualizar/carrinho");
     } else if (index === 3) {
       router.push("/dashboard/visualizar/assinatura");
-    } else if (index === 4) {
-      router.push("/dashboard/visualizar/pedidos");
     }
   };
 
@@ -92,21 +84,24 @@ export const WebSidebar = () => {
     <VStack className="w-48 h-full border-r border-border-300">
       {list
         .filter((item, index) => {
-          if (userType === "master" && (index === 1 || index === 2 || index === 3)) {
+          if (
+            userType === "master" &&
+            (index === 1 || index === 2 || index === 3)
+          ) {
             return false;
           }
           return true;
         })
         .map((item, index) => (
-        <Pressable
-          key={index}
-          className="w-full hover:bg-background-50"
-          onPress={() => handlePress(index)}
-        >
+          <Pressable
+            key={index}
+            className="w-full hover:bg-background-50"
+            onPress={() => handlePress(index)}
+          >
             <HStack
-              className={`items-center px-4 py-3 h-12 w-full ${
-                getBackgroundClass(index)
-              }`}
+              className={`items-center px-4 py-3 h-12 w-full ${getBackgroundClass(
+                index
+              )}`}
               style={{ justifyContent: "flex-start", position: "relative" }}
             >
               <Box className="relative">

@@ -34,7 +34,7 @@ const HeadingCards: CardData[] = [
     route: "/dashboard/gerenciar/jogos",
   },
   {
-    bannerUri: require("@/assets/dashboard/image.png"),
+    bannerUri: require("@/assets/dashboard/image.jpg"),
     title: "Gerenciar Eventos",
     description: "Gerencie os eventos da atlética",
     route: "/dashboard/gerenciar/eventos",
@@ -112,7 +112,7 @@ const MainContent = () => {
             {atleticaName}
           </Heading>
 
-          <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+          <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-10">
             {filteredCards.map((card, index) => (
               <GridItem
                 key={index}

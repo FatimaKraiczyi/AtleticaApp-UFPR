@@ -15,11 +15,10 @@ import { Trash } from "lucide-react-native";
 import { getCart, deleteCartProdut, addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
 import {
-  ProdutoCarrinho,
-  ProdutoCarrinhoResponse,
   ProdutosCart,
 } from "@/interfaces/ProdutoCarrinho";
 import { novoPedido } from "@/api/pedidos";
+import useRouter from "@unitools/router";
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);
@@ -27,6 +26,7 @@ export const MainContent = () => {
   const [subtotal, setSubtotal] = useState(0);
   const hasFetchedCart = useRef(false);
   const { setItems } = useCarrinho();
+	const router = useRouter();
 
   const calcularSubtotal = (items: ProdutosCart[]) => {
     const total = items.reduce(
@@ -208,14 +208,15 @@ export const MainContent = () => {
               className="md:mt-4 mt-auto pt-4 items-right justify-end"
             >
               <Button
-                className="bg-purple-500  text-white py-3 rounded-md"
+                className="bg-purple-500 text-white py-3 rounded-md"
                 onPress={async () => {
                   const response = await novoPedido();
                   if (response.success) {
                     setProdutosCarrinho([]);
                     setSubtotal(0);
-                    updateItemCount(0); 
-                  } 
+                    updateItemCount(0);
+                    router.push("/dashboard/visualizar/pedidos");
+                  }
                 }}
               >
                 Fazer pedido

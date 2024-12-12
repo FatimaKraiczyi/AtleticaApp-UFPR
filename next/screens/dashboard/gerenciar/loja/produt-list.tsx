@@ -35,10 +35,15 @@ const AllProdutos = () => {
   >(undefined);
   const [showViewModal, setShowViewModal] = useState(false);
   const [quantidade, setQuantidade] = useState<number>(1);
+  const route = "/dashboard/visualizar/pedidos";
 
   const showActions =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/loja";
+
+  const showMeusPedidosButton =
+    typeof window !== "undefined" &&
+    window.location.pathname === "/dashboard/visualizar/loja";
 
   const fetchProdutos = async () => {
     setLoading(true);
@@ -122,6 +127,16 @@ const AllProdutos = () => {
   return (
     <Box className="flex-1">
       <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
+        {showMeusPedidosButton && (
+          <VStack space="lg" className="items-center">
+            <Button
+              className="gap-3 relative"
+              onPress={() => (window.location.href = route)}
+            >
+              <ButtonText>Meus Pedidos</ButtonText>
+            </Button>
+          </VStack>
+        )}
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
@@ -137,7 +152,8 @@ const AllProdutos = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                         <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
+
               {produtos.map((produto) => (
                 <GridItem
                   key={produto.id}
@@ -249,6 +265,7 @@ const AllProdutos = () => {
         showModal={showViewModal}
         setShowModal={setShowViewModal}
         produtoData={selectedProduto}
+        refreshProdutos={fetchProdutos}
       />
     </Box>
   );

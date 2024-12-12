@@ -1,16 +1,7 @@
 import { SafeAreaView } from "@/components/ui/safe-area-view";
 import { LayoutComponents } from "@/components/sections/LayoutComponents";
 import { MobileFooter } from "@/components/sections/MobileFooter";
-import {
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@/components/ui/box";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";

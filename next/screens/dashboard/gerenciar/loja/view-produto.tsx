@@ -23,12 +23,14 @@ interface ViewProdutoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   produtoData?: any;
+	refreshProdutos?: () => void;
 }
 
 export const ViewProduto = ({
   showModal,
   setShowModal,
   produtoData,
+	refreshProdutos,
 }: ViewProdutoProps) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantidade, setQuantidade] = useState<number>(1);
