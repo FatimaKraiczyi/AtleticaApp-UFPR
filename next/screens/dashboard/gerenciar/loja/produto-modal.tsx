@@ -22,7 +22,7 @@ import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
 import { useEffect, useRef, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import { TouchableOpacity } from "react-native";
 import { z } from "zod";
 import { Center } from "@/components/ui/center";
@@ -32,7 +32,7 @@ import { Image } from "@/components/ui/image";
 
 const userSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório"),
-  valor: z.union([z.string(), z.number()]).refine((val) => {
+	valor: z.union([z.string(), z.number()]).refine((val) => {
     const num =
       typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
     return !isNaN(num) && num > 0;
@@ -67,70 +67,93 @@ export const ModalProduto = ({
     resolver: zodResolver(userSchema),
     defaultValues: {
       nome: "",
-      valor: "",
-      quantidade: "",
+      valor: 0,
+      quantidade: 0,
       imagem: "",
     },
   });
 
+  const getImageUrl = (path: string | null) => {
+    if (!path) return undefined;
+    const baseUrl = "http://localhost:3001/uploads/";
+    const fileName = path.split("\\").pop();
+    return `${baseUrl}${fileName}`;
+  };
+
   const [produtoImage, setProdutoImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (showModal) {
       resetForm();
       if (produtoData) {
         setValue("nome", produtoData.nome);
-        setValue("valor", produtoData.valor);
-        setValue("quantidade", produtoData.quantidade);
-        setProdutoImage(produtoData.imagem || null);
+        setValue("valor", Number(produtoData.valor));
+        setValue("quantidade", Number(produtoData.quantidade));
+
+        const imageUrl = getImageUrl(produtoData.imagem);
+        setValue("imagem", imageUrl);
+        setProdutoImage(imageUrl || null);
       }
     }
-  }, [showModal, produtoData, setValue]);
+  }, [showModal, produtoData, setValue, reset]);
 
   const resetForm = () => {
-    reset();
-    setProdutoImage(null);
+    reset({
+      nome: "",
+      valor: 0,
+      quantidade: 0,
+      imagem: "",
+    });
   };
 
-  const onSubmit = async (data: userSchemaDetails) => {
-    const produtoPayload = {
-      nome: data.nome,
-      valor: Number(data.valor),
-      quantidade: Number(data.quantidade),
-      imagem: produtoImage,
+  const pickImage = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.click();
+
+    fileInput.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) {
+        setSelectedFile(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProdutoImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
     };
+  };
+
+  const onSubmit = async (data: any) => {
+    const formData = new FormData();
+    formData.append("nome", data.nome);
+    formData.append("valor", String(data.valor));
+    formData.append("quantidade", String(data.quantidade));
+
+    if (selectedFile) {
+      formData.append("imagem", selectedFile);
+    } else if (produtoImage) {
+      formData.append("imagem", produtoImage);
+    }
 
     try {
+      let response;
       if (produtoData) {
-        const response = await updateProduto(produtoData.id, { ...produtoPayload, id: produtoData.id });
-        if (response.success) {
-          refreshProdutos();
-        }
+        response = await updateProduto(produtoData.id, formData);
       } else {
-        const response = await createProduto({ ...produtoPayload, id: Date.now() });
-        if (response.success) {
+        response = await createProduto(formData);
+			}
+
+        if (response.success && response.data) {
           refreshProdutos();
+					resetForm();
+					setShowModal(false);
         }
-      }
-      setShowModal(false);
-      resetForm();
     } catch (error) {
       console.error("Erro:", error);
     }
-  };
-
-  const pickImage = async () => {
-    /*  let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const { uri } = result.assets[0];
-      setProdutoImage(uri);
-    } */
   };
 
   return (
@@ -147,7 +170,7 @@ export const ModalProduto = ({
       <ModalContent>
         <Box className={"w-full h-[110px] "}>
           <Image
-              source={require("@/assets/dashboard/headermodal.png")}
+            source={require("@/assets/dashboard/headermodal.png")}
             alt="Imagem de fundo"
             size="full"
           />
@@ -170,16 +193,21 @@ export const ModalProduto = ({
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
               <Box>
-                <Image
+								{produtoImage ? (
+									                <Image
                   size="xl"
                   class="rounded-full"
-                  source={
-                    produtoImage
-                      ? { uri: produtoImage }
-                      : require("@/assets/dashboard/image2.png")
-                  }
+									source={{ uri: produtoImage }}
                   alt={"Imagem do produto"}
                 />
+								) : (
+									<Image
+										size="xl"
+										class="rounded-full"
+										source={require("@/assets/dashboard/image2.png")}
+										alt={"Imagem vazia"}
+									/>
+								)}
               </Box>
             </TouchableOpacity>
           </Center>

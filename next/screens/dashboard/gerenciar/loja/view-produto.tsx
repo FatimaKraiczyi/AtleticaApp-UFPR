@@ -23,26 +23,28 @@ interface ViewProdutoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   produtoData?: any;
-	refreshProdutos?: () => void;
+  refreshProdutos?: () => void;
 }
+
+const getImageUrl = (path: string | null) => {
+  if (!path) return null;
+  const baseUrl = "http://localhost:3001/uploads/";
+  const fileName = path.split("\\").pop();
+  return `${baseUrl}${fileName}`;
+};
 
 export const ViewProduto = ({
   showModal,
   setShowModal,
   produtoData,
-	refreshProdutos,
+  refreshProdutos,
 }: ViewProdutoProps) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantidade, setQuantidade] = useState<number>(1);
-	const { addItem } = useCarrinho();
+  const { addItem } = useCarrinho();
 
   const handleSizeSelection = (size: string) => {
     setSelectedSize(size);
-  };
-
-  const handlePurchase = () => {
-    // Lógica para realizar a compra
-    console.log("Produto comprado:", produtoData);
   };
 
   const handleIncreaseQuantity = (produto: any) => {
@@ -51,18 +53,17 @@ export const ViewProduto = ({
     }
   };
 
-	const handleAddToCart = async (produto: any) => {
+  const handleAddToCart = async (produto: any) => {
     try {
       const response = await addCartProduct(produto.id, quantidade);
       if (response.success) {
         addItem();
-        console.log(`Produto ${produto.nome} adicionado ao carrinho`);
       }
     } catch (error) {
       console.error("Erro ao adicionar produto ao carrinho:", error);
     }
   };
-	
+
   const handleDecreaseQuantity = () => {
     if (quantidade > 1) {
       setQuantidade((prev) => prev - 1);
@@ -72,13 +73,13 @@ export const ViewProduto = ({
   const valorDesconto = (produtoData?.valor * 0.95).toFixed(2);
 
   return (
-    <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
+    <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
       <ModalBackdrop />
       {produtoData && (
         <ModalContent>
           <Box className={"w-full h-[110px] "}>
             <Image
-                source={require("@/assets/dashboard/headermodal.png")}
+              source={require("@/assets/dashboard/headermodal.png")}
               size="full"
               alt="Banner Image"
             />
@@ -100,38 +101,49 @@ export const ViewProduto = ({
           </Center>
           <ModalBody className="max-h-[80vh] overflow-y-auto">
             <Box className="w-full overflow-hidden rounded-md h-72">
-              <Image
-                source={
-                  produtoData.imagem || require("@/assets/dashboard/image2.png")
-                }
-                alt={produtoData.nome}
-                size="full"
-              />
+              {produtoData.imagem ? (
+                <Image
+                  source={{
+                    uri: getImageUrl(produtoData.imagem),
+                  }}
+                  alt={produtoData.nome}
+                  size="full"
+                />
+              ) : (
+                <Image
+                  source={require("@/assets/dashboard/image2.png")}
+                  alt="Imagem vazia"
+                  size="full"
+                />
+              )}
             </Box>
-						<VStack className="py-2">
-            <Text className="text-sm">
-              Vendido por: {produtoData.vendedor}
-            </Text>
-
-            <HStack space="md" className="items-center gap-2">
-						<Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
-						R$ {valorDesconto}
+            <VStack className="py-2">
+              <Text className="text-sm">
+                Vendido por: {produtoData.vendedor}
               </Text>
-              <Text className="text-sm text-green-900 line-clamp-1">
-                5% off para sócios
-              </Text>
-            </HStack>
 
-            <Text className=" font-semibold  text-md text-typography-900">
-              R$ {produtoData.valor}
-            </Text>
-						</VStack>
+              <HStack space="md" className="items-center gap-2">
+                <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
+                  R$ {valorDesconto}
+                </Text>
+                <Text className="text-sm text-green-900 line-clamp-1">
+                  5% off para sócios
+                </Text>
+              </HStack>
+
+              <Text className=" font-semibold  text-md text-typography-900">
+                R$ {produtoData.valor}
+              </Text>
+            </VStack>
             <HStack space="md" className="items-center gap-2">
               <Button variant="link" onPress={handleDecreaseQuantity}>
                 -
               </Button>
               <Text>{quantidade}</Text>
-              <Button variant="link" onPress={() => handleIncreaseQuantity}>
+              <Button
+                variant="link"
+                onPress={() => handleIncreaseQuantity(produtoData)}
+              >
                 +
               </Button>
               <Text className="text-sm">
@@ -161,14 +173,11 @@ export const ViewProduto = ({
                 <Button
                   className="flex-1 mr-2 hover:bg-primary-500 "
                   variant="outline"
-									onPress={() => handleAddToCart(produtoData)}
+                  onPress={() => handleAddToCart(produtoData)}
                 >
                   <ButtonText className="text-secondary-600 group-hover/button:text-white">
                     Adicionar no carrinho
                   </ButtonText>
-                </Button>
-                <Button onPress={handlePurchase} className="flex-1 ml-2">
-                  <ButtonText>Comprar</ButtonText>
                 </Button>
               </HStack>
             </VStack>
