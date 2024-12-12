@@ -33,25 +33,21 @@ const AssinaturaSchema = z.object({
   nome: z
     .string()
     .min(1, "Nome é obrigatório")
-    .max(50, "O nome deve ter menos de 50 caracteres"),
+    .max(50, "Máximo de 50 caracteres"),
   valor: z.union([z.string(), z.number()]).refine((val) => {
     const num =
       typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
     return !isNaN(num) && num > 0;
   }, "Valor deve ser um número válido maior que 0"),
   descricao: z
-    .array(
-      z.object({
-        id: z.number(),
-        beneficioDescricao: z.string(),
-        beneficioValor: z.number(),
-      })
-    )
-    .nonempty("Descrição é obrigatória"),
+    .string()
+    .min(1, "Descrição é obrigatória")
+    .max(250, "Máximo de 250 caracteres"),
   duracao: z.union([z.string(), z.number()]).refine((val) => {
     const num = typeof val === "string" ? parseInt(val, 10) : val;
     return Number.isInteger(num) && num > 0;
-  }, "Duração deve ser um número inteiro válido maior que 0"),
+  }, "Duração deve ser um número válido maior que 0"),
+  desconto: z.number().min(0).default(0),
 });
 type AssianaturaSchemaDetails = z.infer<typeof AssinaturaSchema>;
 
@@ -75,12 +71,6 @@ export const ModalPlano = ({
     setValue,
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
-    defaultValues: {
-      nome: "",
-      valor: 0,
-      descricao: [],
-      duracao: 0,
-    },
   });
 
   useEffect(() => {
@@ -100,31 +90,29 @@ export const ModalPlano = ({
     reset({
       nome: "",
       valor: 0,
-      descricao: [],
+      descricao: "",
       duracao: 0,
+      desconto: 0,
     });
   };
 
   const onSubmit = async (data: AssianaturaSchemaDetails) => {
     const assinaturaPayload = {
       nome: data.nome,
-      descricao: data.descricao.map((item) => item.beneficioDescricao),
+      descricao: data.descricao,
       valor: Number(data.valor),
       duracao: Number(data.duracao),
+      desconto: data.desconto ?? 0,
       id: planoData?.id,
     };
 
     try {
-      if (planoData) {
-        const response = await editPlano(planoData.id, assinaturaPayload);
-        if (response.success) {
-          refreshPlanos();
-        }
-      } else {
-        const response = await newPlano(assinaturaPayload);
-        if (response.success) {
-          refreshPlanos();
-        }
+      const response = planoData
+        ? await editPlano(planoData.id, assinaturaPayload)
+        : await newPlano(assinaturaPayload);
+
+      if (response.success) {
+        refreshPlanos();
       }
       setShowModal(false);
       resetForm();
@@ -238,22 +226,8 @@ export const ModalPlano = ({
                     <InputField
                       placeholder="Descrição do Plano"
                       type="text"
-                      value={
-                        Array.isArray(value)
-                          ? value
-                              .map((item) => item.beneficioDescricao)
-                              .join(", ")
-                          : ""
-                      }
-                      onChangeText={(text) =>
-                        onChange(
-                          text.split(",").map((item, index) => ({
-                            id: index,
-                            beneficioDescricao: item.trim(),
-                            beneficioValor: 0,
-                          }))
-                        )
-                      }
+                      value={value}
+                      onChangeText={onChange}
                       onBlur={onBlur}
                     />
                   </Input>
@@ -267,6 +241,25 @@ export const ModalPlano = ({
               </FormControlError>
             </FormControl>
 
+            <FormControl>
+              <FormControlLabel>
+                <FormControlLabelText>Desconto (%)</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                name="desconto"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Input>
+                    <InputField
+                      placeholder="Desconto"
+                      value={String(value)}
+                      onChangeText={(text) => onChange(Number(text))}
+                    />
+                  </Input>
+                )}
+              />
+            </FormControl>
+
             <FormControl isInvalid={!!errors.duracao}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Duração do Plano</FormControlLabelText>
@@ -278,7 +271,7 @@ export const ModalPlano = ({
                   <Input>
                     <InputField
                       type="text"
-                      placeholder="Duração do Plano"
+                      placeholder="Duração do Plano (em dias)"
                       value={String(value)}
                       onChangeText={(value) => onChange(Number(value))}
                       onBlur={onBlur}

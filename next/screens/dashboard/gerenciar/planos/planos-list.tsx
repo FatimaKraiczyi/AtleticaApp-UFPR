@@ -15,21 +15,19 @@ import { getPlanoByAtleticaId, getPlanos } from "@/api/planos";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { PlanoAssinatura } from "@/interfaces/planos";
-import { ChevronDown, ChevronUp } from "lucide-react-native";
 
 const AllPlanos = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
   const [loading, setLoading] = useState(true);
-  const [planos, setPlanos] = useState<PlanoAssinatura[]>([]);
+  const [planos, setPlanos] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedPlano, setSelectedPlano] = useState<
-    PlanoAssinatura | undefined
-  >(undefined);
+  const [selectedPlano, setSelectedPlano] = useState<any | undefined>(
+    undefined
+  );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [planoIdToDelete, setPlanoIdToDelete] = useState<number | null>(null);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
 
   const showActions =
     typeof window !== "undefined" &&
@@ -77,16 +75,12 @@ const AllPlanos = () => {
     setShowDeleteModal(true);
   };
 
-  const toggleExpand = (id: number) => {
-    setExpandedPlanos((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
+  const formatDuration = (duracao: number) => {
+    if (duracao % 30 === 0) {
+      const months = duracao / 30;
+      return `${months} ${months === 1 ? "mês" : "meses"}`;
+    }
+    return `${duracao} dias`;
   };
 
   if (loading) {
@@ -120,8 +114,7 @@ const AllPlanos = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-                         <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
-
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
               {planos.map((plano) => (
                 <GridItem
                   key={plano.id}
@@ -141,31 +134,14 @@ const AllPlanos = () => {
                       R$ {plano.valor.toFixed(2)}
                     </Text>
                     <Text className="text-gray-500 text-sm mb-4">
-                      /{" "}
-                      {plano.duracao === 30 ? "mês" : `${plano.duracao} meses`}
+                      / {formatDuration(plano.duracao)}
                     </Text>
-
-                    <Button
-                      variant="link"
-                      className="text-gray-500 text-sm"
-                      onPress={() => toggleExpand(plano.id)}
-                    >
-                      <span>Veja os benefícios</span>
-                      {expandedPlanos.has(plano.id) ? (
-                        <ChevronUp className="h-4 w-4" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4" />
-                      )}
-                    </Button>
-                    {expandedPlanos.has(plano.id) && (
-                      <VStack space="lg" className="items-center">
-                        {plano.descricao && (
-                          <Text className="text-gray-700 text-sm">
-                            ✔️ {plano.descricao}
-                          </Text>
-                        )}
-                      </VStack>
-                    )}
+                    <Text className="text-gray-700 text-sm mt-2">
+                      {plano.descricao}
+                    </Text>
+                    <Text className="text-gray-700 text-sm mt-2 mb-4">
+                      {plano.desconto}% de desconto na loja
+                    </Text>
                   </VStack>
                   <VStack className="items-center">
                     <Button

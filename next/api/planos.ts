@@ -25,7 +25,7 @@ export const getPlanos = async (): Promise<
 };
 
 export const newPlano = async (
-  plano: PlanoAssinatura
+  plano: any
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.post(createPlano, plano);
@@ -37,7 +37,7 @@ export const newPlano = async (
 
 export const editPlano = async (
   id: number,
-  plano: PlanoAssinatura
+  plano: any
 ): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.put(`${updatePlano}/${id}`, plano);

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Box } from "@/components/ui/box";
-import { isWeb } from "@gluestack-ui/nativewind-utils/IsWeb";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
@@ -44,7 +43,7 @@ const HeadingCards: CardData[] = [
     route: "/dashboard/visualizar/loja",
   },
   {
-    bannerUri: require("@/assets/dashboard/image5.png"),
+    bannerUri: require("@/assets/dashboard/image5.jpg"),
     title: "Planos de assinatura",
     description: "Visualizar todos os planos de assinatura",
     route: "/dashboard/visualizar/planos",

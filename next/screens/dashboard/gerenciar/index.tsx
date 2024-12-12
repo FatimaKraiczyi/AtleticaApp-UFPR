@@ -46,7 +46,7 @@ const HeadingCards: CardData[] = [
     route: "/dashboard/gerenciar/loja",
   },
   {
-    bannerUri: require("@/assets/dashboard/image5.png"),
+    bannerUri: require("@/assets/dashboard/image5.jpg"),
     title: "Gerenciar Planos de assinatura",
     description: "Gerencie os planos de assinatura da atlética",
     route: "/dashboard/gerenciar/planos",
