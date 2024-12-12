@@ -22,7 +22,6 @@ export const getAllEventosAPI = async (): Promise<IResponse.Default<any>> => {
   }
 };
 
-// Obter evento por ID
 export const getEventoByIdAPI = async (
   id: number
 ): Promise<IResponse.Default<any>> => {
@@ -34,7 +33,6 @@ export const getEventoByIdAPI = async (
   }
 };
 
-// Obter eventos do usuário logado
 export const getEventosByUserAPI = async (): Promise<IResponse.Default<any>> => {
   try {
     const { data, status } = await API.get(getEventByUser);
@@ -44,7 +42,6 @@ export const getEventosByUserAPI = async (): Promise<IResponse.Default<any>> => 
   }
 };
 
-// Adicionar um evento
 export const addEventoAPI = async (
   newEvento: any
 ): Promise<IResponse.Default<any>> => {
@@ -56,7 +53,6 @@ export const addEventoAPI = async (
   }
 };
 
-// Inscrição em um evento
 export const inscricaoEventoAPI = async (
   id: number
 ): Promise<IResponse.Default<any>> => {
@@ -68,7 +64,6 @@ export const inscricaoEventoAPI = async (
   }
 };
 
-// Excluir um evento
 export const deleteEventoAPI = async (
   id: number
 ): Promise<IResponse.Default<any>> => {
@@ -80,7 +75,6 @@ export const deleteEventoAPI = async (
   }
 };
 
-// Cancelar inscrição em um evento
 export const cancelarInscricaoAPI = async (
   id: number
 ): Promise<IResponse.Default<any>> => {
@@ -92,7 +86,6 @@ export const cancelarInscricaoAPI = async (
   }
 };
 
-// Listar inscritos em um evento
 export const listarInscritosAPI = async (
   id: number
 ): Promise<IResponse.Default<any>> => {

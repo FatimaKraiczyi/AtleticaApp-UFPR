@@ -19,20 +19,28 @@ import { inscricaoEventoAPI } from "@/api/evento";
 import { getJogosImage } from "@/mock/imagens_jogos";
 import { HStack } from "@/components/ui/hstack";
 import useRouter from "@unitools/router";
+import { cancelarInscricaoAPI } from "@/api/evento";
 
 interface ViewJogoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   eventoData?: any;
+	refreshEventos: () => void; 
 }
 
 export const ViewJogo = ({
   showModal,
   setShowModal,
   eventoData,
+	refreshEventos,
 }: ViewJogoProps) => {
   const [isParticipando, setIsParticipando] = useState(false);
-	const router = useRouter();
+  const [isCancelando, setIsCancelando] = useState(false);
+  const router = useRouter();
+
+  const showMeusJogosButton =
+    typeof window !== "undefined" &&
+    window.location.pathname === "/dashboard/visualizar/meus-jogos";
 
   const handleParticipar = async () => {
     if (eventoData) {
@@ -42,7 +50,22 @@ export const ViewJogo = ({
 
       if (response.success) {
         setShowModal(false);
-        router.push('/dashboard/visualizar/meus-jogos');
+				refreshEventos();
+        router.push("/dashboard/visualizar/meus-jogos");
+      }
+    }
+  };
+
+  const handleCancelarParticipacao = async () => {
+    if (eventoData) {
+      setIsCancelando(true);
+      const response = await cancelarInscricaoAPI(eventoData.id);
+      setIsCancelando(false);
+
+      if (response.success) {
+        setShowModal(false);
+				refreshEventos();
+        router.push("/dashboard/visualizar/meus-jogos");
       }
     }
   };
@@ -138,13 +161,25 @@ export const ViewJogo = ({
               </VStack>
             </HStack>
 
-            <Button
-              className="mt-4 w-full bg-primary-500 hover:bg-primary-600"
-              onPress={handleParticipar}
-              disabled={isParticipando}
-            >
-              <ButtonText className="text-white">Participar</ButtonText>
-            </Button>
+            {showMeusJogosButton ? (
+              <Button
+                className="mt-4 w-full bg-red-500 hover:bg-red-600"
+                onPress={handleCancelarParticipacao}
+                disabled={isCancelando}
+              >
+                <ButtonText className="text-white">
+                  Cancelar Participação
+                </ButtonText>
+              </Button>
+            ) : (
+              <Button
+                className="mt-4 w-full bg-primary-500 hover:bg-primary-600"
+                onPress={handleParticipar}
+                disabled={isParticipando}
+              >
+                <ButtonText className="text-white">Participar</ButtonText>
+              </Button>
+            )}
           </ModalBody>
         </ModalContent>
       )}
