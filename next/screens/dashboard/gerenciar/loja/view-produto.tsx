@@ -119,17 +119,8 @@ export const ViewProduto = ({
             </Box>
             <VStack className="py-2">
               <Text className="text-sm">
-                Vendido por: {produtoData.vendedor}
+                Vendido por: {produtoData.atleticaNome}
               </Text>
-
-              <HStack space="md" className="items-center gap-2">
-                <Text className="mt-4 font-semibold text-2xl text-typography-900 text-green-600">
-                  R$ {valorDesconto}
-                </Text>
-                <Text className="text-sm text-green-900 line-clamp-1">
-                  5% off para sócios
-                </Text>
-              </HStack>
 
               <Text className=" font-semibold  text-md text-typography-900">
                 R$ {produtoData.valor}

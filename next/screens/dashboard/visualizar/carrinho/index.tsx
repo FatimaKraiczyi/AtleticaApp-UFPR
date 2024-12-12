@@ -192,16 +192,8 @@ export const MainContent = () => {
                 <Text>Subtotal</Text>
                 <Text>R$ {subtotal.toFixed(2)}</Text>
               </HStack>
-              <HStack className="justify-between">
-                <Text>Desconto para sócios</Text>
-                <Text className="text-lg font-semibold text-green-500">
-                  R$ {desconto.toFixed(2)}
-                </Text>
-              </HStack>
-              <HStack className="justify-between font-bold">
-                <Text>Total</Text>
-                <Text>R$ {totalComDesconto.toFixed(2)}</Text>
-              </HStack>
+            
+             
             </VStack>
             <HStack
               space="xs"

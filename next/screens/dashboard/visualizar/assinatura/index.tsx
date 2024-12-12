@@ -10,7 +10,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
-import { assinaturaUsuario } from "@/api/assinatura";
+import { assinaturaUsuario, cancelarAssinatura } from "@/api/assinatura";
 import { Assinatura } from "@/interfaces/assinatura";
 import { pagamentoAssinatura } from "@/api/planos";
 import { ChevronDown, ChevronUp } from "lucide-react-native";
@@ -84,8 +84,7 @@ const Main = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-                         <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
-
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-10">
               {assinaturas.map((assinatura) => (
                 <GridItem
                   key={assinatura.id}
@@ -117,7 +116,7 @@ const Main = () => {
                     <Text className="text-sm text-gray-600">
                       Fim: {new Date(assinatura.dataFim).toLocaleDateString()}
                     </Text>
-                    <Text className="font-bold text-xl mt-2  mb-4">
+                    <Text className="font-bold text-xl mt-2 mb-4">
                       Status: {assinatura.statusAssinatura}
                     </Text>
                   </VStack>
@@ -139,35 +138,46 @@ const Main = () => {
 
                         {expandedPlanos.has(assinatura.id) && (
                           <VStack space="lg" className="items-center">
-                            {assinatura.planoDescricao.map(
-                              (beneficio, index) => (
-                                <Text
-                                  key={index}
-                                  className="text-gray-700 text-sm"
-                                >
-                                  ✔️ {beneficio.beneficioDescricao}
-                                </Text>
-                              )
-                            )}
+                            {assinatura.planoDescricao.map((beneficio, index) => (
+                              <Text key={index} className="text-gray-700 text-sm">
+                                ✔️ {beneficio.beneficioDescricao}
+                              </Text>
+                            ))}
                           </VStack>
                         )}
                       </VStack>
                     ) : (
+                      assinatura.statusAssinatura === "PENDENTE" && (
+                        <Button
+                          variant="solid"
+                          className="w-full"
+                          onPress={async () => {
+                            const response = await pagamentoAssinatura(assinatura.planoId);
+                            if (response.success && response?.data) {
+                              window.location.href = response.data.url;
+                            } else {
+                              alert("Erro ao iniciar pagamento.");
+                            }
+                          }}
+                        >
+                          <ButtonText>Efetuar pagamento</ButtonText>
+                        </Button>
+                      )
+                    )}
+                    {assinatura.statusAssinatura !== "CANCELADA" && (
                       <Button
                         variant="solid"
-                        className="w-full"
+                        className="w-full mt-4"
                         onPress={async () => {
-                          const response = await pagamentoAssinatura(
-                            assinatura.planoId
-                          );
-                          if (response.success && response?.data) {
-                            window.location.href = response.data.url;
+                          const response = await cancelarAssinatura(assinatura.id);
+                          if (response.success) {
+                            fetchAssinatura();
                           } else {
-                            alert("Erro ao iniciar pagamento.");
+                            alert("Erro ao cancelar assinatura.");
                           }
                         }}
                       >
-                        <ButtonText>Efetuar pagamento</ButtonText>
+                        <ButtonText>Cancelar Assinatura</ButtonText>
                       </Button>
                     )}
                   </VStack>
