@@ -21,31 +21,37 @@ import {
 import { VStack } from "@/components/ui/vstack";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Heading } from "@/components/ui/heading";
-import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Box } from "@/components/ui/box";
 import { Image } from "@/components/ui/image";
-import { putEventoAPI } from "@/api/evento";
-import { Evento } from "@/interfaces/evento";
 import { Center } from "@/components/ui/center";
+import { addEventoAPI } from "@/api/evento";
 
 const eventoSchema = z.object({
   data: z
     .string()
     .min(6, "Data é obrigatória")
     .regex(/^\d{2}\/\d{2}\/\d{4}$/, "Formato de data inválido"),
-  hora: z.string().min(4, "Hora é obrigatória"),
+  hora: z
+    .string()
+    .min(4, "Hora é obrigatória")
+    .regex(/^\d{2}:\d{2}$/, "Formato de hora inválido"),
   endereco: z.string().min(1, "Endereço é obrigatório"),
+  titulo: z.string().min(1, "Título é obrigatório"),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  linkPlataformaIngressos: z.string().url("URL inválida"),
-  statusEvento: z.enum(["CANCELADO", "EM_ANDAMENTO", "CONCLUIDO"]),
-  modalidade: z.enum(["FESTA", "JOGO"]),
-  atleticaId: z.number().int(),
-  qtdeVagas: z.number().int(),
-  ingresso: z.number().int(),
+  ingresso: z.number().positive("Valor do ingresso deve ser maior que zero"),
+  linkPlataformaIngressos: z.string().url("Formato de URL inválido"),
+  modalidade: z.string().min(1, "Modalidade é obrigatória"),
+  statusEvento: z.string().min(1, "Status do evento é obrigatório"),
 });
+
 type EventoFormData = z.infer<typeof eventoSchema>;
+
+const defaultValues: Partial<EventoFormData> = {
+  modalidade: "FESTA",
+  statusEvento: "EM_ANDAMENTO",
+};
 
 export const ModalEvento = ({
   showModal,
@@ -56,25 +62,6 @@ export const ModalEvento = ({
   setShowModal: any;
   refreshEventos: () => void;
 }) => {
-  const ref = useRef(null);
-
-  const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
-  const currentPath =
-    typeof window !== "undefined" ? window.location.pathname : "";
-  const isEventoRoute = currentPath === "/dashboard/gerenciar/eventos";
-  const isJogosRoute = currentPath === "/dashboard/gerenciar/jogos";
-
-  // Define os valores padrão para modalidade e statusEvento
-  const defaultValues: Partial<EventoFormData> = {
-    modalidade: isEventoRoute ? "FESTA" : isJogosRoute ? "JOGO" : "FESTA", // Default para FESTA
-    statusEvento: "EM_ANDAMENTO",
-    atleticaId: atleticaId ? parseInt(atleticaId) : undefined,
-    qtdeVagas: 1,
-    ingresso: 0,
-    linkPlataformaIngressos: "https://default.url",
-  };
-
   const {
     control,
     formState: { errors },
@@ -85,21 +72,30 @@ export const ModalEvento = ({
     defaultValues,
   });
 
-  const onSubmit = async (data: Evento) => {
+  const atleticaId =
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
+  const atleticaNome =
+    typeof window !== "undefined" ? sessionStorage.getItem("atleticaNome") : null;
+  const currentPath =
+    typeof window !== "undefined" ? window.location.pathname : "";
+
+  const onSubmit = async (data: EventoFormData) => {
     try {
       const formattedData = {
         ...data,
         data: data.data.split("/").reverse().join("-"),
         hora: `${data.hora}:00`,
+        atleticaId: Number(atleticaId),
+        atleticaName: atleticaNome,
       };
 
-      const response = await putEventoAPI(formattedData);
+      const response = await addEventoAPI(formattedData);
       if (response.success) {
         refreshEventos();
         setShowModal(false);
       }
     } catch (error) {
-      console.error("Failed to save evento:", error);
+      console.error("Erro ao salvar evento:", error);
     }
   };
 
@@ -110,14 +106,13 @@ export const ModalEvento = ({
         setShowModal(false);
         reset(defaultValues);
       }}
-      finalFocusRef={ref}
       size="lg"
     >
       <ModalBackdrop />
       <ModalContent>
         <Box className="w-full h-[110px]">
           <Image
-            source={require("@/assets/profile-screens/profile/image2.png")}
+              source={require("@/assets/dashboard/headermodal.png")}
             alt="Imagem de fundo"
             size="full"
           />
@@ -133,12 +128,12 @@ export const ModalEvento = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            "Cadastrar Evento"
+            Cadastrar Evento
           </Heading>
         </Center>
         <ModalBody className="max-h-[70vh] overflow-y-auto">
           <VStack space="xl">
-            <FormControl>
+            <FormControl isInvalid={!!errors.titulo}>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>
                   Link Plataforma Ingressos
@@ -172,11 +167,36 @@ export const ModalEvento = ({
               </FormControlLabel>
               <Controller
                 control={control}
-                name="descricao"
+                name="titulo"
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
                       placeholder="Título do evento"
+                      value={value}
+                      onChangeText={onChange}
+                    />
+                  </Input>
+                )}
+              />
+              <FormControlError>
+                <FormControlErrorIcon size="md" as={AlertTriangle} />
+                <FormControlErrorText>
+                  {errors?.titulo?.message}
+                </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+
+            <FormControl>
+              <FormControlLabel>
+                <FormControlLabelText>Descrição</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                control={control}
+                name="descricao"
+                render={({ field: { onChange, value } }) => (
+                  <Input>
+                    <InputField
+                      placeholder="Descrição do evento"
                       value={value}
                       onChangeText={onChange}
                     />
@@ -192,7 +212,6 @@ export const ModalEvento = ({
                 </FormControlError>
               )}
             </FormControl>
-
             <FormControl>
               <FormControlLabel className="mb-2">
                 <FormControlLabelText>Data</FormControlLabelText>
@@ -229,7 +248,7 @@ export const ModalEvento = ({
 
             <FormControl>
               <FormControlLabel className="mb-2">
-                <FormControlLabelText>Hora de Ínicio</FormControlLabelText>
+                <FormControlLabelText>Horário de Ínicio</FormControlLabelText>
               </FormControlLabel>
               <Controller
                 control={control}
@@ -271,7 +290,7 @@ export const ModalEvento = ({
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Endereço do evento"
+                      placeholder="Local do evento"
                       value={value}
                       onChangeText={onChange}
                     />
@@ -287,11 +306,28 @@ export const ModalEvento = ({
                 </FormControlError>
               )}
             </FormControl>
+            <FormControl>
+              <FormControlLabelText>Valor do Ingresso</FormControlLabelText>
+              <Controller
+                control={control}
+                name="ingresso"
+                render={({ field: { onChange, value } }) => (
+                  <Input>
+                    <InputField
+                      placeholder="Valor do ingresso"
+                      keyboardType="numeric"
+                      value={value?.toString() || ""}
+                      onChangeText={(text) => onChange(Number(text))}
+                    />
+                  </Input>
+                )}
+              />
+              {errors.ingresso && (
+                <FormControlError>{errors.ingresso.message}</FormControlError>
+              )}
+            </FormControl>
 
-            <Button
-              onPress={handleSubmit(onSubmit)}
-              className="flex-1 p-2 mt-8"
-            >
+            <Button onPress={handleSubmit(onSubmit)}>
               <ButtonText>Salvar</ButtonText>
             </Button>
           </VStack>

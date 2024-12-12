@@ -1,8 +1,9 @@
 export interface Evento {
-	id?: number;
+  id?: number;
   data: string;
   hora: string;
   endereco: string;
+  titulo: string;
   descricao: string;
   linkPlataformaIngressos?: string;
   qtdeVagas?: number;
@@ -10,8 +11,9 @@ export interface Evento {
   statusEvento?: "CANCELADO" | "EM_ANDAMENTO" | "CONCLUIDO";
   modalidade?: "FESTA" | "JOGO";
   atleticaId: number;
+  atleticaName: string;
 }
 
 export interface EventoResponse {
-	evento: Evento;
+  evento: Evento;
 }

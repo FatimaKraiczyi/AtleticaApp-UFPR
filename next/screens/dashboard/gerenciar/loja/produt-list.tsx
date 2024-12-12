@@ -19,9 +19,16 @@ import { addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
 import { Produto } from "@/interfaces/ProdutoCarrinho";
 
+const getImageUrl = (path: string | null) => {
+  if (!path) return null;
+  const baseUrl = "http://localhost:3001/uploads/";
+  const fileName = path.split("\\").pop();
+  return `${baseUrl}${fileName}`;
+};
+
 const AllProdutos = () => {
   const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaId") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const { addItem } = useCarrinho();
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
@@ -34,11 +41,16 @@ const AllProdutos = () => {
     number | undefined
   >(undefined);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [quantidade, setQuantidade] = useState<number>(1);
+  const [quantidades, setQuantidades] = useState<{ [key: number]: number }>({});
+  const route = "/dashboard/visualizar/pedidos";
 
   const showActions =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/loja";
+
+  const showMeusPedidosButton =
+    typeof window !== "undefined" &&
+    window.location.pathname === "/dashboard/visualizar/loja";
 
   const fetchProdutos = async () => {
     setLoading(true);
@@ -70,6 +82,7 @@ const AllProdutos = () => {
 
   const handleAddToCart = async (produto: Produto) => {
     try {
+      const quantidade = quantidades[produto.id] || 1;
       const response = await addCartProduct(produto.id, quantidade);
       if (response.success) {
         addItem();
@@ -99,16 +112,18 @@ const AllProdutos = () => {
     setShowDeleteModal(true);
   };
 
-  const handleIncreaseQuantity = (produto: any) => {
-    if (quantidade < produto.quantidade) {
-      setQuantidade((prev) => prev + 1);
-    }
+  const handleIncreaseQuantity = (produto: Produto) => {
+    setQuantidades((prev) => ({
+      ...prev,
+      [produto.id]: Math.min((prev[produto.id] || 1) + 1, produto.quantidade ?? 0),
+    }));
   };
 
-  const handleDecreaseQuantity = () => {
-    if (quantidade > 1) {
-      setQuantidade((prev) => prev - 1);
-    }
+  const handleDecreaseQuantity = (produto: Produto) => {
+    setQuantidades((prev) => ({
+      ...prev,
+      [produto.id]: Math.max((prev[produto.id] || 1) - 1, 1),
+    }));
   };
 
   if (loading) {
@@ -122,6 +137,16 @@ const AllProdutos = () => {
   return (
     <Box className="flex-1">
       <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
+        {showMeusPedidosButton && (
+          <VStack space="lg" className="items-center">
+            <Button
+              className="gap-3 relative"
+              onPress={() => (window.location.href = route)}
+            >
+              <ButtonText>Meus Pedidos</ButtonText>
+            </Button>
+          </VStack>
+        )}
         {showActions && (
           <VStack space="lg" className="items-center">
             <Button className="gap-3 relative" onPress={() => openModal()}>
@@ -137,7 +162,7 @@ const AllProdutos = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5">
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
               {produtos.map((produto) => (
                 <GridItem
                   key={produto.id}
@@ -148,15 +173,23 @@ const AllProdutos = () => {
                 >
                   <Pressable onPress={() => openViewModal(produto)}>
                     <Box className="w-full overflow-hidden rounded-md h-48 relative group">
-                      <Image
-                        source={
-                          produto.imagem ||
-                          require("@/assets/dashboard/image2.png")
-                        }
-                        alt={produto.nome}
-                        size="full"
-                        className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
-                      />
+                      {produto.imagem ? (
+                        <Image
+                          source={{
+                            uri: getImageUrl(produto.imagem),
+                          }}
+                          alt={produto.nome}
+                          size="full"
+                          className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                        />
+                      ) : (
+                        <Image
+                          source={require("@/assets/dashboard/image2.png")}
+                          alt="Imagem vazia"
+                          size="full"
+                          className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                        />
+                      )}
                     </Box>
                   </Pressable>
 
@@ -183,14 +216,17 @@ const AllProdutos = () => {
                     </Text>
                   </VStack>
                   <HStack space="md" className="items-center gap-2">
-                    <Text>{quantidade}</Text>
+                    <Text>{quantidades[produto.id] || 1}</Text>
                     <Button
                       variant="link"
-                      onPress={() => handleIncreaseQuantity(quantidade)}
+                      onPress={() => handleIncreaseQuantity(produto)}
                     >
                       +
                     </Button>
-                    <Button variant="link" onPress={handleDecreaseQuantity}>
+                    <Button
+                      variant="link"
+                      onPress={() => handleDecreaseQuantity(produto)}
+                    >
                       -
                     </Button>
 
@@ -203,9 +239,7 @@ const AllProdutos = () => {
                   {showActions ? (
                     <HStack className="w-full items-center justify-between mt-4">
                       <HStack className="items-center">
-                        <Pressable
-                          onPress={() => handleEditProduto(produto)}
-                        >
+                        <Pressable onPress={() => handleEditProduto(produto)}>
                           <Edit className="text-typography-600 mr-4" />
                         </Pressable>
                         <Pressable
@@ -251,6 +285,7 @@ const AllProdutos = () => {
         showModal={showViewModal}
         setShowModal={setShowViewModal}
         produtoData={selectedProduto}
+        refreshProdutos={fetchProdutos}
       />
     </Box>
   );

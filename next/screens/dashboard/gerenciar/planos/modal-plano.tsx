@@ -39,13 +39,15 @@ const AssinaturaSchema = z.object({
       typeof val === "string" ? parseFloat(val.replace(",", ".")) : val;
     return !isNaN(num) && num > 0;
   }, "Valor deve ser um número válido maior que 0"),
-  descricao: z.array(
-    z.object({
-      id: z.number(),
-      beneficioDescricao: z.string(),
-      beneficioValor: z.number(),
-    })
-  ).nonempty("Descrição é obrigatória"),
+  descricao: z
+    .array(
+      z.object({
+        id: z.number(),
+        beneficioDescricao: z.string(),
+        beneficioValor: z.number(),
+      })
+    )
+    .nonempty("Descrição é obrigatória"),
   duracao: z.union([z.string(), z.number()]).refine((val) => {
     const num = typeof val === "string" ? parseInt(val, 10) : val;
     return Number.isInteger(num) && num > 0;
@@ -73,6 +75,12 @@ export const ModalPlano = ({
     setValue,
   } = useForm<AssianaturaSchemaDetails>({
     resolver: zodResolver(AssinaturaSchema),
+    defaultValues: {
+      nome: "",
+      valor: 0,
+      descricao: [],
+      duracao: 0,
+    },
   });
 
   useEffect(() => {
@@ -83,13 +91,18 @@ export const ModalPlano = ({
     if (planoData) {
       setValue("nome", planoData.nome);
       setValue("descricao", planoData.descricao || []);
-      setValue("valor", planoData.valor);
-      setValue("duracao", planoData.duracao);
+      setValue("valor", Number(planoData.valor));
+      setValue("duracao", Number(planoData.duracao));
     }
-  }, [showModal, planoData, setValue]);
+  }, [showModal, planoData, setValue, reset]);
 
   const resetForm = () => {
-    reset();
+    reset({
+      nome: "",
+      valor: 0,
+      descricao: [],
+      duracao: 0,
+    });
   };
 
   const onSubmit = async (data: AssianaturaSchemaDetails) => {
@@ -134,7 +147,7 @@ export const ModalPlano = ({
       <ModalContent>
         <Box className={"w-full h-[110px] "}>
           <Image
-            source={require("@/assets/profile-screens/profile/image2.png")}
+            source={require("@/assets/dashboard/headermodal.png")}
             size="full"
             alt="Banner Image"
           />
@@ -225,7 +238,13 @@ export const ModalPlano = ({
                     <InputField
                       placeholder="Descrição do Plano"
                       type="text"
-                      value={Array.isArray(value) ? value.map((item) => item.beneficioDescricao).join(", ") : ""}
+                      value={
+                        Array.isArray(value)
+                          ? value
+                              .map((item) => item.beneficioDescricao)
+                              .join(", ")
+                          : ""
+                      }
                       onChangeText={(text) =>
                         onChange(
                           text.split(",").map((item, index) => ({

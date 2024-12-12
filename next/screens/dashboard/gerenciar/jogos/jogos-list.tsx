@@ -4,69 +4,77 @@ import { Image } from "@/components/ui/image";
 import { Box } from "@/components/ui/box";
 import { Grid } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
-import { Pressable } from "@/components/ui/pressable";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { Trash } from "lucide-react";
 import { HStack } from "@/components/ui/hstack";
-import { ModalEvento } from "./event-modal";
-import { DeleteEvento } from "./delete-evento";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
+import { ModalJogo } from "./jogo-modal";
+import { DeleteJogo } from "./delete-jogo";
 import { getAllEventosAPI } from "@/api/evento";
-import { Heading } from "@/components/ui/heading";
 import { Card } from "@/components/ui/card";
+import { Heading } from "@/components/ui/heading";
+import { Pressable } from "@/components/ui/pressable";
+import { ViewJogo } from "./view-jogo";
+import { getJogosImage } from "@/mock/imagens_jogos";
+import { getEventosByUserAPI } from "@/api/evento";
 
-interface Plataformas {
-  [key: string]: any;
-}
-
-const plataformas = {
-  sympla:
-    "https://blog.sympla.com.br/wp-content/uploads/2022/09/banner-sympla-1.jpg",
-};
-
-const plataformasTyped: Plataformas = plataformas;
-
-export const EventsList = () => {
+export const JogosList = () => {
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const [loading, setLoading] = useState(true);
-  const [eventos, setEventos] = useState<any[]>([]);
+  const [jogos, setEventos] = useState<any[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventoToDeleteId, setEventoToDeleteId] = useState<number | undefined>(
     undefined
   );
+  const [eventoData, setEventoData] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
 
   const showActions =
     typeof window !== "undefined" &&
-    window.location.pathname === "/dashboard/gerenciar/eventos";
+    window.location.pathname === "/dashboard/gerenciar/jogos";
+
+  const showMeusJogosButton =
+    typeof window !== "undefined" &&
+    window.location.pathname === "/dashboard/visualizar/jogos";
 
   const fetchEventos = async () => {
     setLoading(true);
 
     try {
-      const response = await getAllEventosAPI();
+      let response;
+      if (window.location.pathname === "/dashboard/visualizar/meus-jogos") {
+        response = await getEventosByUserAPI();
+      } else {
+        response = await getAllEventosAPI();
+      }
 
       if (response.success && response.data) {
-        const eventosFiltrados = response.data.filter((evento: any) =>
+        const eventosFiltrados = response.data.filter((jogo: any) =>
           showActions
-            ? evento.modalidade === "FESTA" &&
-              evento.atleticaId.toString() === atleticaId
-            : evento.modalidade === "FESTA"
+            ? jogo.modalidade === "JOGO" &&
+              jogo.atleticaId.toString() === atleticaId
+            : jogo.modalidade === "JOGO"
         );
 
         setEventos(eventosFiltrados);
       } else {
-        console.log("Nenhum evento encontrado");
+        console.log("Nenhum jogo encontrado");
         setEventos([]);
       }
     } catch (error) {
-      console.error("Erro ao buscar eventos:", error);
+      console.error("Erro ao buscar jogos:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const openViewJogoModal = (jogo: any) => {
+    setEventoData(jogo);
+    setShowViewModal(true);
   };
 
   useEffect(() => {
@@ -85,7 +93,7 @@ export const EventsList = () => {
   };
 
   const renderNoItems = () => (
-    <NoItemsFound message={`Nenhum evento encontrado`} />
+    <NoItemsFound message={`Nenhum jogo encontrado`} />
   );
 
   const formatHora = (hora: string) => {
@@ -113,27 +121,24 @@ export const EventsList = () => {
     return meses[mesIndex] || "Mês inválido";
   };
 
-  const getPlatformImage = (url: string) => {
-    const domain = new URL(url).hostname.replace("www.", "");
-    return (
-      plataformasTyped[
-        Object.keys(plataformasTyped).find((key) => domain.includes(key))!
-      ] ||
-      "https://t3.ftcdn.net/jpg/01/22/43/68/360_F_122436844_5TQ5cZcIQI3pfxJFnU17KbWYQF8bQcSM.jpg"
-    );
-  };
-
   return (
     <Box className="flex-1">
       <VStack className="p-4 md:px-10 md:pt-6 w-full" space="2xl">
-        {showActions && (
+        {showMeusJogosButton && (
           <VStack space="lg" className="items-center">
-            <Button className="gap-3 relative" onPress={() => openModal()}>
-              <ButtonText>Adicionar Evento</ButtonText>
+            <Button className="gap-3 relative">
+              <ButtonText>Meus jogos</ButtonText>
             </Button>
           </VStack>
         )}
-        {eventos.length === 0 ? (
+        {showActions && (
+          <VStack space="lg" className="items-center">
+            <Button className="gap-3 relative" onPress={() => openModal()}>
+              <ButtonText>Adicionar Jogo</ButtonText>
+            </Button>
+          </VStack>
+        )}
+        {jogos.length === 0 ? (
           renderNoItems()
         ) : (
           <ScrollView
@@ -142,49 +147,36 @@ export const EventsList = () => {
             className="p-4"
           >
             <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
-              {eventos.map((evento) => {
-                const eventoData = evento.data;
+              {jogos.map((jogo) => {
+                const eventoData = jogo.data;
                 const [ano, mes, dia] = eventoData.split("-");
                 const mesPorExtenso = getMesPorExtenso(mes);
                 const diaNumerico = parseInt(dia, 10);
 
                 return (
                   <Box
-                    key={evento.id}
+                    key={jogo.id}
                     className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden"
                   >
                     <Box className="w-full h-36 bg-violet-600 flex items-center justify-center">
-                      {evento.linkPlataformaIngressos ? (
-                        <Image
-                          source={
-                            evento.linkPlataformaIngressos
-                              ? getPlatformImage(evento.linkPlataformaIngressos)
-                              : ""
-                          }
-                          size="sm"
-                          alt="Imagem do evento"
-                          className="w-20 h-20 rounded-full object-cover"
-                        />
-                      ) : (
-                        <Image
-                          source={require("@/assets/dashboard/image2.png")}
-                          alt="Imagem vazia"
-                          size="sm"
-                          className="w-20 h-20 rounded-full object-cover"
-                        />
-                      )}
+                      <Image
+                        source={jogo.titulo ? getJogosImage(jogo.titulo) : ""}
+                        size="sm"
+                        alt="Imagem do jogo"
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
                     </Box>
 
                     <Card
-                      key={evento.id}
                       className="p-4 rounded-lg max-w-[360px] space-y-3"
+                      key={jogo.id}
                     >
                       <Box>
-                        <Heading size="md">{evento.titulo}</Heading>
+                        <Heading size="md">{jogo.titulo}</Heading>
                         <HStack>
                           <Text size="sm">Realização: </Text>{" "}
                           <Heading size="xs" className="color-violet-600">
-                            {evento.atleticaName}
+                            {jogo.atleticaName}
                           </Heading>
                         </HStack>
                       </Box>
@@ -194,26 +186,21 @@ export const EventsList = () => {
                           <HStack className="align-center">
                             <Text className="text-gray-600 text-typography-400">
                               Dia {diaNumerico} de {mesPorExtenso} às{" "}
-                              {formatHora(evento.hora)}
+                              {formatHora(jogo.hora)}
                             </Text>
                           </HStack>
                         </HStack>
 
                         <Text className="text-md text-gray-600  pt-2 sm:text-left">
-                          Local: {evento.endereco}
+                          Local: {jogo.endereco}
                         </Text>
                       </VStack>
                     </Card>
-
                     <VStack className="items-center px-4 pb-4">
                       <Button
                         variant="outline"
                         className="w-full"
-                        onPress={() => {
-                          if (evento.linkPlataformaIngressos) {
-                            window.open(evento.linkPlataformaIngressos);
-                          }
-                        }}
+                        onPress={() => openViewJogoModal(jogo)}
                       >
                         <ButtonText>Ver mais</ButtonText>
                       </Button>
@@ -222,8 +209,8 @@ export const EventsList = () => {
                         <HStack space="md" className="p-2 mt-2">
                           <Pressable
                             onPress={() =>
-                              evento.id !== undefined &&
-                              handleOpenDeleteModal(evento.id)
+                              jogo.id !== undefined &&
+                              handleOpenDeleteModal(jogo.id)
                             }
                           >
                             <Trash className="text-typography-600" />
@@ -239,16 +226,22 @@ export const EventsList = () => {
         )}
       </VStack>
 
-      <ModalEvento
+      <ModalJogo
         showModal={showModal}
         setShowModal={setShowModal}
         refreshEventos={fetchEventos}
       />
 
-      <DeleteEvento
+      <DeleteJogo
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
         id={eventoToDeleteId}
+        refreshEventos={fetchEventos}
+      />
+      <ViewJogo
+        showModal={showViewModal}
+        setShowModal={setShowViewModal}
+        eventoData={eventoData}
         refreshEventos={fetchEventos}
       />
     </Box>

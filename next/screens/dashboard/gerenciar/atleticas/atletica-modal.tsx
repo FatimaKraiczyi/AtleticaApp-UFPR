@@ -48,12 +48,7 @@ import { AtividadesProps, Atletica, CursoProps } from "@/interfaces/atleticas";
 import { createAtletica, updateAtletica } from "@/api/atleticas";
 import { Image } from "@/components/ui/image";
 import atividadesEsportivas from "@/mock/atividades_esportivas";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallbackText,
-  AvatarBadge,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getCursos } from "@/api/cursos";
 
 const userSchema = z.object({
@@ -158,43 +153,45 @@ export const ModalAtletica = ({
     setAtividadeFields(["atividadesIds"]);
   };
 
-	useEffect(() => {
-		if (showModal) {
-			resetForm();
-			if (atleticaData) {
-				setValue("nome", atleticaData.nome);
-				setValue("descricao", atleticaData.descricao);
-				setValue(
-					"atividadesIds",
-					atleticaData.atividades?.map((atividade: AtividadesProps) =>
-						String(atividade)
-					) || []
-				);
-				const cursosIds = atleticaData.cursos?.map((curso: CursoProps) =>
-					String(curso.id)
-				);
-				setValue("cursoIds", cursosIds || []);
-				setCursoFields(
-					cursosIds?.map((_: any, index: any) => `cursoIds.${index}`) || ["cursoIds"]
-				);
-				const imageUrl = getImageUrl(atleticaData.imagem);
-				setValue("imagem", imageUrl);
+  useEffect(() => {
+    if (showModal) {
+      resetForm();
+      if (atleticaData) {
+        setValue("nome", atleticaData.nome);
+        setValue("descricao", atleticaData.descricao);
+        setValue(
+          "atividadesIds",
+          atleticaData.atividades?.map((atividade: AtividadesProps) =>
+            String(atividade)
+          ) || []
+        );
+        const cursosIds = atleticaData.cursos?.map((curso: CursoProps) =>
+          String(curso.id)
+        );
+        setValue("cursoIds", cursosIds || []);
+        setCursoFields(
+          cursosIds?.map((_: any, index: any) => `cursoIds.${index}`) || [
+            "cursoIds",
+          ]
+        );
+        const imageUrl = getImageUrl(atleticaData.imagem);
+        setValue("imagem", imageUrl);
         setAtleticaImage(imageUrl || null);
-	
-				setAtividadeFields(
-					atleticaData.atividades?.map(
-						(_: any, index: any) => `atividadesIds.${index}`
-					) || ["atividadesIds"]
-				);
-	
-				setCursoFields(
-					atleticaData.cursos?.map((_: any, index: any) => `cursoIds.${index}`) || [
-						"cursoIds",
-					]
-				);
-			}
-		}
-	}, [showModal, atleticaData, setValue, reset]);
+
+        setAtividadeFields(
+          atleticaData.atividades?.map(
+            (_: any, index: any) => `atividadesIds.${index}`
+          ) || ["atividadesIds"]
+        );
+
+        setCursoFields(
+          atleticaData.cursos?.map(
+            (_: any, index: any) => `cursoIds.${index}`
+          ) || ["cursoIds"]
+        );
+      }
+    }
+  }, [showModal, atleticaData, setValue, reset]);
 
   const pickImage = () => {
     const fileInput = document.createElement("input");
@@ -215,48 +212,63 @@ export const ModalAtletica = ({
     };
   };
 
- const onSubmit = async (data: any) => {
-  const formData = new FormData();
-  formData.append("nome", data.nome);
-  formData.append("descricao", data.descricao);
-  data.atividadesIds.forEach((id: string) =>
-    formData.append("atividades[]", id)
-  );
-  data.cursoIds.forEach((id: string) => formData.append("cursoIds[]", id));
-  
-  if (selectedFile) {
-    formData.append("imagem", selectedFile);
-  } else if (atleticaImage) {
-    formData.append("imagem", atleticaImage);
-  }
+  const onSubmit = async (data: any) => {
+    const formData = new FormData();
+    formData.append("nome", data.nome);
+    formData.append("descricao", data.descricao);
 
-  try {
-    let response;
-    if (atleticaData) {
-      response = await updateAtletica(atleticaData.id, formData);
-    } else {
-      response = await createAtletica(formData);
+    data.atividadesIds.forEach((id: string) =>
+      formData.append("atividades[]", id)
+    );
+
+    const validCursoIds = data.cursoIds
+      .filter((id: string) => id !== "")
+      .map((id: string) => Number(id));
+
+    validCursoIds.forEach((id: number) =>
+      formData.append("cursoIds[]", id.toString())
+    );
+
+    if (selectedFile) {
+      formData.append("imagem", selectedFile);
+    } else if (atleticaImage) {
+      formData.append("imagem", atleticaImage);
     }
 
-    if (response.success && response.data) {
-      refreshAtleticas();
-      resetForm();
-      setShowModal(false);
+    try {
+      let response;
+      if (atleticaData) {
+        response = await updateAtletica(atleticaData.id, formData);
+      } else {
+        response = await createAtletica(formData);
+      }
+
+      if (response.success && response.data) {
+        refreshAtleticas();
+        resetForm();
+        setShowModal(false);
+      }
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
     }
-  } catch (error) {
-    console.error("Erro ao salvar:", error);
-  }
-};
+  };
 
   const storedUserType = sessionStorage.getItem("tipo");
 
   return (
-    <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg">
+    <Modal
+      isOpen={showModal}
+      onClose={() => {
+        setShowModal(false);
+        resetForm();
+      }}
+      size="lg"
+    >
       <ModalBackdrop />
       <ModalContent>
         <Box className="w-full h-[110px]">
           <Image
-            source={require("@/assets/profile-screens/profile/image2.png")}
+            source={require("@/assets/dashboard/headermodal.png")}
             alt="Imagem de fundo"
             size="full"
           />

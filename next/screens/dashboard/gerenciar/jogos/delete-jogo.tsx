@@ -14,28 +14,28 @@ import { Center } from "@/components/ui/center";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
-import { deleteAtletica } from "@/api/atleticas";
+import { deleteEventoAPI } from "@/api/evento";
 
-interface DeleteAtleticaProps {
+interface DeleteEventoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   id?: number;
-  refreshAtleticas: () => void;
+  refreshEventos: () => void;
 }
 
-export const DeleteAtletica = ({
+export const DeleteJogo = ({
   showModal,
   setShowModal,
   id,
-  refreshAtleticas,
-}: DeleteAtleticaProps) => {
+  refreshEventos,
+}: DeleteEventoProps) => {
   const handleDelete = async () => {
     try {
       if (id !== undefined) {
-        const response = await deleteAtletica(id);
+        const response = await deleteEventoAPI(id);
         if (response.success) {
           setShowModal(false);
-          refreshAtleticas();
+          refreshEventos();
         }
       }
     } catch (error) {
@@ -65,7 +65,7 @@ export const DeleteAtletica = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            Deletar Atlética
+            Deletar Jogo
           </Heading>
         </Center>
         <ModalBody>
