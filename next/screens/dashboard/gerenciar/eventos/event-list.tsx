@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { Image } from "@/components/ui/image";
 import { Box } from "@/components/ui/box";
-import { Grid, GridItem } from "@/components/ui/grid";
+import { Grid } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
 import { Pressable } from "@/components/ui/pressable";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -11,11 +11,11 @@ import { Trash } from "lucide-react";
 import { HStack } from "@/components/ui/hstack";
 import { ModalEvento } from "./event-modal";
 import { DeleteEvento } from "./delete-evento";
-import { Evento, EventoResponse } from "@/interfaces/evento";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { getAllEventosAPI } from "@/api/evento";
-import { getAtleticaById } from "@/api/atleticas";
+import { Heading } from "@/components/ui/heading";
+import { Card } from "@/components/ui/card";
 
 interface Plataformas {
   [key: string]: any;
@@ -88,6 +88,31 @@ export const EventsList = () => {
     <NoItemsFound message={`Nenhum evento encontrado`} />
   );
 
+  const formatHora = (hora: string) => {
+    const [hh, min] = hora.split(":");
+    return `${hh}:${min} horas`;
+  };
+
+  const getMesPorExtenso = (mes: string) => {
+    const meses = [
+      "janeiro",
+      "fevereiro",
+      "março",
+      "abril",
+      "maio",
+      "junho",
+      "julho",
+      "agosto",
+      "setembro",
+      "outubro",
+      "novembro",
+      "dezembro",
+    ];
+
+    const mesIndex = parseInt(mes, 10) - 1;
+    return meses[mesIndex] || "Mês inválido";
+  };
+
   const getPlatformImage = (url: string) => {
     const domain = new URL(url).hostname.replace("www.", "");
     return (
@@ -116,12 +141,11 @@ export const EventsList = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-                         <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
-
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
               {eventos.map((evento) => {
                 const eventoData = evento.data;
                 const [ano, mes, dia] = eventoData.split("-");
-                const mesAbreviado = mes.substring(0, 3).toUpperCase();
+                const mesPorExtenso = getMesPorExtenso(mes);
                 const diaNumerico = parseInt(dia, 10);
 
                 return (
@@ -129,14 +153,8 @@ export const EventsList = () => {
                     key={evento.id}
                     className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden"
                   >
-                    <Pressable
-                      onPress={() => {
-                        if (evento.linkPlataformaIngressos) {
-                          window.open(evento.linkPlataformaIngressos);
-                        }
-                      }}
-                    >
-                      <Box className="w-full h-36 bg-violet-600 flex items-center justify-center">
+                    <Box className="w-full h-36 bg-violet-600 flex items-center justify-center">
+                      {evento.linkPlataformaIngressos ? (
                         <Image
                           source={
                             evento.linkPlataformaIngressos
@@ -147,48 +165,47 @@ export const EventsList = () => {
                           alt="Imagem do evento"
                           className="w-20 h-20 rounded-full object-cover"
                         />
-                      </Box>
-                    </Pressable>
+                      ) : (
+                        <Image
+                          source={require("@/assets/dashboard/image2.png")}
+                          alt="Imagem vazia"
+                          size="sm"
+                          className="w-20 h-20 rounded-full object-cover"
+                        />
+                      )}
+                    </Box>
 
-                    <GridItem
+                    <Card
                       key={evento.id}
-                      className="flex flex-row items-center  p-4 space-x-4"
+                      className="p-4 rounded-lg max-w-[360px] space-y-3"
                     >
-                      <VStack>
-                        <Box className="flex flex-col items-center justify-center bg-primary-100 rounded-lg px-6 py-2">
-                          <Text className="text-primary-500 font-bold text-sm">
-                            {mesAbreviado}
-                          </Text>
-                          <Text className="text-primary-900 font-extrabold text-2xl">
-                            {diaNumerico}
-                          </Text>
-                        </Box>
+                      <Box>
+                        <Heading size="md">{evento.titulo}</Heading>
+                        <HStack>
+                          <Text size="sm">Realização: </Text>{" "}
+                          <Heading size="xs" className="color-violet-600">
+                            {evento.atleticaName}
+                          </Heading>
+                        </HStack>
+                      </Box>
 
-                        <Text className="text-sm text-gray-600 text-center pt-2 sm:text-left">
+                      <VStack>
+                        <HStack className="space-4 items-center justify-between">
+                          <HStack className="align-center">
+                            <Text className="text-gray-600 text-typography-400">
+                              Dia {diaNumerico} de {mesPorExtenso} às{" "}
+                              {formatHora(evento.hora)}
+                            </Text>
+                          </HStack>
+                        </HStack>
+
+                        <Text className="text-md text-gray-600  pt-2 sm:text-left">
                           Local: {evento.endereco}
                         </Text>
                       </VStack>
+                    </Card>
 
-                      <VStack>
-                        <Box className="flex flex-col items-center justify-center px-6 py-2">
-                          <Text className="text-sm text-center text-gray-600">
-                            Evento realizado por:{" "}
-                          </Text>
-                          <Text className="text-sm text-gray-600 font-semibold">
-                            {evento.atleticaName}
-                          </Text>
-                          <Text className="text-lg font-bold text-center text-gray-900 truncate">
-                            {evento.titulo}
-                          </Text>
-
-                          <Text className="text-sm text-gray-600">Valor:</Text>
-                          <Text className="text-sm font-semibold text-gray-900">
-                            {evento.valor}
-                          </Text>
-                        </Box>
-                      </VStack>
-                    </GridItem>
-                    <VStack className="items-center p-4">
+                    <VStack className="items-center px-4 pb-4">
                       <Button
                         variant="outline"
                         className="w-full"
@@ -202,7 +219,7 @@ export const EventsList = () => {
                       </Button>
 
                       {showActions && (
-                        <HStack space="md" className="pt-4">
+                        <HStack space="md" className="p-2 mt-2">
                           <Pressable
                             onPress={() =>
                               evento.id !== undefined &&

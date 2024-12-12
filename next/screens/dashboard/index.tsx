@@ -59,7 +59,7 @@ const HeadingCards: CardData[] = [
   {
     bannerUri: require("@/assets/dashboard/image6.png"),
     title: "Gerenciar Atléticas",
-    description: "Cadastrar e gerenciar as atléticas e seus membros",
+    description: "Gerenciar as atléticas e seus membros",
     tipo: "master",
     route: "/dashboard/gerenciar/atleticas",
   },

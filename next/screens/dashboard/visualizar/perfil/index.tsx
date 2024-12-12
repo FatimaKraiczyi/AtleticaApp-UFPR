@@ -10,6 +10,10 @@ import { Instagram, Twitter } from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { ProdutosList } from "../../gerenciar/loja/produt-list";
 import { Box } from "@/components/ui/box";
+import { EventsList } from "../../gerenciar/eventos/event-list";
+import { JogosList } from "../../gerenciar/jogos/jogos-list";
+import { PlanosList } from "../../gerenciar/planos/planos-list";
+import { MembrosList } from "../../gerenciar/membros/membro-list";
 
 interface NavBarProps {
   tabs: string[];
@@ -50,7 +54,7 @@ export const MainContent = () => {
   const { atleticaData } = useAtletica();
   const { atletica } = atleticaData || {};
   const { nome, descricao, imagem } = atletica || {};
-  const cursos = atleticaData?.cursos || [];
+  const cursos = atleticaData?.atletica.cursos || [];
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -72,11 +76,29 @@ export const MainContent = () => {
         );
       case 2:
         return (
-          <Text className="text-gray-600">
-            Esta atlética é reconhecida por suas atividades e eventos que
-            promovem integração e diversão para os estudantes.
-          </Text>
+          <VStack space="sm">
+            <EventsList />;
+          </VStack>
         );
+      case 3:
+        return (
+          <VStack space="sm">
+            <JogosList />;
+          </VStack>
+        );
+      case 4:
+        return (
+          <VStack space="sm">
+            <PlanosList />;
+          </VStack>
+        );
+      case 5:
+        return (
+          <VStack space="sm">
+            <MembrosList />;
+          </VStack>
+        );
+
       default:
         return null;
     }
