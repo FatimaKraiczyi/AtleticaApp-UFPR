@@ -76,7 +76,7 @@ export const ViewProduto = ({
         <ModalContent>
           <Box className={"w-full h-[110px] "}>
             <Image
-              source={require("@/assets/profile-screens/profile/image2.png")}
+                source={require("@/assets/dashboard/headermodal.png")}
               size="full"
               alt="Banner Image"
             />
