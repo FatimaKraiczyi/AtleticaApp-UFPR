@@ -4,7 +4,6 @@ import { Image } from "@/components/ui/image";
 import { Box } from "@/components/ui/box";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
-import { Pressable } from "@/components/ui/pressable";
 import { Button, ButtonText } from "@/components/ui/button";
 import { VStack } from "@/components/ui/vstack";
 import { Trash } from "lucide-react";
@@ -14,17 +13,39 @@ import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { ModalJogo } from "./jogo-modal";
 import { DeleteJogo } from "./delete-jogo";
 import { getAllEventosAPI } from "@/api/evento";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Heading } from "@/components/ui/heading";
+import { Pressable } from "@/components/ui/pressable";
 
-interface Plataformas {
-  [key: string]: any;
-}
-
-const plataformas = {
-  sympla:
-    "https://blog.sympla.com.br/wp-content/uploads/2022/09/banner-sympla-1.jpg",
+const getJogoImage = (titulo: string) => {
+  switch (titulo) {
+    case "Futebol":
+      return "https://www.google.com/url?sa=i&url=https%3A%2F%2Finteligenciafinanceira.com.br%2Fmercado-financeiro%2Fnegocios%2Fo-que-move-o-futebol%2F&psig=AOvVaw39CQX8-ZyzDDBsjNjZ2mVG&ust=1734057139878000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOj63ryYoYoDFQAAAAAdAAAAABAE";
+    case "Basquete":
+      return "https://img.freepik.com/vetores-premium/ilustracao-de-cor-do-vetor-de-basquete-na-cesta-em-fundo-transparente_183342-713.jpg";
+    default:
+      return "url_da_imagem_padrao";
+  }
 };
 
-const plataformasTyped: Plataformas = plataformas;
+const getMesPorExtenso = (mes: string) => {
+  const meses = [
+    "janeiro",
+    "fevereiro",
+    "março",
+    "abril",
+    "maio",
+    "junho",
+    "julho",
+    "agosto",
+    "setembro",
+    "outubro",
+    "novembro",
+    "dezembro",
+  ];
+  return meses[parseInt(mes, 10) - 1];
+};
 
 export const JogosList = () => {
   const atleticaId =
@@ -86,14 +107,9 @@ export const JogosList = () => {
     <NoItemsFound message={`Nenhum jogo encontrado`} />
   );
 
-  const getPlatformImage = (url: string) => {
-    const domain = new URL(url).hostname.replace("www.", "");
-    return (
-      plataformasTyped[
-        Object.keys(plataformasTyped).find((key) => domain.includes(key))!
-      ] ||
-      "https://t3.ftcdn.net/jpg/01/22/43/68/360_F_122436844_5TQ5cZcIQI3pfxJFnU17KbWYQF8bQcSM.jpg"
-    );
+  const formatHora = (hora: string) => {
+    const [hh, min] = hora.split(":");
+    return `${hh}:${min} horas`;
   };
 
   return (
@@ -118,7 +134,7 @@ export const JogosList = () => {
               {jogos.map((jogo) => {
                 const eventoData = jogo.data;
                 const [ano, mes, dia] = eventoData.split("-");
-                const mesAbreviado = mes.substring(0, 3).toUpperCase();
+                const mesPorExtenso = getMesPorExtenso(mes);
                 const diaNumerico = parseInt(dia, 10);
 
                 return (
@@ -126,80 +142,58 @@ export const JogosList = () => {
                     key={jogo.id}
                     className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden"
                   >
-                    <Pressable
-                      onPress={() => {
-                        if (jogo.linkPlataformaIngressos) {
-                          window.open(jogo.linkPlataformaIngressos);
-                        }
-                      }}
-                    >
-                      <Box className="w-full h-36 bg-violet-600 flex items-center justify-center">
-                        <Image
-                          source={
-                            jogo.linkPlataformaIngressos
-                              ? getPlatformImage(jogo.linkPlataformaIngressos)
-                              : ""
-                          }
-                          size="sm"
-                          alt="Imagem do jogo"
-                          className="w-20 h-20 rounded-full object-cover"
-                        />
-                      </Box>
-                    </Pressable>
+                    <Box className="w-full h-36 bg-violet-600 flex items-center justify-center">
+                      <Image
+                        source={getJogoImage(jogo.titulo)}
+                        size="sm"
+                        alt="Imagem do jogo"
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
+                    </Box>
 
-                    <GridItem
+                    <Card
+                      className="p-4 rounded-lg max-w-[360px] space-y-3"
                       key={jogo.id}
-                      className="flex flex-row items-center  p-4 space-x-4"
                     >
-                      <VStack>
-                        <Box className="flex flex-col items-center justify-center bg-primary-100 rounded-lg px-6 py-2">
-                          <Text className="text-primary-500 font-bold text-sm">
-                            {mesAbreviado}
-                          </Text>
-                          <Text className="text-primary-900 font-extrabold text-2xl">
-                            {diaNumerico}
-                          </Text>
-                        </Box>
+                      <Box>
+                        <Heading size="md">{jogo.titulo}</Heading>
+                        <HStack>
+                          <Text size="sm">Realização: </Text>{" "}
+                          <Heading size="xs" className="color-violet-600">
+                            {jogo.atleticaName}
+                          </Heading>
+                        </HStack>
+                      </Box>
 
-                        <Text className="text-sm text-gray-600 text-center pt-2 sm:text-left">
+                      <Text size="sm" className="text-typography-400">
+                        {jogo.descricao}
+                      </Text>
+                      <VStack>
+                        <HStack className="space-4 items-center justify-between">
+                          <HStack className="align-center">
+                            <Text className="text-gray-600 text-typography-400">
+                              Dia{" "}
+                              {diaNumerico} de {mesPorExtenso} às{" "}
+                              {formatHora(jogo.hora)}
+                            </Text>
+                          </HStack>
+                        </HStack>
+
+                        <Text className="text-md text-gray-600  pt-2 sm:text-left">
                           Local: {jogo.endereco}
                         </Text>
+                        <Text className="text-sm font-semibold text-gray-900 pt-2">
+                          {jogo.qtdeVagas} vagas disponíveis
+                        </Text>
                       </VStack>
-
-                      <VStack>
-                        <Box className="flex flex-col items-center justify-center px-6 py-2">
-                          <Text className="text-sm text-center text-gray-600">
-                            Jogo realizado por:{" "}
-                          </Text>
-                          <Text className="text-sm text-gray-600 font-semibold">
-                            {jogo.atleticaName}
-                          </Text>
-                          <Text className="text-lg font-bold text-center text-gray-900 truncate">
-                            {jogo.titulo}
-                          </Text>
-
-                          <Text className="text-sm text-gray-600">Valor:</Text>
-                          <Text className="text-sm font-semibold text-gray-900">
-                            {jogo.valor}
-                          </Text>
-                        </Box>
-                      </VStack>
-                    </GridItem>
-                    <VStack className="items-center p-4">
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onPress={() => {
-                          if (jogo.linkPlataformaIngressos) {
-                            window.open(jogo.linkPlataformaIngressos);
-                          }
-                        }}
-                      >
+                    </Card>
+                    <VStack className="items-center px-4">
+                      <Button variant="outline" className="w-full">
                         <ButtonText>Ver mais</ButtonText>
                       </Button>
 
                       {showActions && (
-                        <HStack space="md" className="pt-4">
+                        <HStack space="md" className="p-2">
                           <Pressable
                             onPress={() =>
                               jogo.id !== undefined &&

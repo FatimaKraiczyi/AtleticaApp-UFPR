@@ -40,16 +40,14 @@ const eventoSchema = z.object({
   endereco: z.string().min(1, "Endereço é obrigatório"),
   titulo: z.string().min(1, "Título é obrigatório"),
   descricao: z.string().min(1, "Descrição é obrigatória"),
-  ingresso: z.number().positive("Valor do ingresso deve ser maior que zero"),
-  linkPlataformaIngressos: z.string().url("Formato de URL inválido"),
   modalidade: z.string().min(1, "Modalidade é obrigatória"),
   statusEvento: z.string().min(1, "Status do evento é obrigatório"),
+	qtdeVagas: z.number().min(1, "Quantidade de vagas é obrigatória"),
 });
 
 type EventoFormData = z.infer<typeof eventoSchema>;
 
 const defaultValues: Partial<EventoFormData> = {
-  modalidade: "FESTA",
   statusEvento: "EM_ANDAMENTO",
 };
 
@@ -75,7 +73,9 @@ export const ModalJogo = ({
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const atleticaNome =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaNome") : null;
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("atleticaNome")
+      : null;
   const currentPath =
     typeof window !== "undefined" ? window.location.pathname : "";
 
@@ -87,6 +87,7 @@ export const ModalJogo = ({
         hora: `${data.hora}:00`,
         atleticaId: Number(atleticaId),
         atleticaName: atleticaNome,
+				modalidade: "JOGO",
       };
 
       const response = await addEventoAPI(formattedData);
@@ -128,39 +129,11 @@ export const ModalJogo = ({
         </ModalHeader>
         <Center className="w-full absolute top-10">
           <Heading size="2xl" className="text-typography-800">
-            Cadastrar Evento
+            Cadastrar Jogo
           </Heading>
         </Center>
         <ModalBody className="max-h-[70vh] overflow-y-auto">
           <VStack space="xl">
-            <FormControl isInvalid={!!errors.titulo}>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>
-                  Link Plataforma Ingressos
-                </FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                control={control}
-                name="linkPlataformaIngressos"
-                render={({ field: { onChange, value } }) => (
-                  <Input>
-                    <InputField
-                      placeholder="URL da plataforma de ingressos"
-                      value={value}
-                      onChangeText={onChange}
-                    />
-                  </Input>
-                )}
-              />
-              {errors.linkPlataformaIngressos && (
-                <FormControlError>
-                  <FormControlErrorIcon size="md" as={AlertTriangle} />
-                  <FormControlErrorText>
-                    {errors.linkPlataformaIngressos.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              )}
-            </FormControl>
             <FormControl>
               <FormControlLabel>
                 <FormControlLabelText>Título</FormControlLabelText>
@@ -307,14 +280,16 @@ export const ModalJogo = ({
               )}
             </FormControl>
             <FormControl>
-              <FormControlLabelText>Valor do Ingresso</FormControlLabelText>
+              <FormControlLabelText>
+                Quantidade de vagas disponíveis
+              </FormControlLabelText>
               <Controller
                 control={control}
-                name="ingresso"
+                name="qtdeVagas"
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Valor do ingresso"
+                      placeholder="Número de vagas"
                       keyboardType="numeric"
                       value={value?.toString() || ""}
                       onChangeText={(text) => onChange(Number(text))}
@@ -322,8 +297,10 @@ export const ModalJogo = ({
                   </Input>
                 )}
               />
-              {errors.ingresso && (
-                <FormControlError>{errors.ingresso.message}</FormControlError>
+              {errors.qtdeVagas && (
+                <FormControlError>
+                  {errors.qtdeVagas.message}
+                </FormControlError>
               )}
             </FormControl>
 
