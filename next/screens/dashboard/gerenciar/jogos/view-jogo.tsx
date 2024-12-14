@@ -139,13 +139,13 @@ export const ViewJogo = ({
                 className=" rounded-full"
               />
               <VStack className="p-4 rounded-lg max-w-[360px] space-y-3 text-left">
-                <HStack>
+                <VStack>
                   <Text size="sm">Realização: </Text>{" "}
                   <Heading size="xs" className="color-violet-600">
                     {eventoData.atleticaName}
                   </Heading>
-                </HStack>
-                <Text size="sm" className="text-typography-400">
+                </VStack>
+                <Text size="sm" >
                   {eventoData.descricao}
                 </Text>
                 <Text className="text-gray-600 text-typography-400">

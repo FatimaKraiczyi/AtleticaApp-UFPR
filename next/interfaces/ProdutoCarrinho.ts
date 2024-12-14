@@ -41,3 +41,11 @@ export interface ProdutoCarrinhoResponse {
 export interface RespostaSimples {
   msg: string;
 }
+
+export interface Carrinho {
+	id: number;
+	data: string;
+	status: string;
+	valorTotal: number;
+	usuarioId: number;
+}

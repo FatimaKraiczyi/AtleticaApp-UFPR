@@ -15,3 +15,12 @@ export interface PedidoId {
   descricao: string
   produtos: PedidoProdutos[];
 }
+
+export interface Pedido {
+	id: number;
+	idCarrinho: number;
+	usuarioId: number;
+	data: string;
+	status: string;
+	valorTotal: number;
+}

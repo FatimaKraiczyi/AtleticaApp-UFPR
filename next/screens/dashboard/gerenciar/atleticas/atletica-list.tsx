@@ -146,7 +146,7 @@ const AllAtleticas = () => {
                       )}
                     </Avatar>
                   </Box>
-                  <Box className="p-4 md:h-[180px]">
+                  <Box className="p-4 sm:py-4 md:h-[180px]">
                     <Text className="text-lg font-semibold">
                       {atletica.atletica.nome}
                     </Text>

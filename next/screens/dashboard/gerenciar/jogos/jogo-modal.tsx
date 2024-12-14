@@ -112,13 +112,13 @@ export const ModalJogo = ({
         setShowModal(false);
         reset();
       }}
-      size="lg"
+      size="md"
     >
       <ModalBackdrop />
       <ModalContent>
         <Box className="w-full h-[110px]">
           <Image
-              source={require("@/assets/dashboard/headermodal.png")}
+            source={require("@/assets/dashboard/headermodal.png")}
             alt="Imagem de fundo"
             size="full"
           />
@@ -137,26 +137,19 @@ export const ModalJogo = ({
             Cadastrar Jogo
           </Heading>
         </Center>
-        <ModalBody className="max-h-[70vh] overflow-y-auto">
-          <VStack space="xl">
+        <ModalBody className="overflow-y-auto">
+          <VStack space="md">
             <FormControl>
-              <FormControlLabel>
-                <FormControlLabelText>Atividade</FormControlLabelText>
-              </FormControlLabel>
+              <FormControlLabelText>Atividade</FormControlLabelText>
               <Controller
                 name="titulo"
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                  <Select
-                    onValueChange={onChange}
-                    className="flex-1"
-                    selectedValue={value}
-                  >
-                    <SelectTrigger variant="outline" size="md">
+                  <Select onValueChange={onChange} selectedValue={value}>
+                    <SelectTrigger variant="outline">
                       <SelectInput placeholder="Atividade" />
                       <SelectIcon className="mr-3" as={ChevronDownIcon} />
                     </SelectTrigger>
-
                     <SelectPortal>
                       <SelectBackdrop />
                       <SelectContent>
@@ -185,44 +178,36 @@ export const ModalJogo = ({
               </FormControlError>
             </FormControl>
 
-            <FormControl>
-              <FormControlLabel>
-                <FormControlLabelText>Descrição</FormControlLabelText>
-              </FormControlLabel>
+            <FormControl isInvalid={!!errors.descricao?.message}>
+              <FormControlLabelText>Descrição</FormControlLabelText>
               <Controller
                 control={control}
                 name="descricao"
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Descrição do evento"
+                      placeholder="Descrição do jogo"
                       value={value}
                       onChangeText={onChange}
                     />
                   </Input>
                 )}
               />
-              {errors.descricao && (
-                <FormControlError>
-                  <FormControlErrorIcon size="md" as={AlertTriangle} />
-                  <FormControlErrorText>
-                    {errors.descricao.message}
-                  </FormControlErrorText>
-                </FormControlError>
+              {errors.descricao?.message && (
+                <FormControlErrorText>
+                  {errors.descricao.message}
+                </FormControlErrorText>
               )}
             </FormControl>
             <FormControl>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>Data</FormControlLabelText>
-              </FormControlLabel>
+              <FormControlLabelText>Data</FormControlLabelText>
               <Controller
                 control={control}
                 name="data"
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      className="text-sm"
-                      placeholder="Data do evento"
+                      placeholder="Data do jogo"
                       value={value}
                       keyboardType="numeric"
                       onChangeText={(text) => {
@@ -246,16 +231,13 @@ export const ModalJogo = ({
             </FormControl>
 
             <FormControl>
-              <FormControlLabel className="mb-2">
-                <FormControlLabelText>Horário de Ínicio</FormControlLabelText>
-              </FormControlLabel>
+              <FormControlLabelText>Horário de Ínicio</FormControlLabelText>
               <Controller
                 control={control}
                 name="hora"
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      className="text-sm"
                       placeholder="HH:MM"
                       value={value}
                       keyboardType="numeric"
@@ -280,16 +262,14 @@ export const ModalJogo = ({
             </FormControl>
 
             <FormControl>
-              <FormControlLabel>
-                <FormControlLabelText>Endereço</FormControlLabelText>
-              </FormControlLabel>
+              <FormControlLabelText>Endereço</FormControlLabelText>
               <Controller
                 name="endereco"
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      placeholder="Local"
+                      placeholder="Local do jogo"
                       value={value}
                       onChangeText={onChange}
                     />
@@ -297,12 +277,7 @@ export const ModalJogo = ({
                 )}
               />
               {errors.endereco && (
-                <FormControlError>
-                  <FormControlErrorIcon size="md" as={AlertTriangle} />
-                  <FormControlErrorText>
-                    {errors.endereco.message}
-                  </FormControlErrorText>
-                </FormControlError>
+                <FormControlError>{errors.endereco.message}</FormControlError>
               )}
             </FormControl>
             <FormControl>
@@ -327,11 +302,10 @@ export const ModalJogo = ({
                 <FormControlError>{errors.qtdeVagas.message}</FormControlError>
               )}
             </FormControl>
-
-            <Button onPress={handleSubmit(onSubmit)}>
-              <ButtonText>Salvar</ButtonText>
-            </Button>
           </VStack>
+          <Button className=" mt-4" onPress={handleSubmit(onSubmit)}>
+            <ButtonText>Salvar</ButtonText>
+          </Button>
         </ModalBody>
       </ModalContent>
     </Modal>

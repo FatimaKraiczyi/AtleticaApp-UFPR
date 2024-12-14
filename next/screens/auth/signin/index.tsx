@@ -71,7 +71,7 @@ const SignInForm = () => {
 			sessionStorage.setItem("atleticaNome", response.data.atleticaNome);
       sessionStorage.setItem("usuarioId", response.data.usuarioId.toString());
       sessionStorage.setItem("usuarioNome", response.data.usuarioNome);
-
+			sessionStorage.setItem("assinaturas", JSON.stringify(response.data.assinaturas));
       router.push("/dashboard/");
     }
   };

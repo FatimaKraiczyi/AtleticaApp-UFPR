@@ -140,7 +140,7 @@ const AllPlanos = () => {
                       {plano.descricao}
                     </Text>
                     <Text className="text-gray-700 text-sm mt-2 mb-4">
-                      {plano.desconto}% de desconto na loja
+                      {plano.desconto}% de desconto na loja para assinantes
                     </Text>
                   </VStack>
                   <VStack className="items-center">

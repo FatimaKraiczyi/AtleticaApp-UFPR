@@ -75,7 +75,9 @@ export const ModalEvento = ({
   const atleticaId =
     typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const atleticaNome =
-    typeof window !== "undefined" ? sessionStorage.getItem("atleticaNome") : null;
+    typeof window !== "undefined"
+      ? sessionStorage.getItem("atleticaNome")
+      : null;
   const currentPath =
     typeof window !== "undefined" ? window.location.pathname : "";
 
@@ -95,7 +97,6 @@ export const ModalEvento = ({
         setShowModal(false);
       }
     } catch (error) {
-      console.error("Erro ao salvar evento:", error);
     }
   };
 
@@ -106,13 +107,13 @@ export const ModalEvento = ({
         setShowModal(false);
         reset(defaultValues);
       }}
-      size="lg"
+      size="md"
     >
       <ModalBackdrop />
       <ModalContent>
         <Box className="w-full h-[110px]">
           <Image
-              source={require("@/assets/dashboard/headermodal.png")}
+            source={require("@/assets/dashboard/headermodal.png")}
             alt="Imagem de fundo"
             size="full"
           />
@@ -131,10 +132,10 @@ export const ModalEvento = ({
             Cadastrar Evento
           </Heading>
         </Center>
-        <ModalBody className="max-h-[70vh] overflow-y-auto">
-          <VStack space="xl">
+        <ModalBody className=" overflow-y-auto">
+          <VStack space="md">
             <FormControl isInvalid={!!errors.titulo}>
-              <FormControlLabel className="mb-2">
+              <FormControlLabel>
                 <FormControlLabelText>
                   Link Plataforma Ingressos
                 </FormControlLabelText>
@@ -213,7 +214,7 @@ export const ModalEvento = ({
               )}
             </FormControl>
             <FormControl>
-              <FormControlLabel className="mb-2">
+              <FormControlLabel>
                 <FormControlLabelText>Data</FormControlLabelText>
               </FormControlLabel>
               <Controller
@@ -222,7 +223,6 @@ export const ModalEvento = ({
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      className="text-sm"
                       placeholder="Data do evento"
                       value={value}
                       keyboardType="numeric"
@@ -247,7 +247,7 @@ export const ModalEvento = ({
             </FormControl>
 
             <FormControl>
-              <FormControlLabel className="mb-2">
+              <FormControlLabel>
                 <FormControlLabelText>Horário de Ínicio</FormControlLabelText>
               </FormControlLabel>
               <Controller
@@ -256,7 +256,6 @@ export const ModalEvento = ({
                 render={({ field: { onChange, value } }) => (
                   <Input>
                     <InputField
-                      className="text-sm"
                       placeholder="HH:MM"
                       value={value}
                       keyboardType="numeric"
@@ -279,7 +278,6 @@ export const ModalEvento = ({
                 </FormControlError>
               )}
             </FormControl>
-
             <FormControl>
               <FormControlLabel>
                 <FormControlLabelText>Endereço</FormControlLabelText>
@@ -299,7 +297,6 @@ export const ModalEvento = ({
               />
               {errors.endereco && (
                 <FormControlError>
-                  <FormControlErrorIcon size="md" as={AlertTriangle} />
                   <FormControlErrorText>
                     {errors.endereco.message}
                   </FormControlErrorText>
@@ -326,11 +323,10 @@ export const ModalEvento = ({
                 <FormControlError>{errors.ingresso.message}</FormControlError>
               )}
             </FormControl>
-
-            <Button onPress={handleSubmit(onSubmit)}>
-              <ButtonText>Salvar</ButtonText>
-            </Button>
           </VStack>
+          <Button className=" mt-4" onPress={handleSubmit(onSubmit)}>
+            <ButtonText>Salvar</ButtonText>
+          </Button>
         </ModalBody>
       </ModalContent>
     </Modal>

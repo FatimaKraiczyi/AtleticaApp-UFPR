@@ -249,7 +249,6 @@ export const ModalAtletica = ({
         setShowModal(false);
       }
     } catch (error) {
-      console.error("Erro ao salvar:", error);
     }
   };
 

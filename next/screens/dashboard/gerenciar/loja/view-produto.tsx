@@ -18,12 +18,12 @@ import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
 import { addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
+import { AuthenticatedUser } from "@/interfaces/users";
 
 interface ViewProdutoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   produtoData?: any;
-  refreshProdutos?: () => void;
 }
 
 const getImageUrl = (path: string | null) => {
@@ -37,11 +37,59 @@ export const ViewProduto = ({
   showModal,
   setShowModal,
   produtoData,
-  refreshProdutos,
 }: ViewProdutoProps) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantidade, setQuantidade] = useState<number>(1);
   const { addItem } = useCarrinho();
+
+  const atleticaIdUsuario = parseInt(sessionStorage.getItem("atletica") || "0");
+  const usuario: AuthenticatedUser = {
+    ...JSON.parse(sessionStorage.getItem("assinaturas") || "[]"),
+    atleticaId: sessionStorage.getItem("atletica"),
+  };
+
+  const isProdutoDaAtletica = produtoData?.atleticaId === atleticaIdUsuario;
+
+  const valorComDesconto = (() => {
+    if (!produtoData?.valor) return null;
+
+    const isMembroDaAtletica = isProdutoDaAtletica;
+
+    const valorDescontoMembro = isMembroDaAtletica
+      ? produtoData.valor * 0.8
+      : null;
+
+    const assinaturaValida = !isMembroDaAtletica
+      ? usuario.assinaturas?.find(
+          (assinatura: any) =>
+            assinatura.statusAssinatura === "PAGA" &&
+            assinatura.PlanoAssinatura?.atleticaId === produtoData.atleticaId
+        )
+      : null;
+
+    const descontoAssinante = assinaturaValida
+      ? assinaturaValida.PlanoAssinatura.desconto || 0
+      : 0;
+    const valorDescontoAssinante = descontoAssinante
+      ? produtoData.valor * (1 - descontoAssinante / 100)
+      : null;
+
+    if (valorDescontoMembro !== null) {
+      return {
+        valor: valorDescontoMembro.toFixed(2),
+        tipo: "20% de desconto para membros",
+      };
+    }
+
+    if (valorDescontoAssinante !== null) {
+      return {
+        valor: valorDescontoAssinante.toFixed(2),
+        tipo: `${descontoAssinante}% de desconto para assinantes`,
+      };
+    }
+
+    return null;
+  })();
 
   const handleSizeSelection = (size: string) => {
     setSelectedSize(size);
@@ -69,8 +117,6 @@ export const ViewProduto = ({
       setQuantidade((prev) => prev - 1);
     }
   };
-
-  const valorDesconto = (produtoData?.valor * 0.95).toFixed(2);
 
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
@@ -122,9 +168,25 @@ export const ViewProduto = ({
                 Vendido por: {produtoData.atleticaNome}
               </Text>
 
-              <Text className=" font-semibold  text-md text-typography-900">
-                R$ {produtoData.valor}
-              </Text>
+              {valorComDesconto ? (
+                <>
+                  <HStack className="items-center gap-2">
+                    <Text className="font-semibold text-md line-through text-red-500">
+                      R$ {produtoData.valor.toFixed(2)}
+                    </Text>
+                    <Text className="font-semibold text-lg text-green-600">
+                      R$ {valorComDesconto.valor}
+                    </Text>
+                    <Text className="text-sm text-gray-600 italic">
+                      ({valorComDesconto.tipo})
+                    </Text>
+                  </HStack>
+                </>
+              ) : (
+                <Text className="font-semibold text-md text-typography-900">
+                  R$ {produtoData.valor.toFixed(2)}
+                </Text>
+              )}
             </VStack>
             <HStack space="md" className="items-center gap-2">
               <Button variant="link" onPress={handleDecreaseQuantity}>

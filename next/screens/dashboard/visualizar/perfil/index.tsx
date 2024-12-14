@@ -58,14 +58,14 @@ export const MainContent = () => {
 
   const [activeTab, setActiveTab] = useState(0);
 
-  const tabs = ["Sobre", "Produtos", "Eventos", "Jogos", "Planos", "Membros"];
+  const tabs = ["Membros", "Produtos", "Eventos", "Jogos", "Planos",];
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
         return (
           <VStack space="sm">
-            <Text className="text-gray-600">{descricao}</Text>
+            <MembrosList />;
           </VStack>
         );
       case 1:
@@ -92,13 +92,7 @@ export const MainContent = () => {
             <PlanosList />;
           </VStack>
         );
-      case 5:
-        return (
-          <VStack space="sm">
-            <MembrosList />;
-          </VStack>
-        );
-
+     
       default:
         return null;
     }

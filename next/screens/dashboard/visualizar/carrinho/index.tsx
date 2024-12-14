@@ -149,9 +149,9 @@ export const MainContent = () => {
                   />
                   <VStack className="flex-1">
                     <Text className="font-bold">{produto.produto.nome}</Text>
-                    <Text className="text-sm text-gray-500">Size: Medium</Text>
+                    <Text className="text-sm text-gray-500">Quantidade: {produto.quantidade}</Text>
                     <Text className="text-sm text-gray-500">
-                      Delivery by Mon 27
+                     
                     </Text>
                     <Text className="text-lg font-semibold text-green-500">
                       R$ {produto.valorUnitario.toFixed(2)}
