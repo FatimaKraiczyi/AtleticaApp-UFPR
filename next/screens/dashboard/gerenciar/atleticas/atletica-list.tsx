@@ -154,7 +154,7 @@ const AllAtleticas = () => {
                       {atletica.atletica.descricao}
                     </Text>
                     <Button
-                      className="mt-auto w-full hover:bg-primary-500 "
+                      className=" mt-4 w-full hover:bg-primary-500 "
                       variant="outline"
                       onPress={() => handleViewAtletica(atletica)}
                     >

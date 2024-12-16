@@ -28,9 +28,7 @@ const getImageUrl = (path: string | null) => {
 };
 
 const AllProdutos = () => {
-  const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
-  const { addItem } = useCarrinho();
+   const { addItem } = useCarrinho();
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -49,6 +47,10 @@ const AllProdutos = () => {
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/loja";
 
+    const atleticaIdUsuario = window.location.pathname === "/dashboard/gerenciar/loja"
+      ? parseInt(sessionStorage.getItem("atletica") || "0", 10)
+      : 0;
+		
   const showMeusPedidosButton =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/visualizar/loja";
@@ -59,8 +61,8 @@ const AllProdutos = () => {
     try {
       let response;
 
-      if (showActions && atleticaId) {
-        response = await getProdutoById(atleticaId);
+      if (atleticaIdUsuario) {
+        response = await getProdutoById(atleticaIdUsuario.toString());
         if (response.success && response.data?.produto) {
           setProdutos(response.data.produto);
         }
@@ -131,9 +133,7 @@ const AllProdutos = () => {
   };
 
   const valorComDesconto = (produto: any) => {
-    const atleticaIdUsuario = parseInt(
-      sessionStorage.getItem("atletica") || "0"
-    );
+  
     const usuario: AuthenticatedUser = {
       ...JSON.parse(sessionStorage.getItem("assinaturas") || "[]"),
       atleticaId: sessionStorage.getItem("atletica"),

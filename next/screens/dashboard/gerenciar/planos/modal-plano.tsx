@@ -141,7 +141,7 @@ export const ModalPlano = ({
         setShowModal(false);
         resetForm();
       }}
-      size="lg"
+      size="md"
     >
       <ModalBackdrop />
       <ModalContent>
@@ -161,19 +161,17 @@ export const ModalPlano = ({
             />
           </ModalCloseButton>
         </ModalHeader>
-        <Center className="w-full absolute top-10">
-          <Heading size="2xl" className="text-typography-800">
+        <Center className="w-full absolute top-7">
+          <Heading size="2xl" className=" text-center text-typography-800">
             {planoData
               ? "Editar Plano de Assinatura"
               : "Cadastrar Plano de Assinatura"}
           </Heading>
         </Center>
-        <ModalBody className="max-h-[70vh] overflow-y-auto">
-          <VStack space="xl">
+        <ModalBody className="overflow-y-auto">
+          <VStack space="md">
             <FormControl isInvalid={!!errors.nome}>
-              <FormControlLabel className="mb-2">
                 <FormControlLabelText>Nome do Plano</FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 name="nome"
                 control={control}
@@ -198,9 +196,7 @@ export const ModalPlano = ({
             </FormControl>
 
             <FormControl isInvalid={!!errors.valor}>
-              <FormControlLabel className="mb-2">
                 <FormControlLabelText>Preço do Plano</FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 name="valor"
                 control={control}
@@ -227,9 +223,7 @@ export const ModalPlano = ({
             </FormControl>
 
             <FormControl isInvalid={!!errors.descricao}>
-              <FormControlLabel className="mb-2">
                 <FormControlLabelText>Descrição</FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 name="descricao"
                 control={control}
@@ -254,9 +248,7 @@ export const ModalPlano = ({
             </FormControl>
 
             <FormControl>
-              <FormControlLabel>
                 <FormControlLabelText>Desconto (%)</FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 name="desconto"
                 control={control}
@@ -273,9 +265,7 @@ export const ModalPlano = ({
             </FormControl>
 
             <FormControl isInvalid={!!errors.duracao}>
-              <FormControlLabel className="mb-2">
                 <FormControlLabelText>Duração do Plano</FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 name="duracao"
                 control={control}
@@ -300,9 +290,7 @@ export const ModalPlano = ({
             </FormControl>
 
             <FormControl>
-              <FormControlLabel className="mb-2 flex items-center">
                 <FormControlLabelText>Beneficios</FormControlLabelText>
-              </FormControlLabel>
               <div className="w-full">
                 <Controller
                   name="beneficios"
@@ -357,7 +345,7 @@ export const ModalPlano = ({
             </FormControl>
             <Button
               onPress={handleSubmit(onSubmit)}
-              className="flex-1 p-2 mt-8"
+              className="mt-4"
             >
               <ButtonText>Salvar</ButtonText>
             </Button>

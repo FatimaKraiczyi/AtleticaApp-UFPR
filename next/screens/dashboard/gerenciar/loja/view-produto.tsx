@@ -170,17 +170,19 @@ export const ViewProduto = ({
 
               {valorComDesconto ? (
                 <>
-                  <HStack className="items-center gap-2">
+                  <VStack className="gap-2">
                     <Text className="font-semibold text-md line-through text-red-500">
                       R$ {produtoData.valor.toFixed(2)}
                     </Text>
-                    <Text className="font-semibold text-lg text-green-600">
-                      R$ {valorComDesconto.valor}
-                    </Text>
-                    <Text className="text-sm text-gray-600 italic">
-                      ({valorComDesconto.tipo})
-                    </Text>
-                  </HStack>
+                    <HStack className="items-center sm:flex-row sm:justify-between w-full">
+                      <Text className="font-semibold text-lg text-green-600">
+                        R$ {valorComDesconto.valor}
+                      </Text>
+                      <Text className="text-sm text-gray-600 italic">
+                        ({valorComDesconto.tipo})
+                      </Text>
+                    </HStack>
+                  </VStack>
                 </>
               ) : (
                 <Text className="font-semibold text-md text-typography-900">

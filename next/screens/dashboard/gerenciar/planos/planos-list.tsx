@@ -15,6 +15,7 @@ import { getPlanoByAtleticaId, getPlanos } from "@/api/planos";
 import { LoadingState } from "@/components/sections/LoadingState";
 import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { PlanoAssinatura } from "@/interfaces/planos";
+import { ChevronDown, ChevronUp } from "lucide-react-native";
 
 const AllPlanos = () => {
   const atleticaId =
@@ -28,6 +29,7 @@ const AllPlanos = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [planoIdToDelete, setPlanoIdToDelete] = useState<number | null>(null);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [expandedPlanos, setExpandedPlanos] = useState<Set<number>>(new Set());
 
   const showActions =
     typeof window !== "undefined" &&
@@ -83,6 +85,18 @@ const AllPlanos = () => {
     return `${duracao} dias`;
   };
 
+  const toggleExpand = (id: number) => {
+    setExpandedPlanos((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
   if (loading) {
     return <LoadingState />;
   }
@@ -123,7 +137,7 @@ const AllPlanos = () => {
                     className: "",
                   }}
                 >
-                  <VStack className="items-center">
+                  <VStack className="items-center align-center justify-center">
                     <Text className="text-sm font-bold">
                       {plano.atleticaNome}
                     </Text>
@@ -136,14 +150,36 @@ const AllPlanos = () => {
                     <Text className="text-gray-500 text-sm mb-4">
                       / {formatDuration(plano.duracao)}
                     </Text>
-                    <Text className="text-gray-700 text-sm mt-2">
+                    <Text className="text-center text-gray-700 text-sm mt-2">
                       {plano.descricao}
                     </Text>
-                    <Text className="text-gray-700 text-sm mt-2 mb-4">
-                      {plano.desconto}% de desconto na loja para assinantes
-                    </Text>
+                    <Button
+                      variant="link"
+                      className="text-violet-500 text-sm"
+                      onPress={() => toggleExpand(plano.id)}
+                    >
+                      <span>Veja os benefícios</span>
+                      {expandedPlanos.has(plano.id) ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
+                    {expandedPlanos.has(plano.id) && (
+                      <VStack space="lg" className="items-center">
+                        <Text className="text-gray-700 text-sm">
+                          ✔️ {plano.desconto} % de desconto na loja
+                        </Text>
+                        {plano.beneficios &&
+                          plano.beneficios.map((beneficio: any, index: any) => (
+                            <Text key={index} className="text-center text-gray-700 text-sm">
+                              ✔️ {beneficio}
+                            </Text>
+                          ))}
+                      </VStack>
+                    )}
                   </VStack>
-                  <VStack className="items-center">
+                  <VStack className="items-center pt-4">
                     <Button
                       variant="solid"
                       className="w-full"
