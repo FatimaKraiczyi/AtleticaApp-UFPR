@@ -60,7 +60,7 @@ const signUpSchema = z.object({
   sobrenome: z.string().optional(),
   password: z
     .string()
-    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .min(6, "A senha deve ter no mínimo 6 caracteres")
     .regex(
       new RegExp(".*[A-Z].*"),
       "Deve conter pelo menos uma letra maiúscula"
@@ -76,7 +76,7 @@ const signUpSchema = z.object({
     ),
   confirmpassword: z
     .string()
-    .min(8, "A senha deve ter no mínimo 8 caracteres")
+    .min(6, "A senha deve ter no mínimo 6 caracteres")
     .regex(
       new RegExp(".*[A-Z].*"),
       "Deve conter pelo menos uma letra maiúscula"
@@ -170,11 +170,11 @@ const SignUpForm = () => {
   };
 
   return (
-    <>
+    <Box className="py-4">
       <FormControl
-        className="my-2  md:my-2"
         isInvalid={!!errors.nome}
         isRequired={true}
+				className="mb-2"
       >
         <Controller
           name="nome"
@@ -199,7 +199,8 @@ const SignUpForm = () => {
           <FormControlErrorText>{errors?.nome?.message}</FormControlErrorText>
         </FormControlError>
       </FormControl>
-      <FormControl className="my-2  md:my-2" isInvalid={!!errors.sobrenome}>
+      <FormControl 				className="mb-2"
+  isInvalid={!!errors.sobrenome}>
         <Controller
           name="sobrenome"
           defaultValue=" "
@@ -226,9 +227,10 @@ const SignUpForm = () => {
       </FormControl>
 
       <FormControl
-        className="my-2  md:my-2"
         isRequired={true}
         isInvalid={!!errors.password}
+				className="mb-2"
+
       >
         <Controller
           name="password"
@@ -248,7 +250,6 @@ const SignUpForm = () => {
           render={({ field: { onChange, onBlur, value } }) => (
             <Input>
               <InputField
-                className="text-sm"
                 placeholder="Senha"
                 value={value}
                 onChangeText={onChange}
@@ -271,7 +272,8 @@ const SignUpForm = () => {
         </FormControlError>
       </FormControl>
       <FormControl
-        className="my-2  md:my-2"
+							className="mb-2"
+
         isRequired={true}
         isInvalid={!!errors.confirmpassword}
       >
@@ -294,7 +296,6 @@ const SignUpForm = () => {
             <Input>
               <InputField
                 placeholder="Confirmar Senha"
-                className="text-sm"
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -317,7 +318,8 @@ const SignUpForm = () => {
         </FormControlError>
       </FormControl>
       <FormControl
-        className="my-2  md:my-2"
+							className="mb-2"
+
         isRequired={true}
         isInvalid={!!errors.curso}
       >
@@ -354,7 +356,8 @@ const SignUpForm = () => {
         </FormControlError>
       </FormControl>
       <FormControl
-        className="my-2  md:my-2"
+							className="mb-2"
+
         isRequired={true}
         isInvalid={!!errors.telefone}
       >
@@ -364,7 +367,6 @@ const SignUpForm = () => {
           render={({ field: { onChange, value } }) => (
             <Input>
               <InputField
-                className="text-sm"
                 placeholder="Telefone"
                 value={value}
                 keyboardType="phone-pad"
@@ -386,7 +388,8 @@ const SignUpForm = () => {
         </FormControlError>
       </FormControl>
       <FormControl
-        className="my-2  md:my-2"
+							className="mb-2"
+
         isRequired={true}
         isInvalid={!!errors.dataNascimento}
       >
@@ -437,18 +440,17 @@ const SignUpForm = () => {
           </Checkbox>
         )}
       />
-      <VStack className="w-full" space="lg">
+      <VStack className="w-full">
         <Button
           variant="solid"
           action="primary"
-          size="lg"
 					className="mt-4"
           onPress={handleSubmit(onSubmit)}
         >
           <ButtonText>FINALIZAR</ButtonText>
         </Button>
       </VStack>
-    </>
+    </Box>
   );
 };
 
@@ -509,10 +511,10 @@ const Main = () => {
         className="max-w-[508px] flex-1 px-4 py-8 bg-background-0
             dark:bg-background-50 md:pt-8 md:px-8"
       >
-        <Heading className="mb-8 md:flex md:text-2xl hidden">
+        <Heading className="md:flex md:text-2xl hidden">
           Finalize o cadastro para continuar
         </Heading>
-        <SignUpForm />
+        <SignUpForm/>
       </Box>
     </>
   );
