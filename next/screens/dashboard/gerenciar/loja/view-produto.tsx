@@ -145,7 +145,7 @@ export const ViewProduto = ({
               {produtoData.nome}
             </Heading>
           </Center>
-          <ModalBody className="max-h-[80vh] overflow-y-auto">
+          <ModalBody className="overflow-y-auto">
             <Box className="w-full overflow-hidden rounded-md h-72">
               {produtoData.imagem ? (
                 <Image
@@ -163,31 +163,33 @@ export const ViewProduto = ({
                 />
               )}
             </Box>
-            <VStack className="py-2">
-              <Text className="text-sm">
-                Vendido por: {produtoData.atleticaNome}
-              </Text>
+						<VStack className="items-center">
+                      <Text className="text-sm  gap-2">Vendido por:</Text>
+                      <Text className="font-primary text-violet-600 text-md pb-4 font-semibold">
+                        {produtoData.atleticaNome}
+                      </Text>
+                    
 
               {valorComDesconto ? (
                 <>
-                  <VStack className="gap-2">
-                    <Text className="font-semibold text-md line-through text-red-500">
-                      R$ {produtoData.valor.toFixed(2)}
+                      <VStack space="sm" className="items-center">
+											<Text className="font-semibold text-md line-through text-red-500">
+									R$ {produtoData.valor}
                     </Text>
-                    <HStack className="items-center sm:flex-row sm:justify-between w-full">
-                      <Text className="font-semibold text-lg text-green-600">
-                        R$ {valorComDesconto.valor}
+										<Text className="font-semibold text-2xl text-typography-900 text-green-600">
+										R$ {valorComDesconto.valor}
                       </Text>
-                      <Text className="text-sm text-gray-600 italic">
-                        ({valorComDesconto.tipo})
-                      </Text>
-                    </HStack>
+										<Text className="text-sm text-green-900 line-clamp-1 italic">
+										({valorComDesconto.tipo})
+                    </Text>
                   </VStack>
                 </>
               ) : (
-                <Text className="font-semibold text-md text-typography-900">
-                  R$ {produtoData.valor.toFixed(2)}
-                </Text>
+								<VStack space="sm" className="items-center">
+                  <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                    R$ {produtoData.valor}
+                  </Text>
+                </VStack>
               )}
             </VStack>
             <HStack space="md" className="items-center gap-2">

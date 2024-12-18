@@ -166,7 +166,7 @@ const AllPlanos = () => {
                       )}
                     </Button>
                     {expandedPlanos.has(plano.id) && (
-                      <VStack space="lg" className="items-center">
+                      <VStack space="lg" className="items-center h-auto	">
                         <Text className="text-gray-700 text-sm">
                           ✔️ {plano.desconto} % de desconto na loja
                         </Text>

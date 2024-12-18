@@ -141,7 +141,7 @@ export const EventsList = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 gap-10">
               {eventos.map((evento) => {
                 const eventoData = evento.data;
                 const [ano, mes, dia] = eventoData.split("-");
@@ -201,6 +201,9 @@ export const EventsList = () => {
 
                         <Text className="text-md text-gray-600  pt-2 sm:text-left">
                           Local: {evento.endereco}
+                        </Text>
+												<Text className="font-semibold text-2xl pt-2 text-typography-900 text-green-600">
+                          R$ {evento.ingresso}
                         </Text>
                       </VStack>
                     </Card>

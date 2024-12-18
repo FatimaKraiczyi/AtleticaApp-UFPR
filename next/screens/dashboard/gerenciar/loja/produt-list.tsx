@@ -50,7 +50,8 @@ const AllProdutos = () => {
     const atleticaIdUsuario = window.location.pathname === "/dashboard/gerenciar/loja"
       ? parseInt(sessionStorage.getItem("atletica") || "0", 10)
       : 0;
-		
+		  const atleticaId =
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const showMeusPedidosButton =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/visualizar/loja";
@@ -132,14 +133,12 @@ const AllProdutos = () => {
     }));
   };
 
-  const valorComDesconto = (produto: any) => {
-  
+  const valorComDesconto = (produto: Produto) => {
     const usuario: AuthenticatedUser = {
       ...JSON.parse(sessionStorage.getItem("assinaturas") || "[]"),
-      atleticaId: sessionStorage.getItem("atletica"),
     };
 
-    const isProdutoDaAtletica = produto?.atleticaId === atleticaIdUsuario;
+    const isProdutoDaAtletica = produto?.atleticaId === Number(atleticaId);
 
     const assinaturaValida = usuario.assinaturas?.find(
       (assinatura: any) =>
@@ -223,11 +222,11 @@ const AllProdutos = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
-						{produtos.map((produto) => (
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 gap-10">
+              {produtos.map((produto) => (
                 <GridItem
                   key={produto.id}
-                  className="flex flex-col p-4 xl:h-120 xl:w-72 md:h-120 md:w-72 rounded-md shadow-md"
+                  className=" p-4 rounded-md shadow-md"
                 >
                   <Pressable onPress={() => openViewModal(produto)}>
                     <Box className="rounded-md h-48 w-full overflow-hidden">
@@ -265,22 +264,27 @@ const AllProdutos = () => {
                     {valorComDesconto(produto) ? (
                       <VStack space="sm" className="items-center">
                         <Text className="font-semibold text-md line-through text-red-500">
-                          R$ {produto.valor.toFixed(2)}
+                          R$ {produto.valor}
                         </Text>
                         <Text className="font-semibold text-2xl text-typography-900 text-green-600">
                           R$ {valorComDesconto(produto)?.valor}
                         </Text>
-                        <Text className="text-sm text-green-900 line-clamp-1">
+                        <Text className="text-sm text-green-900 line-clamp-1 italic">
                           {valorComDesconto(produto)?.tipo}
                         </Text>
                       </VStack>
                     ) : (
-                      <Text className="font-semibold text-md text-typography-900">
-                        R$ {produto.valor.toFixed(2)}
-                      </Text>
+                      <VStack space="sm" className="items-center">
+                        <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                          R$ {produto.valor}
+                        </Text>
+                      </VStack>
                     )}
                   </VStack>
-                  <HStack space="md" className="justify-center  items-center gap-2">
+                  <HStack
+                    space="md"
+                    className="justify-center  items-center gap-2"
+                  >
                     <Text>{quantidades[produto.id] || 1}</Text>
                     <Button
                       variant="link"

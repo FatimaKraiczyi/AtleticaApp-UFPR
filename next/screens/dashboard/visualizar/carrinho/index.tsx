@@ -14,11 +14,16 @@ import { LoadingState } from "@/components/sections/LoadingState";
 import { Trash } from "lucide-react-native";
 import { getCart, deleteCartProdut, addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
-import {
-  ProdutosCart,
-} from "@/interfaces/ProdutoCarrinho";
+import { ProdutosCart } from "@/interfaces/ProdutoCarrinho";
 import { novoPedido } from "@/api/pedidos";
 import useRouter from "@unitools/router";
+
+const getImageUrl = (path: string | null) => {
+  if (!path) return null;
+  const baseUrl = "http://localhost:3001/uploads/";
+  const fileName = path.split("\\").pop();
+  return `${baseUrl}${fileName}`;
+};
 
 export const MainContent = () => {
   const [loading, setLoading] = useState(true);
@@ -26,7 +31,7 @@ export const MainContent = () => {
   const [subtotal, setSubtotal] = useState(0);
   const hasFetchedCart = useRef(false);
   const { setItems } = useCarrinho();
-	const router = useRouter();
+  const router = useRouter();
 
   const calcularSubtotal = (items: ProdutosCart[]) => {
     const total = items.reduce(
@@ -119,7 +124,7 @@ export const MainContent = () => {
     <NoItemsFound message="Seu carrinho está vazio" />
   );
 
-  const desconto = subtotal * 0.05;
+  const desconto = subtotal * 0.20;
   const totalComDesconto = subtotal - desconto;
 
   return (
@@ -142,12 +147,12 @@ export const MainContent = () => {
                   <Image
                     source={
                       produto.produto.imagem ||
-                      require("@/assets/dashboard/image2.png")
+                      require("@/assets/dashboard/okeb1sudj73wkjpyxtmdm.png")
                     }
                     alt={produto.produto.nome}
                     className="w-20 h-25 object-cover rounded"
                   />
-                  <VStack className="flex-1">
+           <VStack className="flex-1">
                     <Text className="font-bold">{produto.produto.nome}</Text>
                     <Text className="text-sm text-gray-500">Quantidade: {produto.quantidade}</Text>
                     <Text className="text-sm text-gray-500">
@@ -192,8 +197,16 @@ export const MainContent = () => {
                 <Text>Subtotal</Text>
                 <Text>R$ {subtotal.toFixed(2)}</Text>
               </HStack>
-            
-             
+              <HStack className="justify-between">
+                <Text>20% de desconto para membros</Text>
+                <Text className="text-lg font-semibold text-green-500">
+                  R$ {desconto.toFixed(2)}
+                </Text>
+              </HStack>
+              <HStack className="justify-between font-bold">
+                <Text>Total</Text>
+                <Text>R$ {totalComDesconto.toFixed(2)}</Text>
+              </HStack>
             </VStack>
             <HStack
               space="xs"
