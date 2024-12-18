@@ -1,9 +1,10 @@
 export interface PlanoAssinatura {
-	descricao: string[];
 	id: number;
+	atleticaId: number;
 	nome: string;
+	descricao: string;
 	valor: number;
 	duracao: number;
-	atleticaNome?: string;
-	atleticaId?: number;
+	desconto: number;
+	beneficios: string[];
 }

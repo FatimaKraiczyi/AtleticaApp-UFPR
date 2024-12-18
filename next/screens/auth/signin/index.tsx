@@ -68,14 +68,22 @@ const SignInForm = () => {
         "atletica",
         response.data.atletica ? response.data.atletica.toString() : ""
       );
-			sessionStorage.setItem("atleticaNome", response.data.atleticaNome);
+      sessionStorage.setItem("atleticaNome", response.data.atleticaNome);
       sessionStorage.setItem("usuarioId", response.data.usuarioId.toString());
       sessionStorage.setItem("usuarioNome", response.data.usuarioNome);
+      sessionStorage.setItem(
+        "assinaturas",
+        JSON.stringify(response.data.assinaturas)
+      );
 
-      router.push("/dashboard/");
+      if (response.data.tipo === "master") {
+        router.push("/dashboard/gerenciar/atleticas");
+      } else {
+        router.push("/dashboard/");
+      }
     }
   };
-	
+
   const handleKeyPress = () => {
     Keyboard.dismiss();
     handleSubmit(onSubmit)();
@@ -199,7 +207,7 @@ function SideContainerWeb() {
   return (
     <Center
       className="bg-violet-600
-            dark:bg-background-0 flex-1"
+                        dark:bg-background-0 flex-1"
     >
       <Image
         alt="logo"
@@ -216,7 +224,7 @@ function MobileHeader() {
     <VStack
       space="md"
       className="px-3 mt-4 bg-violet-600
-            dark:bg-background-0"
+                        dark:bg-background-0"
     >
       <HStack space="md" className="items-center">
         <Link href="..">
@@ -250,7 +258,7 @@ const Main = () => {
       </Box>
       <Box
         className="max-w-[508px] flex-1 px-4 py-8 bg-background-0
-            dark:bg-background-50 md:pt-8 md:px-8"
+                        dark:bg-background-50 md:pt-8 md:px-8"
       >
         <Heading className="mb-8 md:flex md:text-2xl hidden">
           Faça login para continuar

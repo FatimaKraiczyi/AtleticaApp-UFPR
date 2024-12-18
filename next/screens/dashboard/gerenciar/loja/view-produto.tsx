@@ -18,12 +18,12 @@ import { Box } from "@/components/ui/box";
 import { Center } from "@/components/ui/center";
 import { addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
+import { AuthenticatedUser } from "@/interfaces/users";
 
 interface ViewProdutoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
   produtoData?: any;
-  refreshProdutos?: () => void;
 }
 
 const getImageUrl = (path: string | null) => {
@@ -37,11 +37,59 @@ export const ViewProduto = ({
   showModal,
   setShowModal,
   produtoData,
-  refreshProdutos,
 }: ViewProdutoProps) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantidade, setQuantidade] = useState<number>(1);
   const { addItem } = useCarrinho();
+
+  const atleticaIdUsuario = parseInt(sessionStorage.getItem("atletica") || "0");
+  const usuario: AuthenticatedUser = {
+    ...JSON.parse(sessionStorage.getItem("assinaturas") || "[]"),
+    atleticaId: sessionStorage.getItem("atletica"),
+  };
+
+  const isProdutoDaAtletica = produtoData?.atleticaId === atleticaIdUsuario;
+
+  const valorComDesconto = (() => {
+    if (!produtoData?.valor) return null;
+
+    const isMembroDaAtletica = isProdutoDaAtletica;
+
+    const valorDescontoMembro = isMembroDaAtletica
+      ? produtoData.valor * 0.8
+      : null;
+
+    const assinaturaValida = !isMembroDaAtletica
+      ? usuario.assinaturas?.find(
+          (assinatura: any) =>
+            assinatura.statusAssinatura === "PAGA" &&
+            assinatura.PlanoAssinatura?.atleticaId === produtoData.atleticaId
+        )
+      : null;
+
+    const descontoAssinante = assinaturaValida
+      ? assinaturaValida.PlanoAssinatura.desconto || 0
+      : 0;
+    const valorDescontoAssinante = descontoAssinante
+      ? produtoData.valor * (1 - descontoAssinante / 100)
+      : null;
+
+    if (valorDescontoMembro !== null) {
+      return {
+        valor: valorDescontoMembro.toFixed(2),
+        tipo: "20% de desconto para membros",
+      };
+    }
+
+    if (valorDescontoAssinante !== null) {
+      return {
+        valor: valorDescontoAssinante.toFixed(2),
+        tipo: `${descontoAssinante}% de desconto para assinantes`,
+      };
+    }
+
+    return null;
+  })();
 
   const handleSizeSelection = (size: string) => {
     setSelectedSize(size);
@@ -70,8 +118,6 @@ export const ViewProduto = ({
     }
   };
 
-  const valorDesconto = (produtoData?.valor * 0.95).toFixed(2);
-
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
       <ModalBackdrop />
@@ -99,7 +145,7 @@ export const ViewProduto = ({
               {produtoData.nome}
             </Heading>
           </Center>
-          <ModalBody className="max-h-[80vh] overflow-y-auto">
+          <ModalBody className="overflow-y-auto">
             <Box className="w-full overflow-hidden rounded-md h-72">
               {produtoData.imagem ? (
                 <Image
@@ -117,14 +163,34 @@ export const ViewProduto = ({
                 />
               )}
             </Box>
-            <VStack className="py-2">
-              <Text className="text-sm">
-                Vendido por: {produtoData.atleticaNome}
-              </Text>
+						<VStack className="items-center">
+                      <Text className="text-sm  gap-2">Vendido por:</Text>
+                      <Text className="font-primary text-violet-600 text-md pb-4 font-semibold">
+                        {produtoData.atleticaNome}
+                      </Text>
+                    
 
-              <Text className=" font-semibold  text-md text-typography-900">
-                R$ {produtoData.valor}
-              </Text>
+              {valorComDesconto ? (
+                <>
+                      <VStack space="sm" className="items-center">
+											<Text className="font-semibold text-md line-through text-red-500">
+									R$ {produtoData.valor}
+                    </Text>
+										<Text className="font-semibold text-2xl text-typography-900 text-green-600">
+										R$ {valorComDesconto.valor}
+                      </Text>
+										<Text className="text-sm text-green-900 line-clamp-1 italic">
+										({valorComDesconto.tipo})
+                    </Text>
+                  </VStack>
+                </>
+              ) : (
+								<VStack space="sm" className="items-center">
+                  <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                    R$ {produtoData.valor}
+                  </Text>
+                </VStack>
+              )}
             </VStack>
             <HStack space="md" className="items-center gap-2">
               <Button variant="link" onPress={handleDecreaseQuantity}>

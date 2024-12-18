@@ -127,7 +127,7 @@ const ForgotPasswordForm = () => {
         </Heading>
         <Text className="text-sm font-normal text-center md:text-left">
           Não se preocupe! Insira o endereço de e-mail associado à sua conta e
-          enviaremos um token de autenticação para redefinir sua senha.
+          enviaremos um código de verificação para redefinir sua senha.
         </Text>
       </VStack>
       <FormControl
@@ -172,7 +172,7 @@ const ForgotPasswordForm = () => {
         </FormControlError>
       </FormControl>
       <Button variant="solid" size="lg" onPress={handleSubmit(onSubmit)}>
-        <ButtonText className="text-sm">Enviar token</ButtonText>
+        <ButtonText className="text-sm">Enviar código</ButtonText>
       </Button>
     </>
   );

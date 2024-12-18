@@ -146,7 +146,7 @@ export const JogosList = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 gap-10">
               {jogos.map((jogo) => {
                 const eventoData = jogo.data;
                 const [ano, mes, dia] = eventoData.split("-");

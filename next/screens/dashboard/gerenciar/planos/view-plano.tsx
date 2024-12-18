@@ -24,7 +24,7 @@ import useRouter from "@unitools/router";
 interface ViewPlanoProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
-  planosData?: PlanoAssinatura;
+  planosData?: any;
 }
 
 export const ViewPlano = ({
@@ -93,7 +93,7 @@ export const ViewPlano = ({
             </Text>
             <Text className="text-sm">Duração: {planosData.duracao} dias</Text>
 
-            <VStack space="2xl">
+            <VStack className="mt-4">
               <Button
                 variant="link"
                 className="text-gray-500 text-sm"
@@ -108,14 +108,18 @@ export const ViewPlano = ({
               </Button>
 
               {expandedPlanos.has(planosData.id) && (
-                <VStack space="lg" className="items-center">
-                  {planosData.descricao && (
-                    <Text className="text-gray-700 text-sm">
-                      ✔️ {planosData.descricao}
-                    </Text>
-                  )}
-                </VStack>
-              )}
+                      <VStack space="md" className="items-center">
+                        <Text className="text-gray-700 text-sm">
+                          ✔️ {planosData.desconto} % de desconto na loja
+                        </Text>
+                        {planosData.beneficios &&
+                          planosData.beneficios.map((beneficio: any, index: any) => (
+                            <Text key={index} className="text-center text-gray-700 text-sm">
+                              ✔️ {beneficio}
+                            </Text>
+                          ))}
+                      </VStack>
+                    )}
 
               <HStack className="items-center justify-between mt-4">
                 <Button onPress={handlePurchase} className="flex-1 ml-2">

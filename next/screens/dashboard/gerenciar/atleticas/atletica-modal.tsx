@@ -249,7 +249,6 @@ export const ModalAtletica = ({
         setShowModal(false);
       }
     } catch (error) {
-      console.error("Erro ao salvar:", error);
     }
   };
 
@@ -287,7 +286,7 @@ export const ModalAtletica = ({
             {atleticaData ? "Editar Atlética" : "Cadastrar Atlética"}
           </Heading>
         </Center>
-        <ModalBody className="max-h-[70vh] overflow-y-auto">
+        <ModalBody className="overflow-y-auto">
           <Center className="w-full mb-6">
             <TouchableOpacity onPress={pickImage}>
               <Box>

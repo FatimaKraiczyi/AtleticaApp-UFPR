@@ -152,7 +152,7 @@ const Main = () => {
                           variant="solid"
                           className="w-full"
                           onPress={async () => {
-                            const response = await pagamentoAssinatura(assinatura.planoId);
+                            const response = await pagamentoAssinatura(assinatura.id);
                             if (response.success && response?.data) {
                               window.location.href = response.data.url;
                             } else {

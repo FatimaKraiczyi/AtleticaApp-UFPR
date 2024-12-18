@@ -18,6 +18,7 @@ import { NoItemsFound } from "@/components/sections/NoItemsFound";
 import { addCartProduct } from "@/api/carrinho";
 import { useCarrinho } from "@/hooks/CarrinhoContext";
 import { Produto } from "@/interfaces/ProdutoCarrinho";
+import { AuthenticatedUser } from "@/interfaces/users";
 
 const getImageUrl = (path: string | null) => {
   if (!path) return null;
@@ -27,9 +28,7 @@ const getImageUrl = (path: string | null) => {
 };
 
 const AllProdutos = () => {
-  const atleticaId =
-    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
-  const { addItem } = useCarrinho();
+   const { addItem } = useCarrinho();
   const [loading, setLoading] = useState(true);
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -48,6 +47,11 @@ const AllProdutos = () => {
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/gerenciar/loja";
 
+    const atleticaIdUsuario = window.location.pathname === "/dashboard/gerenciar/loja"
+      ? parseInt(sessionStorage.getItem("atletica") || "0", 10)
+      : 0;
+		  const atleticaId =
+    typeof window !== "undefined" ? sessionStorage.getItem("atletica") : null;
   const showMeusPedidosButton =
     typeof window !== "undefined" &&
     window.location.pathname === "/dashboard/visualizar/loja";
@@ -58,8 +62,8 @@ const AllProdutos = () => {
     try {
       let response;
 
-      if (showActions && atleticaId) {
-        response = await getProdutoById(atleticaId);
+      if (atleticaIdUsuario) {
+        response = await getProdutoById(atleticaIdUsuario.toString());
         if (response.success && response.data?.produto) {
           setProdutos(response.data.produto);
         }
@@ -115,7 +119,10 @@ const AllProdutos = () => {
   const handleIncreaseQuantity = (produto: Produto) => {
     setQuantidades((prev) => ({
       ...prev,
-      [produto.id]: Math.min((prev[produto.id] || 1) + 1, produto.quantidade ?? 0),
+      [produto.id]: Math.min(
+        (prev[produto.id] || 1) + 1,
+        produto.quantidade ?? 0
+      ),
     }));
   };
 
@@ -124,6 +131,59 @@ const AllProdutos = () => {
       ...prev,
       [produto.id]: Math.max((prev[produto.id] || 1) - 1, 1),
     }));
+  };
+
+  const valorComDesconto = (produto: Produto) => {
+    const usuario: AuthenticatedUser = {
+      ...JSON.parse(sessionStorage.getItem("assinaturas") || "[]"),
+    };
+
+    const isProdutoDaAtletica = produto?.atleticaId === Number(atleticaId);
+
+    const assinaturaValida = usuario.assinaturas?.find(
+      (assinatura: any) =>
+        assinatura.statusAssinatura === "PAGA" &&
+        assinatura.PlanoAssinatura?.atleticaId === produto.atleticaId
+    );
+
+    const descontoAssinante = assinaturaValida
+      ? assinaturaValida.PlanoAssinatura.desconto || 0
+      : 0;
+    const valorDescontoAssinante = descontoAssinante
+      ? produto.valor * (1 - descontoAssinante / 100)
+      : null;
+
+    const valorDescontoMembro = isProdutoDaAtletica
+      ? produto.valor * 0.8
+      : null;
+
+    if (valorDescontoAssinante !== null && valorDescontoMembro !== null) {
+      return valorDescontoAssinante < valorDescontoMembro
+        ? {
+            valor: valorDescontoAssinante.toFixed(2),
+            tipo: `${descontoAssinante}% de desconto para assinantes`,
+          }
+        : {
+            valor: valorDescontoMembro.toFixed(2),
+            tipo: "20% de desconto para membros",
+          };
+    }
+
+    if (valorDescontoAssinante !== null) {
+      return {
+        valor: valorDescontoAssinante.toFixed(2),
+        tipo: `${descontoAssinante}% de desconto para assinantes`,
+      };
+    }
+
+    if (valorDescontoMembro !== null) {
+      return {
+        valor: valorDescontoMembro.toFixed(2),
+        tipo: "20% de desconto para membros",
+      };
+    }
+
+    return null;
   };
 
   if (loading) {
@@ -162,17 +222,14 @@ const AllProdutos = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
+            <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 gap-10">
               {produtos.map((produto) => (
                 <GridItem
                   key={produto.id}
-                  className="flex flex-col p-4 bg-white rounded-md shadow-md"
-                  _extra={{
-                    className: "",
-                  }}
+                  className=" p-4 rounded-md shadow-md"
                 >
                   <Pressable onPress={() => openViewModal(produto)}>
-                    <Box className="w-full overflow-hidden rounded-md h-48 relative group">
+                    <Box className="rounded-md h-48 w-full overflow-hidden">
                       {produto.imagem ? (
                         <Image
                           source={{
@@ -180,7 +237,7 @@ const AllProdutos = () => {
                           }}
                           alt={produto.nome}
                           size="full"
-                          className="w-full rounded-lg bg-gray-200 object-cover group-hover:opacity-75 xl:aspect-[7/8]"
+                          className="transform duration-500 ease-in-out hover:scale-110 rounded-lg bg-gray-200 "
                         />
                       ) : (
                         <Image
@@ -193,29 +250,41 @@ const AllProdutos = () => {
                     </Box>
                   </Pressable>
 
-                  <VStack className="py-2">
-                    <HStack>
-                      <Text className="text-sm">Vendido por: {""}</Text>
-                      <Text className="text-sm font-bold">
+                  <VStack>
+                    <VStack className="items-center">
+                      <Text className="text-sm  gap-2">Vendido por:</Text>
+                      <Text className="font-primary text-violet-600 text-md pb-4 font-semibold">
                         {produto.atleticaNome}
                       </Text>
-                    </HStack>
-                    <Text className="font-semibold text-xl mt-4">
-                      {produto.nome}
-                    </Text>
-                    <HStack space="md" className="items-center gap-2">
-                      <Text className="font-semibold text-2xl text-typography-900 text-green-600">
-                        R$ {(produto.valor - produto.valor * 0.05).toFixed(2)}
+                      <Text className="font-primary text-2xl font-semibold">
+                        {produto.nome}
                       </Text>
-                      <Text className="text-sm text-green-900 line-clamp-1">
-                        5% off para sócios
-                      </Text>
-                    </HStack>
-                    <Text className="font-semibold  text-md text-typography-900">
-                      R$ {produto.valor.toFixed(2)}
-                    </Text>
+                    </VStack>
+
+                    {valorComDesconto(produto) ? (
+                      <VStack space="sm" className="items-center">
+                        <Text className="font-semibold text-md line-through text-red-500">
+                          R$ {produto.valor}
+                        </Text>
+                        <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                          R$ {valorComDesconto(produto)?.valor}
+                        </Text>
+                        <Text className="text-sm text-green-900 line-clamp-1 italic">
+                          {valorComDesconto(produto)?.tipo}
+                        </Text>
+                      </VStack>
+                    ) : (
+                      <VStack space="sm" className="items-center">
+                        <Text className="font-semibold text-2xl text-typography-900 text-green-600">
+                          R$ {produto.valor}
+                        </Text>
+                      </VStack>
+                    )}
                   </VStack>
-                  <HStack space="md" className="items-center gap-2">
+                  <HStack
+                    space="md"
+                    className="justify-center  items-center gap-2"
+                  >
                     <Text>{quantidades[produto.id] || 1}</Text>
                     <Button
                       variant="link"
@@ -230,14 +299,14 @@ const AllProdutos = () => {
                       -
                     </Button>
 
-                    <Text className="text-sm">
+                    <Text className="text-sm text-gray-600 font-primary font-light">
                       Em estoque: {""}
                       {produto.quantidade}
                     </Text>
                   </HStack>
 
                   {showActions ? (
-                    <HStack className="w-full items-center justify-between mt-4">
+                    <HStack className="w-full items-center justify-center mt-4">
                       <HStack className="items-center">
                         <Pressable onPress={() => handleEditProduto(produto)}>
                           <Edit className="text-typography-600 mr-4" />
@@ -285,7 +354,6 @@ const AllProdutos = () => {
         showModal={showViewModal}
         setShowModal={setShowViewModal}
         produtoData={selectedProduto}
-        refreshProdutos={fetchProdutos}
       />
     </Box>
   );

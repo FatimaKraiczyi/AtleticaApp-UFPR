@@ -120,7 +120,7 @@ const AllAtleticas = () => {
             contentContainerStyle={{ flexGrow: 1 }}
             className="p-4"
           >
-      <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
+      <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-5  xl:grid-cols-5 gap-10">
               {atleticas.map((atletica) => (
                 <GridItem
                   key={atletica.atletica.id}
@@ -146,7 +146,7 @@ const AllAtleticas = () => {
                       )}
                     </Avatar>
                   </Box>
-                  <Box className="p-4 md:h-[180px]">
+                  <Box className="p-4 sm:py-4 md:h-[180px]">
                     <Text className="text-lg font-semibold">
                       {atletica.atletica.nome}
                     </Text>

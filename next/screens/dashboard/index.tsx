@@ -163,7 +163,7 @@ const MainContent = () => {
               <Heading size="2xl" className="font-roboto font-bold">
                 Gerenciar Atléticas
               </Heading>
-              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 gap-10">
                 {masterCards.map((card, index) => (
                   <Card key={index} card={card} onPress={handleCardPress} />
                 ))}
@@ -174,7 +174,7 @@ const MainContent = () => {
               <Heading size="2xl" className="font-roboto font-bold">
                 Olá, {userName}
               </Heading>
-              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
+              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 gap-10">
                 {mainCards.map((card, index) => (
                   <Card key={index} card={card} onPress={handleCardPress} />
                 ))}
@@ -185,7 +185,7 @@ const MainContent = () => {
                   <Heading size="xl" className="font-roboto font-bold mt-10">
                     Gerenciar: {String(atleticaData)}
                   </Heading>
-              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-10">
+              <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3   xl:grid-cols-5 gap-10">
                     {adminCards.map((card, index) => (
                       <Card key={index} card={card} onPress={handleCardPress} />
                     ))}

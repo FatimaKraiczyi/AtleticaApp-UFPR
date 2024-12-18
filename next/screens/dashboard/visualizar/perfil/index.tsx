@@ -14,6 +14,7 @@ import { EventsList } from "../../gerenciar/eventos/event-list";
 import { JogosList } from "../../gerenciar/jogos/jogos-list";
 import { PlanosList } from "../../gerenciar/planos/planos-list";
 import { MembrosList } from "../../gerenciar/membros/membro-list";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 interface NavBarProps {
   tabs: string[];
@@ -50,6 +51,13 @@ const NavBar = ({ tabs, activeTab, setActiveTab }: NavBarProps) => {
   );
 };
 
+const getImageUrl = (path: string | null) => {
+  if (!path) return null;
+  const baseUrl = "http://localhost:3001/uploads/";
+  const fileName = path.split("\\").pop();
+  return `${baseUrl}${fileName}`;
+};
+
 export const MainContent = () => {
   const { atleticaData } = useAtletica();
   const { atletica } = atleticaData || {};
@@ -58,14 +66,14 @@ export const MainContent = () => {
 
   const [activeTab, setActiveTab] = useState(0);
 
-  const tabs = ["Sobre", "Produtos", "Eventos", "Jogos", "Planos", "Membros"];
+  const tabs = ["Membros", "Produtos", "Eventos", "Jogos", "Planos"];
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 0:
         return (
           <VStack space="sm">
-            <Text className="text-gray-600">{descricao}</Text>
+            <MembrosList />;
           </VStack>
         );
       case 1:
@@ -92,12 +100,6 @@ export const MainContent = () => {
             <PlanosList />;
           </VStack>
         );
-      case 5:
-        return (
-          <VStack space="sm">
-            <MembrosList />;
-          </VStack>
-        );
 
       default:
         return null;
@@ -110,11 +112,24 @@ export const MainContent = () => {
         {/* Cabeçalho com Foto e Detalhes */}
         <HStack className="items-center space-x-6">
           {/* Imagem do Perfil */}
-          <Image
-            source={imagem || require("@/assets/dashboard/image2.png")}
-            className="w-24 h-24 rounded-full"
-            alt="Imagem da Atlética"
-          />
+          <Avatar size="xl">
+            {atletica.imagem ? (
+              <AvatarImage
+                source={{
+                  uri: getImageUrl(atletica.imagem) || undefined,
+                }}
+                alt="Imagem da atlética"
+                className="w-24 h-24 rounded-full"
+              />
+            ) : (
+              <AvatarImage
+                className="w-24 h-24 rounded-full"
+                source={{
+                  uri: "https://img.freepik.com/vetores-premium/icone-de-moldura-de-foto-foto-vazia-em-branco-vetor-em-fundo-transparente-isolado-eps-10_399089-1290.jpg",
+                }}
+              />
+            )}
+          </Avatar>
 
           {/* Informações da Atlética */}
           <VStack space="sm">
