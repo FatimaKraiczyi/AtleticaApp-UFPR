@@ -7,15 +7,15 @@ Este é o repositório do projeto **AtleticaApp-UFPR**, desenvolvido como parte 
 
 **Atlética UFPR — Aplicação Web (TCC)**
 
-Desenvolvimento do front-end de aplicação web destinada a melhorar a gestão das atléticas universitárias na Universidade Federal do Paraná (UFPR)
+Desenvolvimento do front-end de aplicação web destinada a melhorar a gestão das atléticas universitárias na Universidade Federal do Paraná (UFPR).
 
-●	**Interface moderna e responsiva** construída com Next.js (React), TypeScript, Tailwind CSS e Gluestack UI, com foco em experiência do usuário e design adaptável para múltiplos dispositivos
+●	**Interface moderna e responsiva** construída com Next.js (React), TypeScript, Tailwind CSS e Gluestack UI, com foco em experiência do usuário e design adaptável para múltiplos dispositivos.
 
-●	**Integração completa com API back-end**, incluindo sistema de autenticação de usuários (login, cadastro, recuperação de senha), gerenciamento de pedidos, produtos, membros, eventos e assinaturas
+●	**Integração completa com API back-end**, incluindo sistema de autenticação de usuários (login, cadastro, recuperação de senha), gerenciamento de pedidos, produtos, membros, eventos e assinaturas.
 
-●	**Implementação de fluxos de pagamento online** com integração de gateway de pagamento para processamento seguro de transações
+●	**Implementação de fluxos de pagamento online** com integração de gateway de pagamento para processamento seguro de transações.
 
-●	**Deploy do front-end realizado na Vercel**, garantindo alta disponibilidade e performance da aplicação
+●	**Deploy do front-end realizado na Vercel**, garantindo alta disponibilidade e performance da aplicação.
 
 
 ## 🚀 Começando
