@@ -11,6 +11,8 @@ Desenvolvimento do front-end de aplicação web destinada a melhorar a gestão d
 
 ●	**Interface moderna e responsiva** construída com Next.js (React), TypeScript, Tailwind CSS e Gluestack UI, com foco em experiência do usuário e design adaptável para múltiplos dispositivos.
 
+●	**Arquitetura modular e escalável** baseada em componentes reutilizáveis, utilizando Next.js App Router, Context API para gerenciamento de estado (autenticação, carrinho, membros), camada de API com interceptadores Axios e organização clara entre screens, componentes e hooks customizados.
+
 ●	**Integração completa com API back-end**, incluindo sistema de autenticação de usuários (login, cadastro, recuperação de senha), gerenciamento de pedidos, produtos, membros, eventos e assinaturas.
 
 ●	**Implementação de fluxos de pagamento online** com integração de gateway de pagamento para processamento seguro de transações.
